@@ -1,43 +1,69 @@
-
 import { useEffect, useRef, useState } from "react";
 import "../../styles/game.css";
 
 const WIDTH = 720;
 const HEIGHT = 400;
-const WORLD_WIDTH = 2360;
+const WORLD_WIDTH = 3100;
 
-const PLAYER_WIDTH = 32;
+const PLAYER_WIDTH = 30;
 const PLAYER_HEIGHT = 42;
 const GROUND_Y = 330;
+const REQUIRED_HEARTS = 4;
 
 const platforms = [
-  { x: 0, y: 330, w: 570, h: 70 },
-  { x: 650, y: 330, w: 420, h: 70 },
-  { x: 1170, y: 330, w: 370, h: 70 },
-  { x: 1640, y: 330, w: 720, h: 70 },
+  { x: 0, y: 330, w: 480, h: 70 },
+  { x: 560, y: 330, w: 420, h: 70 },
+  { x: 1070, y: 330, w: 360, h: 70 },
+  { x: 1530, y: 330, w: 450, h: 70 },
+  { x: 2080, y: 330, w: 370, h: 70 },
+  { x: 2530, y: 330, w: 570, h: 70 },
 
-  { x: 230, y: 260, w: 130, h: 16 },
-  { x: 770, y: 245, w: 130, h: 16 },
-  { x: 1210, y: 250, w: 120, h: 16 },
-  { x: 1770, y: 255, w: 130, h: 16 },
-  { x: 2040, y: 245, w: 145, h: 16 }
+  { x: 220, y: 260, w: 140, h: 16 },
+  { x: 720, y: 245, w: 140, h: 16 },
+  { x: 1180, y: 220, w: 120, h: 16 },
+  { x: 1660, y: 245, w: 150, h: 16 },
+  { x: 2190, y: 250, w: 120, h: 16 },
+
+  // Anak tangga menuju kastil
+  { x: 2550, y: 300, w: 70, h: 16 },
+  { x: 2625, y: 270, w: 70, h: 16 },
+  { x: 2700, y: 240, w: 70, h: 16 },
+  { x: 2775, y: 210, w: 70, h: 16 },
+
+  // Balkon kastil
+  { x: 2840, y: 170, w: 180, h: 16 }
 ];
 
-const hearts = [
-  { x: 185, y: 293 },
-  { x: 285, y: 220 },
-  { x: 795, y: 205 },
-  { x: 990, y: 293 },
-  { x: 1245, y: 210 },
-  { x: 1815, y: 215 },
-  { x: 2120, y: 205 }
+const ladders = [
+  { x: 772, y: 245, w: 36, h: 85 },
+  { x: 1690, y: 245, w: 36, h: 85 }
 ];
 
-const enemies = [
-  { x: 455, y: 302, w: 32, h: 28 },
-  { x: 1450, y: 302, w: 32, h: 28 },
-  { x: 1930, y: 302, w: 32, h: 28 }
+const heartItems = [
+  { x: 130, y: 292 },
+  { x: 290, y: 220 },
+  { x: 615, y: 292 },
+  { x: 780, y: 205 },
+  { x: 1195, y: 180 },
+  { x: 1705, y: 205 },
+  { x: 2220, y: 210 },
+  { x: 2730, y: 200 }
 ];
+
+const enemyTemplates = [
+  { x: 360, y: 302, w: 30, h: 28, minX: 250, maxX: 430, speed: 1.2, dir: 1 },
+  { x: 820, y: 302, w: 30, h: 28, minX: 650, maxX: 930, speed: 1.4, dir: -1 },
+  { x: 1260, y: 302, w: 30, h: 28, minX: 1130, maxX: 1380, speed: 1.3, dir: 1 },
+  { x: 1760, y: 302, w: 30, h: 28, minX: 1590, maxX: 1940, speed: 1.5, dir: -1 },
+  { x: 2290, y: 302, w: 30, h: 28, minX: 2140, maxX: 2410, speed: 1.2, dir: 1 }
+];
+
+const partner = {
+  x: 2930,
+  y: 128,
+  w: 28,
+  h: 42
+};
 
 function createGame() {
   return {
@@ -46,11 +72,13 @@ function createGame() {
       y: GROUND_Y - PLAYER_HEIGHT,
       vx: 0,
       vy: 0,
-      onGround: true
+      onGround: true,
+      onLadder: false
     },
     checkpoint: 55,
     collected: new Set(),
-    warned: false
+    warned: false,
+    enemies: enemyTemplates.map((enemy) => ({ ...enemy }))
   };
 }
 
@@ -78,82 +106,143 @@ function drawHeart(ctx, x, y, size, color) {
   ctx.restore();
 }
 
+function drawCloud(ctx, x, y) {
+  ctx.beginPath();
+  ctx.ellipse(x, y, 38, 17, 0, 0, Math.PI * 2);
+  ctx.ellipse(x + 18, y - 8, 24, 17, 0, 0, Math.PI * 2);
+  ctx.ellipse(x - 18, y - 5, 22, 14, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawLadder(ctx, ladder) {
+  ctx.fillStyle = "#E8C895";
+  ctx.fillRect(ladder.x, ladder.y, ladder.w, ladder.h);
+
+  ctx.fillStyle = "#C79E63";
+  ctx.fillRect(ladder.x + 4, ladder.y, 5, ladder.h);
+  ctx.fillRect(ladder.x + ladder.w - 9, ladder.y, 5, ladder.h);
+
+  for (let y = ladder.y + 10; y < ladder.y + ladder.h - 4; y += 14) {
+    ctx.fillRect(ladder.x + 5, y, ladder.w - 10, 4);
+  }
+}
+
+function drawPlayer(ctx, player) {
+  // telinga
+  ctx.fillStyle = "#FFF9FC";
+  ctx.fillRect(player.x + 5, player.y - 16, 8, 22);
+  ctx.fillRect(player.x + 18, player.y - 16, 8, 22);
+
+  ctx.fillStyle = "#F4BDD2";
+  ctx.fillRect(player.x + 8, player.y - 10, 3, 12);
+  ctx.fillRect(player.x + 21, player.y - 10, 3, 12);
+
+  // badan
+  ctx.fillStyle = "#FFFDFE";
+  ctx.fillRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+
+  // mata
+  ctx.fillStyle = "#D884AA";
+  ctx.fillRect(player.x + 7, player.y + 12, 4, 4);
+  ctx.fillRect(player.x + 19, player.y + 12, 4, 4);
+
+  // pipi + kaki
+  ctx.fillStyle = "#F5B7CF";
+  ctx.fillRect(player.x + 10, player.y + 24, 10, 5);
+  ctx.fillRect(player.x + 3, player.y + 36, 10, 5);
+  ctx.fillRect(player.x + 17, player.y + 36, 10, 5);
+}
+
+function drawPartner(ctx) {
+  // rambut
+  ctx.fillStyle = "#6A4A5D";
+  ctx.fillRect(partner.x + 5, partner.y - 8, 18, 14);
+
+  // kepala
+  ctx.fillStyle = "#FFE5D8";
+  ctx.fillRect(partner.x + 6, partner.y + 2, 16, 13);
+
+  // badan dress
+  ctx.fillStyle = "#EFA6C4";
+  ctx.fillRect(partner.x + 4, partner.y + 15, 20, 22);
+
+  // kaki
+  ctx.fillStyle = "#FFE5D8";
+  ctx.fillRect(partner.x + 8, partner.y + 37, 4, 5);
+  ctx.fillRect(partner.x + 16, partner.y + 37, 4, 5);
+
+  // hati kecil
+  drawHeart(ctx, partner.x + 14, partner.y - 10, 12, "#E774A4");
+}
+
+function getCameraX(playerX) {
+  return Math.max(0, Math.min(playerX - 230, WORLD_WIDTH - WIDTH));
+}
+
 function drawWorld(ctx, game, time) {
   const player = game.player;
+  const cameraX = getCameraX(player.x);
 
-  const cameraX = Math.max(
-    0,
-    Math.min(player.x - 230, WORLD_WIDTH - WIDTH)
-  );
-
-  const sky = ctx.createLinearGradient(
-    0, 0, 0, HEIGHT
-  );
+  const sky = ctx.createLinearGradient(0, 0, 0, HEIGHT);
   sky.addColorStop(0, "#FBD8EB");
   sky.addColorStop(1, "#FFF8ED");
 
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-  // Awan yang bergerak pelan
+  // awan
   ctx.fillStyle = "#FFFFFF";
-
-  for (let i = 0; i < 8; i++) {
-    const x = i * 190 - cameraX * 0.18 + 30;
+  for (let i = 0; i < 10; i++) {
+    const x = i * 180 - cameraX * 0.18 + 30;
     const y = 65 + (i % 3) * 24;
-
-    ctx.beginPath();
-    ctx.ellipse(x, y, 38, 17, 0, 0, Math.PI * 2);
-    ctx.ellipse(x + 20, y - 9, 25, 19, 0, 0, Math.PI * 2);
-    ctx.fill();
+    drawCloud(ctx, x, y);
   }
 
-  // Bukit jauh
+  // bukit belakang
   ctx.fillStyle = "#F4C9DB";
-  for (let i = 0; i < 8; i++) {
-    const x = i * 320 - cameraX * 0.35;
+  for (let i = 0; i < 12; i++) {
+    const x = i * 300 - cameraX * 0.35;
     ctx.beginPath();
-    ctx.ellipse(x, 380, 195, 100, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, 390, 185, 100, 0, 0, Math.PI * 2);
     ctx.fill();
   }
 
   ctx.save();
   ctx.translate(-cameraX, 0);
 
-  // Platform tanah
+  // tanah / platform
   for (const platform of platforms) {
     ctx.fillStyle = "#D9A9B8";
-    ctx.fillRect(
-      platform.x,
-      platform.y,
-      platform.w,
-      platform.h
-    );
+    ctx.fillRect(platform.x, platform.y, platform.w, platform.h);
 
     ctx.fillStyle = "#F9D4E0";
-    ctx.fillRect(
-      platform.x,
-      platform.y,
-      platform.w,
-      10
-    );
+    ctx.fillRect(platform.x, platform.y, platform.w, 10);
 
     ctx.fillStyle = "#FFFFFF";
-    for (let x = platform.x + 12;
-      x < platform.x + platform.w - 5;
-      x += 37) {
+    for (let x = platform.x + 12; x < platform.x + platform.w - 5; x += 37) {
       ctx.fillRect(x, platform.y + 5, 12, 3);
     }
   }
 
-  // Dekorasi bunga di tanah
-  for (let x = 110; x < WORLD_WIDTH; x += 175) {
-    const onGround = platforms
-      .slice(0, 4)
-      .some(p => x >= p.x && x < p.x + p.w);
+  // jurang (visual bawah)
+  const gaps = [
+    { x: 480, w: 80 },
+    { x: 980, w: 90 },
+    { x: 1430, w: 100 },
+    { x: 1980, w: 100 },
+    { x: 2450, w: 80 }
+  ];
 
-    if (!onGround) continue;
+  gaps.forEach((gap) => {
+    ctx.fillStyle = "#7C5468";
+    ctx.fillRect(gap.x, 330, gap.w, 70);
 
+    ctx.fillStyle = "#5E3B4B";
+    ctx.fillRect(gap.x + 8, 330, gap.w - 16, 70);
+  });
+
+  // bunga kecil
+  for (let x = 90; x < WORLD_WIDTH; x += 170) {
     ctx.strokeStyle = "#92B99B";
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -161,99 +250,104 @@ function drawWorld(ctx, game, time) {
     ctx.lineTo(x, GROUND_Y - 18);
     ctx.stroke();
 
-    drawHeart(ctx, x, GROUND_Y - 23, 13, "#FFFFFF");
+    drawHeart(ctx, x, GROUND_Y - 23, 12, "#FFFFFF");
   }
 
-  // Hati yang dapat dikumpulkan
-  hearts.forEach((heart, index) => {
+  // ladder
+  ladders.forEach((ladder) => drawLadder(ctx, ladder));
+
+  // hati collectible
+  heartItems.forEach((heart, index) => {
     if (game.collected.has(index)) return;
 
     const floatY = Math.sin(time / 350 + index) * 4;
-
-    drawHeart(
-      ctx,
-      heart.x,
-      heart.y + floatY,
-      25,
-      "#E774A4"
-    );
+    drawHeart(ctx, heart.x, heart.y + floatY, 24, "#E774A4");
   });
 
-  // Monster kecil
-  enemies.forEach(enemy => {
+  // enemy / mob gerak
+  game.enemies.forEach((enemy) => {
     ctx.fillStyle = "#A889BD";
     ctx.beginPath();
-    ctx.ellipse(
-      enemy.x + 16,
-      enemy.y + 17,
-      16,
-      13,
-      0,
-      0,
-      Math.PI * 2
-    );
+    ctx.ellipse(enemy.x + 15, enemy.y + 16, 15, 12, 0, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(enemy.x + 8, enemy.y + 13, 5, 5);
-    ctx.fillRect(enemy.x + 20, enemy.y + 13, 5, 5);
+    ctx.fillRect(enemy.x + 7, enemy.y + 12, 5, 5);
+    ctx.fillRect(enemy.x + 18, enemy.y + 12, 5, 5);
 
     ctx.fillStyle = "#6F547E";
-    ctx.fillRect(enemy.x + 10, enemy.y + 15, 2, 3);
-    ctx.fillRect(enemy.x + 22, enemy.y + 15, 2, 3);
+    ctx.fillRect(enemy.x + 9, enemy.y + 14, 2, 3);
+    ctx.fillRect(enemy.x + 20, enemy.y + 14, 2, 3);
+
+    ctx.fillStyle = "#6F547E";
+    ctx.fillRect(enemy.x + 5, enemy.y + 26, 6, 2);
+    ctx.fillRect(enemy.x + 19, enemy.y + 26, 6, 2);
   });
 
-  // Kado tujuan akhir
-  const giftX = 2250;
+  // kastil akhir
+  const castleX = 2860;
+  const castleY = 55;
+  const castleW = 180;
+  const castleH = 115;
 
-  ctx.fillStyle = "#E998BA";
-  ctx.fillRect(giftX, 275, 55, 55);
+  ctx.fillStyle = "#F3D8E5";
+  ctx.fillRect(castleX, castleY + 25, castleW, castleH);
 
-  ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(giftX + 23, 275, 10, 55);
-  ctx.fillRect(giftX - 5, 268, 65, 12);
+  ctx.fillStyle = "#E0B8CA";
+  ctx.fillRect(castleX + 8, castleY + 12, 28, 35);
+  ctx.fillRect(castleX + 72, castleY, 36, 47);
+  ctx.fillRect(castleX + 144, castleY + 12, 28, 35);
 
-  ctx.font = "32px serif";
-  ctx.textAlign = "center";
-  ctx.fillText("🎀", giftX + 28, 270);
+  ctx.fillStyle = "#C789A5";
+  ctx.fillRect(castleX + 70, castleY + 70, 40, 70);
 
-  // Karakter kelinci pink
-  ctx.fillStyle = "#FFFFFF";
-  ctx.fillRect(player.x + 6, player.y - 15, 8, 21);
-  ctx.fillRect(player.x + 20, player.y - 15, 8, 21);
+  ctx.fillStyle = "#FFF6FA";
+  ctx.fillRect(castleX + 28, castleY + 67, 18, 24);
+  ctx.fillRect(castleX + 134, castleY + 67, 18, 24);
 
-  ctx.fillStyle = "#EFA6C4";
-  ctx.fillRect(player.x + 9, player.y - 10, 3, 12);
-  ctx.fillRect(player.x + 23, player.y - 10, 3, 12);
+  // pasangan di akhir
+  drawPartner(ctx);
 
-  ctx.fillStyle = "#FFF9FC";
-  ctx.fillRect(
-    player.x,
-    player.y,
-    PLAYER_WIDTH,
-    PLAYER_HEIGHT
-  );
+  // bendera kecil di kastil
+  ctx.fillStyle = "#B96A8D";
+  ctx.fillRect(castleX + 90, castleY - 18, 3, 20);
+  ctx.beginPath();
+  ctx.moveTo(castleX + 93, castleY - 18);
+  ctx.lineTo(castleX + 115, castleY - 12);
+  ctx.lineTo(castleX + 93, castleY - 6);
+  ctx.closePath();
+  ctx.fill();
 
-  ctx.fillStyle = "#D884AA";
-  ctx.fillRect(player.x + 7, player.y + 13, 4, 4);
-  ctx.fillRect(player.x + 22, player.y + 13, 4, 4);
-
-  ctx.fillStyle = "#F4B8CE";
-  ctx.fillRect(player.x + 12, player.y + 24, 9, 5);
-  ctx.fillRect(player.x + 4, player.y + 37, 10, 5);
-  ctx.fillRect(player.x + 20, player.y + 37, 10, 5);
+  // player
+  drawPlayer(ctx, player);
 
   ctx.restore();
+}
+
+function getLadderForPlayer(player) {
+  const centerX = player.x + PLAYER_WIDTH / 2;
+  const playerTop = player.y;
+  const playerBottom = player.y + PLAYER_HEIGHT;
+
+  return ladders.find((ladder) => {
+    const insideX = centerX >= ladder.x - 10 && centerX <= ladder.x + ladder.w + 10;
+    const overlapsY = playerBottom > ladder.y && playerTop < ladder.y + ladder.h;
+    return insideX && overlapsY;
+  });
 }
 
 export default function HeartAdventure({ onComplete }) {
   const canvasRef = useRef(null);
   const gameRef = useRef(createGame());
+
   const controlsRef = useRef({
     left: false,
     right: false,
+    up: false,
+    down: false,
     jump: false
   });
+
   const statusRef = useRef("ready");
 
   const [status, setStatus] = useState("ready");
@@ -266,6 +360,8 @@ export default function HeartAdventure({ onComplete }) {
     controlsRef.current = {
       left: false,
       right: false,
+      up: false,
+      down: false,
       jump: false
     };
 
@@ -280,17 +376,12 @@ export default function HeartAdventure({ onComplete }) {
 
     if (statusRef.current !== "playing") return;
 
-    event.currentTarget.setPointerCapture?.(
-      event.pointerId
-    );
-
+    event.currentTarget.setPointerCapture?.(event.pointerId);
     controlsRef.current[key] = true;
   }
 
   function releaseControl(key) {
-    if (key !== "jump") {
-      controlsRef.current[key] = false;
-    }
+    controlsRef.current[key] = false;
   }
 
   useEffect(() => {
@@ -302,6 +393,16 @@ export default function HeartAdventure({ onComplete }) {
     let frameId;
     let lastTime = 0;
 
+    const resetControls = () => {
+      controlsRef.current = {
+        left: false,
+        right: false,
+        up: false,
+        down: false,
+        jump: false
+      };
+    };
+
     const respawn = () => {
       const game = gameRef.current;
 
@@ -310,8 +411,9 @@ export default function HeartAdventure({ onComplete }) {
       game.player.vx = 0;
       game.player.vy = 0;
       game.player.onGround = true;
+      game.player.onLadder = false;
 
-      setNotice("Ups, coba lagi yaa, sayang ♡");
+      setNotice("Ups, jatuh atau kena mob. Coba lagi yaa, sayang ♡");
     };
 
     function keyDown(event) {
@@ -319,8 +421,7 @@ export default function HeartAdventure({ onComplete }) {
 
       if (statusRef.current !== "playing") return;
 
-      if (["arrowleft", "arrowright", "arrowup",
-           "a", "d", "w", " "].includes(key)) {
+      if (["arrowleft", "arrowright", "arrowup", "arrowdown", "a", "d", "w", "s", " "].includes(key)) {
         event.preventDefault();
       }
 
@@ -332,10 +433,15 @@ export default function HeartAdventure({ onComplete }) {
         controlsRef.current.right = true;
       }
 
-      if (
-        (key === " " || key === "arrowup" || key === "w") &&
-        !event.repeat
-      ) {
+      if (key === "arrowup" || key === "w") {
+        controlsRef.current.up = true;
+      }
+
+      if (key === "arrowdown" || key === "s") {
+        controlsRef.current.down = true;
+      }
+
+      if ((key === " " || key === "arrowup") && !event.repeat) {
         controlsRef.current.jump = true;
       }
     }
@@ -350,14 +456,14 @@ export default function HeartAdventure({ onComplete }) {
       if (key === "arrowright" || key === "d") {
         controlsRef.current.right = false;
       }
-    }
 
-    function resetControls() {
-      controlsRef.current = {
-        left: false,
-        right: false,
-        jump: false
-      };
+      if (key === "arrowup" || key === "w") {
+        controlsRef.current.up = false;
+      }
+
+      if (key === "arrowdown" || key === "s") {
+        controlsRef.current.down = false;
+      }
     }
 
     function update(delta) {
@@ -365,55 +471,111 @@ export default function HeartAdventure({ onComplete }) {
       const player = game.player;
       const controls = controlsRef.current;
 
-      player.vx = controls.right
-        ? 5.3
-        : controls.left
-          ? -5.3
-          : 0;
+      game.enemies.forEach((enemy) => {
+        enemy.x += enemy.speed * enemy.dir * delta;
 
-      if (controls.jump && player.onGround) {
-        player.vy = -13;
+        if (enemy.x <= enemy.minX) {
+          enemy.x = enemy.minX;
+          enemy.dir = 1;
+        }
+
+        if (enemy.x >= enemy.maxX) {
+          enemy.x = enemy.maxX;
+          enemy.dir = -1;
+        }
+      });
+
+      player.vx = controls.right ? 5.2 : controls.left ? -5.2 : 0;
+
+      const ladder = getLadderForPlayer(player);
+      const wantsLadder = ladder && (controls.up || controls.down);
+
+      if (wantsLadder && !player.onLadder) {
+        player.onLadder = true;
         player.onGround = false;
+        player.vy = 0;
+        player.x = ladder.x + ladder.w / 2 - PLAYER_WIDTH / 2;
+      }
+
+      if (player.onLadder) {
+        const activeLadder = getLadderForPlayer(player);
+
+        if (!activeLadder) {
+          player.onLadder = false;
+        } else {
+          player.vy = 0;
+
+          if (controls.up) {
+            player.y -= 3.4 * delta;
+          }
+
+          if (controls.down) {
+            player.y += 3.4 * delta;
+          }
+
+          player.x += player.vx * 0.45 * delta;
+          player.x = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x));
+
+          const topLimit = activeLadder.y - PLAYER_HEIGHT + 6;
+          const bottomLimit = activeLadder.y + activeLadder.h - PLAYER_HEIGHT;
+
+          if (player.y < topLimit) {
+            player.y = topLimit;
+          }
+
+          if (player.y > bottomLimit) {
+            player.y = bottomLimit;
+          }
+
+          if (controls.jump) {
+            player.onLadder = false;
+            player.vy = -11;
+          }
+        }
+      }
+
+      if (!player.onLadder) {
+        if (controls.jump && player.onGround) {
+          player.vy = -12.5;
+          player.onGround = false;
+        }
+
+        const previousBottom = player.y + PLAYER_HEIGHT;
+
+        player.vy = Math.min(player.vy + 0.64 * delta, 16);
+
+        player.x += player.vx * delta;
+        player.y += player.vy * delta;
+
+        player.x = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x));
+
+        player.onGround = false;
+
+        for (const platform of platforms) {
+          const crossingTop =
+            previousBottom <= platform.y + 6 &&
+            player.y + PLAYER_HEIGHT >= platform.y;
+
+          const horizontallyInside =
+            player.x + PLAYER_WIDTH > platform.x &&
+            player.x < platform.x + platform.w;
+
+          if (player.vy >= 0 && crossingTop && horizontallyInside) {
+            player.y = platform.y - PLAYER_HEIGHT;
+            player.vy = 0;
+            player.onGround = true;
+          }
+        }
       }
 
       controls.jump = false;
 
-      const previousBottom =
-        player.y + PLAYER_HEIGHT;
+      if (player.x > 1600) {
+        game.checkpoint = 1560;
+      }
 
-      player.vy = Math.min(
-        player.vy + 0.64 * delta,
-        16
-      );
-
-      player.x += player.vx * delta;
-      player.y += player.vy * delta;
-
-      player.x = Math.max(
-        0,
-        Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x)
-      );
-
-      player.onGround = false;
-
-      for (const platform of platforms) {
-        const crossingTop =
-          previousBottom <= platform.y + 6 &&
-          player.y + PLAYER_HEIGHT >= platform.y;
-
-        const horizontallyInside =
-          player.x + PLAYER_WIDTH > platform.x &&
-          player.x < platform.x + platform.w;
-
-        if (
-          player.vy >= 0 &&
-          crossingTop &&
-          horizontallyInside
-        ) {
-          player.y = platform.y - PLAYER_HEIGHT;
-          player.vy = 0;
-          player.onGround = true;
-        }
+      if (player.x > 2500) {
+        game.checkpoint = 2520;
       }
 
       if (player.y > HEIGHT + 50) {
@@ -421,21 +583,12 @@ export default function HeartAdventure({ onComplete }) {
         return;
       }
 
-      if (player.x > 1230) {
-        game.checkpoint = 1200;
-      }
-
-      // Mengambil hati
-      hearts.forEach((heart, index) => {
+      heartItems.forEach((heart, index) => {
         if (game.collected.has(index)) return;
 
         const nearHeart =
-          Math.abs(
-            player.x + PLAYER_WIDTH / 2 - heart.x
-          ) < 28 &&
-          Math.abs(
-            player.y + PLAYER_HEIGHT / 2 - heart.y
-          ) < 34;
+          Math.abs(player.x + PLAYER_WIDTH / 2 - heart.x) < 28 &&
+          Math.abs(player.y + PLAYER_HEIGHT / 2 - heart.y) < 34;
 
         if (nearHeart) {
           game.collected.add(index);
@@ -451,38 +604,27 @@ export default function HeartAdventure({ onComplete }) {
         h: PLAYER_HEIGHT
       };
 
-      if (enemies.some(enemy => overlaps(playerBox, enemy))) {
+      if (game.enemies.some((enemy) => overlaps(playerBox, enemy))) {
         respawn();
         return;
       }
 
-      // Kado di ujung level
-      const atGift = overlaps(playerBox, {
-        x: 2250,
-        y: 275,
-        w: 55,
-        h: 55
-      });
-
-      if (atGift && game.collected.size >= 3) {
-        statusRef.current = "won";
-        setStatus("won");
-        setNotice("");
-      } else if (atGift && !game.warned) {
-        game.warned = true;
-        setNotice(
-          "Kumpulin minimal 3 hati dulu, yaa ♡"
-        );
-      } else if (!atGift) {
+      if (overlaps(playerBox, partner)) {
+        if (game.collected.size >= REQUIRED_HEARTS) {
+          statusRef.current = "won";
+          setStatus("won");
+          setNotice("");
+        } else if (!game.warned) {
+          game.warned = true;
+          setNotice(`Kumpulin minimal ${REQUIRED_HEARTS} hati dulu yaa, sayang ♡`);
+        }
+      } else {
         game.warned = false;
       }
     }
 
     function frame(time) {
-      const delta = lastTime
-        ? Math.min((time - lastTime) / 16.67, 2)
-        : 1;
-
+      const delta = lastTime ? Math.min((time - lastTime) / 16.67, 2) : 1;
       lastTime = time;
 
       if (statusRef.current === "playing") {
@@ -510,8 +652,8 @@ export default function HeartAdventure({ onComplete }) {
   return (
     <div className="adventure">
       <div className="adventure__topbar">
-        <span>♡ Hati: {score} / 3</span>
-        <span>Level 1 — Cari Kado</span>
+        <span>♡ Hati: {score} / {REQUIRED_HEARTS}</span>
+        <span>Level 1 — Menuju Kastil</span>
       </div>
 
       <div className="adventure__viewport">
@@ -519,16 +661,16 @@ export default function HeartAdventure({ onComplete }) {
           ref={canvasRef}
           width={WIDTH}
           height={HEIGHT}
-          aria-label="Permainan kelinci pink yang berjalan, melompat, dan mengumpulkan hati"
+          aria-label="Permainan platform petualangan menuju kastil"
         />
 
         {status === "ready" && (
           <div className="adventure__overlay">
-            <span className="adventure__emoji">🐰</span>
-            <h2>Petualangan Kecil Buat Kamu</h2>
+            <span className="adventure__emoji">🏰</span>
+            <h2>Petualangan Menuju Kastil ♡</h2>
             <p>
-              Kumpulin 3 hati dan temuin
-              kado di ujung jalan, yaa!
+              Lewatin jurang, hindari mob, naik tangga,
+              kumpulin {REQUIRED_HEARTS} hati, lalu temui pasanganmu di kastil.
             </p>
             <button
               type="button"
@@ -542,18 +684,18 @@ export default function HeartAdventure({ onComplete }) {
 
         {status === "won" && (
           <div className="adventure__overlay">
-            <span className="adventure__emoji">🎁</span>
-            <h2>Yeay, kamu berhasil! ♡</h2>
+            <span className="adventure__emoji">💖</span>
+            <h2>Yeay, kamu sampai juga! ♡</h2>
             <p>
-              Hehe, pinter banget sayang.
-              Sekarang ada sesuatu lagi buat kamu.
+              Kamu berhasil sampai ke kastil dan ketemu pasangan yang nungguin kamu.
+              Sekarang yuk lanjut ke kejutan berikutnya.
             </p>
             <button
               type="button"
               className="btn btn--primary"
               onClick={onComplete}
             >
-              Buka Hadiah Terakhir ♡
+              Lanjut Ke Surat ♡
             </button>
           </div>
         )}
@@ -566,14 +708,12 @@ export default function HeartAdventure({ onComplete }) {
       )}
 
       <div className="adventure__controls">
-        <div className="adventure__directions">
+        <div className="adventure__move">
           <button
             type="button"
             aria-label="Jalan ke kiri"
             disabled={status !== "playing"}
-            onPointerDown={event =>
-              pressControl("left", event)
-            }
+            onPointerDown={(event) => pressControl("left", event)}
             onPointerUp={() => releaseControl("left")}
             onPointerCancel={() => releaseControl("left")}
           >
@@ -584,9 +724,7 @@ export default function HeartAdventure({ onComplete }) {
             type="button"
             aria-label="Jalan ke kanan"
             disabled={status !== "playing"}
-            onPointerDown={event =>
-              pressControl("right", event)
-            }
+            onPointerDown={(event) => pressControl("right", event)}
             onPointerUp={() => releaseControl("right")}
             onPointerCancel={() => releaseControl("right")}
           >
@@ -594,21 +732,45 @@ export default function HeartAdventure({ onComplete }) {
           </button>
         </div>
 
-        <button
-          type="button"
-          className="adventure__jump"
-          disabled={status !== "playing"}
-          onPointerDown={event =>
-            pressControl("jump", event)
-          }
-        >
-          Lompat ↑
-        </button>
+        <div className="adventure__action">
+          <button
+            type="button"
+            aria-label="Naik tangga"
+            disabled={status !== "playing"}
+            onPointerDown={(event) => pressControl("up", event)}
+            onPointerUp={() => releaseControl("up")}
+            onPointerCancel={() => releaseControl("up")}
+          >
+            ↑
+          </button>
+
+          <button
+            type="button"
+            aria-label="Turun tangga"
+            disabled={status !== "playing"}
+            onPointerDown={(event) => pressControl("down", event)}
+            onPointerUp={() => releaseControl("down")}
+            onPointerCancel={() => releaseControl("down")}
+          >
+            ↓
+          </button>
+
+          <button
+            type="button"
+            className="adventure__jump"
+            disabled={status !== "playing"}
+            onPointerDown={(event) => pressControl("jump", event)}
+            onPointerUp={() => releaseControl("jump")}
+            onPointerCancel={() => releaseControl("jump")}
+          >
+            Lompat
+          </button>
+        </div>
       </div>
 
       <p className="adventure__hint">
-        Komputer: tombol ← → dan Spasi.
-        HP: gunakan tombol di bawah permainan.
+        Komputer: ← → untuk jalan, Spasi untuk lompat, ↑ ↓ untuk naik/turun tangga.
+        HP: pakai tombol di bawah permainan.
       </p>
 
       {status === "playing" && (
