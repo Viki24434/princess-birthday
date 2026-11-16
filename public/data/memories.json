@@ -2,25 +2,25 @@
 [
   {
     "id": "memory-01",
-    "title": "Our First Moment",
-    "date": "Our beginning",
-    "description": "A beautiful beginning of our story.",
+    "title": "Awal Cerita Kita",
+    "date": "Awal dari semuanya",
+    "description": "Kalau dipikir-pikir lagi, lucu juga ya gimana semuanya bisa dimulai. Aku seneng banget akhirnya bisa kenal sama kamu.",
     "image": "images/memories/memory-01.jpg",
     "rotation": -5
   },
   {
     "id": "memory-02",
-    "title": "Sweet Memories",
-    "date": "A special day",
-    "description": "Every little moment with you means so much.",
+    "title": "Salah Satu Hari Favoritku",
+    "date": "Kenangan kecil kita",
+    "description": "Mungkin buat orang lain ini cuma momen biasa, tapi buat aku, hal-hal kecil yang kita lewatin bareng selalu punya tempat tersendiri.",
     "image": "images/memories/memory-02.jpg",
     "rotation": 4
   },
   {
     "id": "memory-03",
-    "title": "My Favorite Person",
-    "date": "Forever us",
-    "description": "You are my favorite part of every day.",
+    "title": "Aku dan Kamu",
+    "date": "Cerita kita",
+    "description": "Aku nggak tahu nanti bakal ada berapa banyak cerita lagi, tapi aku berharap masih banyak momen yang bisa kita buat bareng-bareng.",
     "image": "images/memories/memory-03.jpg",
     "rotation": -3
   }

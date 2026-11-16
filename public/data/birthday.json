@@ -1,18 +1,18 @@
 
 {
   "recipient": {
-    "name": "Princess",
-    "nickname": "Sayang",
+    "name": "Sayang",
+    "nickname": "sayang",
     "birthday": "2026-12-20"
   },
   "sender": {
-    "name": "Your Favorite Person"
+    "name": "Aku"
   },
   "website": {
-    "title": "A Little Surprise For You",
-    "subtitle": "Made with all my love, just for you.",
-    "welcomeMessage": "Today is all about you, my princess.",
-    "closingMessage": "May every beautiful dream of yours come true."
+    "title": "Ada Sesuatu Buat Kamu",
+    "subtitle": "Aku bikin ini khusus buat kamu, sayang.",
+    "welcomeMessage": "Sebenernya sederhana aja, tapi aku bikinnya khusus buat kamu. Semoga kamu suka, yaa.",
+    "closingMessage": "Semoga di umur kamu yang sekarang, semakin banyak hal baik yang datang. Aku pengen terus ada di samping kamu, nemenin setiap cerita yang bakal kita lewatin nanti."
   },
   "theme": {
     "name": "pink-princess-scrapbook",
@@ -21,10 +21,10 @@
   },
   "cake": {
     "candles": 3,
-    "message": "Close your eyes and make a wish."
+    "message": "Sebelum lanjut, coba bikin satu permintaan dulu, yaa."
   },
   "photoBooth": {
-    "title": "Birthday Photo Booth",
+    "title": "Foto-Foto Dulu, Yuk!",
     "defaultFrame": "princess",
     "countdown": 3,
     "captureCount": 4
