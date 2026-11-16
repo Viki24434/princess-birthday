@@ -12,6 +12,7 @@ import WelcomeScene from "./scenes/WelcomeScene";
 import CakeScene from "./scenes/CakeScene";
 import MemoriesScene from "./scenes/MemoriesScene";
 import PhotoBoothScene from "./scenes/PhotoBoothScene";
+import GameScene from "./scenes/GameScene";
 import LetterScene from "./scenes/LetterScene";
 import FinalScene from "./scenes/FinalScene";
 
@@ -29,6 +30,9 @@ export default function App() {
 
   const [unlockedScenes, setUnlockedScenes] =
     useState(["welcome"]);
+
+  const [gameCompleted, setGameCompleted] =
+    useState(false);
 
   useEffect(() => {
     window.scrollTo({
@@ -48,11 +52,18 @@ export default function App() {
 
     if (targetIndex === -1) return;
 
-    // Boleh membuka scene yang sudah pernah dikunjungi
-    // atau tepat satu scene berikutnya.
     if (
       targetIndex > currentIndex + 1 &&
       !unlockedScenes.includes(sceneId)
+    ) {
+      return;
+    }
+
+    // Surat baru bisa dibuka setelah game selesai.
+    if (
+      currentScene === "game" &&
+      sceneId === "letter" &&
+      !gameCompleted
     ) {
       return;
     }
@@ -80,12 +91,26 @@ export default function App() {
     }
   }
 
+  function finishGame() {
+    setGameCompleted(true);
+
+    setUnlockedScenes(previous => {
+      if (previous.includes("letter")) {
+        return previous;
+      }
+
+      return [...previous, "letter"];
+    });
+
+    setCurrentScene("letter");
+  }
+
   if (loading) {
     return (
       <div className="app-status">
         <span className="loading-heart">♡</span>
-        <h1>Preparing your surprise...</h1>
-        <p>Made with love, just for you.</p>
+        <h1>Lagi nyiapin kejutan buat kamu...</h1>
+        <p>Sebentar yaa, sayang ♡</p>
       </div>
     );
   }
@@ -93,9 +118,11 @@ export default function App() {
   if (error || !birthday || !letter) {
     return (
       <div className="app-status">
-        <h1>Oops! ♡</h1>
+        <h1>Ups, ada yang salah ♡</h1>
+
         <p>
-          {error || "Birthday data could not be loaded."}
+          {error ||
+            "Data ulang tahunnya belum bisa dibuka."}
         </p>
 
         <button
@@ -103,7 +130,7 @@ export default function App() {
           className="btn btn--primary"
           onClick={() => window.location.reload()}
         >
-          Try Again
+          Coba Lagi
         </button>
       </div>
     );
@@ -129,6 +156,10 @@ export default function App() {
       <PhotoBoothScene birthday={birthday} />
     ),
 
+    game: (
+      <GameScene onComplete={finishGame} />
+    ),
+
     letter: (
       <LetterScene letter={letter} />
     ),
@@ -151,7 +182,7 @@ export default function App() {
             type="button"
             className="brand"
             onClick={() => navigateTo("welcome")}
-            aria-label="Kembali ke halaman utama"
+            aria-label="Kembali ke halaman pembuka"
           >
             <span className="brand__icon">♡</span>
 
@@ -161,7 +192,7 @@ export default function App() {
           </button>
 
           <span className="header-label">
-            Made with Love ✦
+            Khusus Buat Kamu ✦
           </span>
         </header>
 
@@ -169,6 +200,10 @@ export default function App() {
           currentScene={currentScene}
           unlockedScenes={unlockedScenes}
           onNavigate={navigateTo}
+          canContinue={
+            currentScene !== "game" ||
+            gameCompleted
+          }
         />
 
         <main
@@ -184,7 +219,7 @@ export default function App() {
         </main>
 
         <div className="app-footer-note">
-          A little love, in every detail ♡
+          Dibuat khusus buat kamu ♡
         </div>
       </div>
     </div>

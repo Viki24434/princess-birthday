@@ -1,0 +1,200 @@
+
+/* ========================================
+   PETUALANGAN KECIL BUAT SAYANG
+======================================== */
+
+.adventure {
+  width: min(100%, 860px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.adventure__topbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+
+  padding: 12px 18px;
+  border-radius: 16px;
+
+  background: #fff0f6;
+  color: #94506f;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.adventure__viewport {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 720 / 400;
+
+  overflow: hidden;
+  border: 7px solid #f0bed2;
+  border-radius: 22px;
+
+  background: #fbd8eb;
+  box-shadow: 0 14px 35px rgba(185, 106, 141, 0.16);
+}
+
+.adventure__viewport canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.adventure__overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 22px;
+  background: rgba(255, 247, 251, 0.93);
+  text-align: center;
+}
+
+.adventure__overlay h2 {
+  color: #94506f;
+  font-size: clamp(17px, 3.5vw, 28px);
+}
+
+.adventure__overlay p {
+  max-width: 400px;
+  font-size: clamp(10px, 2vw, 14px);
+  color: #926c80;
+}
+
+.adventure__emoji {
+  font-size: clamp(28px, 5vw, 52px);
+}
+
+.adventure__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+  padding: 4px 5px;
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.adventure__directions {
+  display: flex;
+  gap: 12px;
+}
+
+.adventure__controls button {
+  min-width: 70px;
+  min-height: 60px;
+
+  border: 2px solid #edb5ca;
+  border-radius: 18px;
+  background: #fff0f6;
+  color: #94506f;
+
+  font-size: 26px;
+  font-weight: 700;
+
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.adventure__controls button:active:not(:disabled) {
+  transform: scale(0.94);
+  background: #f8d7e4;
+}
+
+.adventure__controls .adventure__jump {
+  min-width: 105px;
+  background: #b96a8d;
+  border-color: #b96a8d;
+  color: white;
+  font-size: 16px;
+}
+
+.adventure__hint {
+  color: #9a7487;
+  font-size: 12px;
+  text-align: center;
+}
+
+.adventure__notice {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  background: #fff1f6;
+  color: #94506f;
+  font-size: 13px;
+  text-align: center;
+}
+
+.adventure__restart {
+  padding: 8px 15px;
+  border: 0;
+  background: transparent;
+  color: #b96a8d;
+  text-decoration: underline;
+  font-size: 13px;
+}
+
+.game-scene__message {
+  max-width: 550px;
+  color: #9a7487;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .adventure {
+    gap: 12px;
+  }
+
+  .adventure__viewport {
+    border-width: 4px;
+    border-radius: 14px;
+  }
+
+  .adventure__topbar {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .adventure__controls button {
+    min-width: 62px;
+    min-height: 58px;
+    font-size: 24px;
+  }
+
+  .adventure__controls .adventure__jump {
+    min-width: 95px;
+    font-size: 15px;
+  }
+
+  .adventure__overlay {
+    gap: 5px;
+    padding: 10px;
+  }
+
+  .adventure__overlay .btn {
+    min-height: 35px;
+    padding: 7px 15px;
+    font-size: 11px;
+  }
+
+  .adventure__hint {
+    font-size: 10px;
+  }
+}

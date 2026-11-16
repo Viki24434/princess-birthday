@@ -1,38 +1,22 @@
 
 const scenes = [
-  {
-    id: "welcome",
-    label: "Pembuka"
-  },
-  {
-    id: "cake",
-    label: "Kue Ulang Tahun"
-  },
-  {
-    id: "memories",
-    label: "Kenangan Kita"
-  },
-  {
-    id: "photobooth",
-    label: "Foto-Foto"
-  },
-  {
-    id: "letter",
-    label: "Surat Buat Kamu"
-  },
-  {
-    id: "final",
-    label: "Penutup"
-  }
+  { id: "welcome", label: "Pembuka" },
+  { id: "cake", label: "Kue Ulang Tahun" },
+  { id: "memories", label: "Kenangan Kita" },
+  { id: "photobooth", label: "Foto-Foto" },
+  { id: "game", label: "Petualangan Kecil" },
+  { id: "letter", label: "Surat Buat Kamu" },
+  { id: "final", label: "Penutup" }
 ];
 
 export default function SceneNavigation({
   currentScene,
   unlockedScenes = [],
-  onNavigate
+  onNavigate,
+  canContinue = true
 }) {
   const currentIndex = scenes.findIndex(
-    (scene) => scene.id === currentScene
+    scene => scene.id === currentScene
   );
 
   const previousScene = scenes[currentIndex - 1];
@@ -40,17 +24,16 @@ export default function SceneNavigation({
 
   return (
     <>
-      {/* Navigasi progres halaman */}
       <nav
         className="scene-progress"
         aria-label="Perjalanan kejutan ulang tahun"
       >
         {scenes.map((scene, index) => {
-          const isActive = currentScene === scene.id;
+          const isActive =
+            currentScene === scene.id;
 
-          const isUnlocked = unlockedScenes.includes(
-            scene.id
-          );
+          const isUnlocked =
+            unlockedScenes.includes(scene.id);
 
           return (
             <button
@@ -60,9 +43,7 @@ export default function SceneNavigation({
                 "progress-dot",
                 isActive ? "is-active" : "",
                 isUnlocked ? "is-unlocked" : ""
-              ]
-                .filter(Boolean)
-                .join(" ")}
+              ].filter(Boolean).join(" ")}
               disabled={!isUnlocked}
               onClick={() => onNavigate(scene.id)}
               aria-label={`Buka halaman ${scene.label}`}
@@ -77,7 +58,6 @@ export default function SceneNavigation({
         })}
       </nav>
 
-      {/* Tombol navigasi bawah */}
       <footer className="bottom-navigation">
         <button
           type="button"
@@ -100,6 +80,7 @@ export default function SceneNavigation({
           <button
             type="button"
             className="btn btn--primary"
+            disabled={!canContinue}
             onClick={() => onNavigate(nextScene.id)}
           >
             Lanjut →
