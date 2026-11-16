@@ -5,22 +5,22 @@ import SceneLayout from "../components/SceneLayout";
 const frames = [
   {
     id: "princess",
-    label: "Pink Princess",
+    label: "Putri Cantik",
     symbol: "♛"
   },
   {
     id: "love-strip",
-    label: "Love Strip",
+    label: "Foto Kita",
     symbol: "♡"
   },
   {
     id: "scrapbook",
-    label: "Scrapbook",
+    label: "Kenangan Manis",
     symbol: "✿"
   },
   {
     id: "royal",
-    label: "Royal Birthday",
+    label: "Hari Spesial",
     symbol: "✦"
   }
 ];
@@ -32,33 +32,40 @@ export default function PhotoBoothScene({ birthday }) {
     );
 
   const activeFrame =
-    frames.find(frame => frame.id === selectedFrame);
+    frames.find(frame => frame.id === selectedFrame)
+    || frames[0];
 
   return (
     <SceneLayout
       className="photobooth-scene"
-      eyebrow="Smile for the camera"
-      title="Birthday Photo Booth"
-      description="A little picture to remember this special day."
+      eyebrow="Senyum dulu, sayang"
+      title="Foto-Foto Dulu, Yuk!"
+      description="Biar ada foto lucu yang bisa kamu simpen dari hari ini."
     >
       <div className="photobooth-card">
-        <div className={`photo-frame frame--${selectedFrame}`}>
+        <div
+          className={`photo-frame frame--${selectedFrame}`}
+        >
           <div className="photo-frame__header">
-            ✦ Happy Birthday ✦
+            ✦ Selamat Ulang Tahun ✦
           </div>
 
           <div className="photo-frame__preview">
             <span>{activeFrame.symbol}</span>
-            <p>Your pretty smile goes here</p>
+
+            <p>
+              Nanti foto cantik kamu
+              ada di sini ♡
+            </p>
           </div>
 
           <div className="photo-frame__footer">
-            Forever my princess ♡
+            Senyum terus yaa, sayang ♡
           </div>
         </div>
 
         <div className="frame-picker">
-          <h3>Choose Your Frame</h3>
+          <h3>Pilih bingkainya, yaa</h3>
 
           <div className="frame-options">
             {frames.map(frame => (
@@ -85,8 +92,9 @@ export default function PhotoBoothScene({ birthday }) {
         </div>
 
         <p className="feature-note">
-          Live camera and photo capture will
-          be available in the Photo Booth phase.
+          Sabar yaa, sayang. Aku lagi
+          nyiapin tempat foto-foto
+          yang lucu buat kamu, hehe.
         </p>
 
         <button
@@ -94,7 +102,7 @@ export default function PhotoBoothScene({ birthday }) {
           className="btn btn--primary btn--large"
           disabled
         >
-          Camera Coming Soon
+          Kameranya belum siap, hehe ♡
         </button>
       </div>
     </SceneLayout>

@@ -13,8 +13,8 @@ export default function CakeScene({ birthday }) {
   return (
     <SceneLayout
       className="cake-scene"
-      eyebrow="Make a wish"
-      title="Happy Birthday!"
+      eyebrow="Hari spesial kamu"
+      title="Selamat Ulang Tahun, Sayang! ♡"
       description={birthday?.cake?.message}
     >
       <div className="cake-stage">
@@ -23,7 +23,7 @@ export default function CakeScene({ birthday }) {
           role="img"
           aria-label={
             candlesOut
-              ? "Kue ulang tahun dengan lilin padam"
+              ? "Kue ulang tahun dengan lilin yang sudah padam"
               : "Kue ulang tahun dengan lilin menyala"
           }
         >
@@ -56,16 +56,31 @@ export default function CakeScene({ birthday }) {
       <div className="scene-message">
         {candlesOut ? (
           <>
-            <h2>Your wish is on its way! ✨</h2>
+            <h2>
+              Aamiin, semoga terkabul yaa! ♡
+            </h2>
+
             <p>
-              May all your beautiful wishes come true.
+              Semoga semua yang kamu harapin
+              bisa tercapai satu per satu.
+              Aku juga bakal ikut seneng
+              kalau kamu bahagia.
             </p>
           </>
         ) : (
-          <p>
-            Close your eyes, make a wish, and blow
-            out the candles.
-          </p>
+          <>
+            <p>
+              Sebelum lanjut, coba tutup
+              mata sebentar, terus bikin
+              satu permintaan dulu, yaa.
+            </p>
+
+            <p>
+              Kalau udah, tiup lilinnya.
+              Semoga permintaannya terkabul,
+              sayang. ♡
+            </p>
+          </>
         )}
       </div>
 
@@ -75,8 +90,8 @@ export default function CakeScene({ birthday }) {
         onClick={() => setCandlesOut(value => !value)}
       >
         {candlesOut
-          ? "Light Candles Again ♡"
-          : "Blow the Candles ✨"}
+          ? "Nyalain lilinnya lagi ♡"
+          : "Tiup lilinnya ♡"}
       </button>
     </SceneLayout>
   );

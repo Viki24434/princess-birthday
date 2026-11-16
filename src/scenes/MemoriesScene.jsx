@@ -6,9 +6,9 @@ export default function MemoriesScene({ memories }) {
   return (
     <SceneLayout
       className="memories-scene"
-      eyebrow="Our beautiful moments"
-      title="Our Little Story"
-      description="Every picture holds a piece of our story."
+      eyebrow="Sedikit cerita tentang kita"
+      title="Cerita Kita ♡"
+      description="Ada cerita kecil di balik setiap foto kita."
     >
       <div className="scrapbook">
         <div className="scrapbook__tape tape-left" />
@@ -16,11 +16,14 @@ export default function MemoriesScene({ memories }) {
 
         <div className="scrapbook__heading">
           <span>✿</span>
+
           <p>
-            A collection of moments that
-            will always have a special place
-            in my heart.
+            Aku nyimpen beberapa momen kita
+            di sini. Mungkin sederhana,
+            tapi semuanya punya cerita yang
+            pengen aku inget terus.
           </p>
+
           <span>✿</span>
         </div>
 
@@ -34,7 +37,7 @@ export default function MemoriesScene({ memories }) {
         </div>
 
         <p className="scrapbook__footer">
-          Tap the photos to discover our stories ♡
+          Coba klik fotonya, sayang ♡
         </p>
       </div>
     </SceneLayout>

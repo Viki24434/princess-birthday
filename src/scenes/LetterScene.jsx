@@ -8,9 +8,9 @@ export default function LetterScene({ letter }) {
   return (
     <SceneLayout
       className="letter-scene"
-      eyebrow="Words from my heart"
-      title="A Letter For You"
-      description="Some things are better written from the heart."
+      eyebrow="Ada sedikit cerita dari aku"
+      title="Buat Kamu, Sayang ♡"
+      description="Ada beberapa hal yang pengen aku sampein ke kamu."
     >
       {!isOpen ? (
         <div className="letter-opening">
@@ -18,24 +18,27 @@ export default function LetterScene({ letter }) {
             type="button"
             className="envelope"
             onClick={() => setIsOpen(true)}
-            aria-label="Buka surat cinta"
+            aria-label="Buka surat buat kamu"
           >
             <div className="envelope__back" />
             <div className="envelope__flap" />
             <div className="envelope__front" />
+
             <div className="envelope__seal">
               ♡
             </div>
           </button>
 
-          <p>Tap the envelope to read my letter ♡</p>
+          <p>
+            Coba buka amplopnya, sayang ♡
+          </p>
 
           <button
             className="btn btn--primary"
             type="button"
             onClick={() => setIsOpen(true)}
           >
-            Open My Letter
+            Buka suratnya ♡
           </button>
         </div>
       ) : (
@@ -51,7 +54,9 @@ export default function LetterScene({ letter }) {
           </p>
 
           {letter.paragraphs.map((paragraph, index) => (
-            <p key={index}>{paragraph}</p>
+            <p key={index}>
+              {paragraph}
+            </p>
           ))}
 
           <div className="letter-signature">
@@ -64,7 +69,7 @@ export default function LetterScene({ letter }) {
             className="btn btn--secondary"
             onClick={() => setIsOpen(false)}
           >
-            Close Letter ♡
+            Tutup surat ♡
           </button>
         </article>
       )}

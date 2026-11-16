@@ -5,14 +5,11 @@ export default function FinalScene({
   birthday,
   onNavigate
 }) {
-  const name =
-    birthday?.recipient?.nickname || "Princess";
-
   return (
     <SceneLayout
       className="final-scene"
-      eyebrow="One last little message"
-      title={`I Love You, ${name} ♡`}
+      eyebrow="Terakhir, ada satu hal lagi"
+      title="Aku Sayang Kamu ♡"
       description={birthday?.website?.closingMessage}
     >
       <div className="final-heart">
@@ -21,17 +18,20 @@ export default function FinalScene({
 
       <div className="final-card">
         <span className="script-text">
-          Forever & Always
+          Aku dan Kamu ♡
         </span>
 
         <h2>
-          You deserve all the happiness
-          in the world.
+          Semoga kamu selalu punya
+          banyak alasan buat senyum
+          setiap harinya.
         </h2>
 
         <p>
-          Thank you for being such a
-          beautiful part of my life.
+          Makasih yaa udah jadi
+          bagian dari hidup aku.
+          Aku seneng bisa kenal sama kamu
+          dan punya banyak cerita bareng kamu.
         </p>
 
         <div className="final-card__divider">
@@ -39,7 +39,14 @@ export default function FinalScene({
         </div>
 
         <p>
-          Happy Birthday, my favorite person.
+          Selamat ulang tahun sekali lagi,
+          sayang. Semoga kita masih bisa
+          ngerayain banyak ulang tahun
+          bareng-bareng, yaa.
+        </p>
+
+        <p>
+          Aku sayang kamu. ❤️
         </p>
       </div>
 
@@ -49,7 +56,7 @@ export default function FinalScene({
           className="btn btn--secondary"
           onClick={() => onNavigate("memories")}
         >
-          Our Memories
+          Lihat Kenangan Kita
         </button>
 
         <button
@@ -57,7 +64,7 @@ export default function FinalScene({
           className="btn btn--primary"
           onClick={() => onNavigate("welcome")}
         >
-          Experience Again ♡
+          Ulang dari Awal ♡
         </button>
       </div>
     </SceneLayout>
