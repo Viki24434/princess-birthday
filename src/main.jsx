@@ -1,19 +1,12 @@
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { registerSW } from "virtual:pwa-register";
 import App from "./App";
-import "./styles/global.css";
 
-registerSW({
-  immediate: true,
-  onOfflineReady() {
-    console.log("Website siap digunakan offline");
-  },
-  onNeedRefresh() {
-    console.log("Versi baru tersedia");
-  }
-});
+import "./styles/variables.css";
+import "./styles/global.css";
+import "./styles/components.css";
+import "./styles/responsive.css";
 
 ReactDOM.createRoot(
   document.getElementById("root")

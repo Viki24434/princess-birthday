@@ -1,0 +1,217 @@
+
+/* ========================================
+   MOBILE FIRST
+======================================== */
+
+.app-footer-note {
+  order: 3;
+}
+
+@media (max-width: 767px) {
+  .app-shell {
+    width: min(calc(100% - 28px), 480px);
+  }
+
+  .app-header {
+    padding: 18px 0;
+  }
+
+  .header-label {
+    display: none;
+  }
+
+  .scene {
+    padding: 25px 0 35px;
+  }
+
+  .scene__inner {
+    gap: 24px;
+  }
+
+  .scene__title {
+    font-size: clamp(32px, 8vw, 44px);
+  }
+
+  .scene__description {
+    font-size: 13px;
+  }
+
+  .scene__content {
+    gap: 24px;
+  }
+
+  .welcome-illustration {
+    height: 260px;
+  }
+
+  .scene-progress {
+    gap: 8px;
+  }
+
+  .progress-dot {
+    width: 28px;
+    height: 28px;
+  }
+
+  .bottom-navigation {
+    position: relative;
+    padding: 15px 0;
+    padding-bottom:
+      max(15px, env(safe-area-inset-bottom));
+  }
+
+  .bottom-navigation .btn {
+    min-height: 44px;
+    padding-inline: 17px;
+  }
+
+  .scrapbook {
+    padding: 38px 16px;
+  }
+
+  .polaroid-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+    gap: 22px 14px;
+  }
+
+  .polaroid {
+    width: min(100%, 200px);
+  }
+
+  .polaroid__front {
+    padding: 8px 8px 20px;
+  }
+
+  .polaroid__caption {
+    font-size: 17px;
+  }
+
+  .polaroid__back {
+    padding: 10px;
+    gap: 5px;
+  }
+
+  .polaroid__back h3 {
+    font-size: 15px;
+  }
+
+  .polaroid__back p {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+
+  .scrapbook__heading {
+    margin-bottom: 24px;
+    gap: 8px;
+  }
+
+  .scrapbook__heading p {
+    font-size: 13px;
+  }
+
+  .scrapbook__footer {
+    font-size: 22px;
+  }
+
+  .photobooth-card {
+    padding: 20px 14px;
+  }
+
+  .frame-options {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .letter-paper {
+    padding: 30px 22px;
+  }
+
+  .letter-paper h2 {
+    font-size: 26px;
+  }
+
+  .letter-paper p {
+    font-size: 14px;
+  }
+
+  .final-card {
+    padding: 30px 22px;
+  }
+
+  .final-actions {
+    width: 100%;
+  }
+
+  .final-actions .btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 359px) {
+  .brand__text {
+    font-size: 12px;
+  }
+
+  .progress-dot {
+    width: 25px;
+    height: 25px;
+  }
+
+  .scene-progress {
+    gap: 6px;
+  }
+
+  .polaroid-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .polaroid {
+    width: min(100%, 220px);
+  }
+
+  .navigation-caption {
+    font-size: 10px;
+  }
+
+  .bottom-navigation .btn {
+    padding-inline: 11px;
+    font-size: 11px;
+  }
+}
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .app-shell {
+    width: min(calc(100% - 60px), 900px);
+  }
+
+  .polaroid-grid {
+    gap: 22px;
+  }
+}
+
+/* ========================================
+   DESKTOP
+======================================== */
+
+@media (min-width: 1024px) {
+  .scene {
+    padding: 55px 0 70px;
+  }
+
+  .scene__header {
+    gap: 16px;
+  }
+
+  .welcome-illustration {
+    transform: scale(1.1);
+  }
+
+  .scrapbook {
+    padding: 55px;
+  }
+}

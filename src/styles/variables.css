@@ -1,0 +1,53 @@
+
+:root {
+  --pink-50: #fff6f8;
+  --pink-100: #fdeaf1;
+  --pink-200: #f8d7e4;
+  --pink-300: #efb5ce;
+  --pink-400: #efa6c4;
+  --pink-500: #d884aa;
+  --pink-600: #b96a8d;
+  --pink-700: #94506f;
+
+  --cream-50: #fffcf7;
+  --cream-100: #f9f0e4;
+  --cream-200: #f5e8da;
+
+  --gold: #c6a16a;
+
+  --text-primary: #70475c;
+  --text-secondary: #9a7487;
+  --text-light: #ffffff;
+
+  --bg-primary: var(--pink-50);
+  --bg-card: rgba(255, 255, 255, 0.85);
+
+  --border-soft: rgba(185, 106, 141, 0.17);
+
+  --shadow-soft:
+    0 12px 35px rgba(185, 106, 141, 0.11);
+
+  --shadow-card:
+    0 20px 60px rgba(185, 106, 141, 0.14);
+
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-xl: 36px;
+  --radius-pill: 999px;
+
+  --content-width: 1100px;
+  --scene-width: 920px;
+
+  --font-body:
+    "Trebuchet MS", "Segoe UI", sans-serif;
+
+  --font-heading:
+    Georgia, "Times New Roman", serif;
+
+  --font-script:
+    "Brush Script MT", cursive;
+
+  --transition-fast: 180ms ease;
+  --transition-medium: 350ms ease;
+}

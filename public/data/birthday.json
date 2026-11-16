@@ -1,0 +1,32 @@
+
+{
+  "recipient": {
+    "name": "Princess",
+    "nickname": "Sayang",
+    "birthday": "2026-12-20"
+  },
+  "sender": {
+    "name": "Your Favorite Person"
+  },
+  "website": {
+    "title": "A Little Surprise For You",
+    "subtitle": "Made with all my love, just for you.",
+    "welcomeMessage": "Today is all about you, my princess.",
+    "closingMessage": "May every beautiful dream of yours come true."
+  },
+  "theme": {
+    "name": "pink-princess-scrapbook",
+    "primaryColor": "#EFA6C4",
+    "backgroundColor": "#FFF6F8"
+  },
+  "cake": {
+    "candles": 3,
+    "message": "Close your eyes and make a wish."
+  },
+  "photoBooth": {
+    "title": "Birthday Photo Booth",
+    "defaultFrame": "princess",
+    "countdown": 3,
+    "captureCount": 4
+  }
+}

@@ -1,122 +1,192 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useEffect, useState } from "react";
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
+import useBirthdayData from "./hooks/useBirthdayData";
+
+import DecorativeBackground from "./components/DecorativeBackground";
+import SceneNavigation, {
+  scenes
+} from "./components/SceneNavigation";
+
+import WelcomeScene from "./scenes/WelcomeScene";
+import CakeScene from "./scenes/CakeScene";
+import MemoriesScene from "./scenes/MemoriesScene";
+import PhotoBoothScene from "./scenes/PhotoBoothScene";
+import LetterScene from "./scenes/LetterScene";
+import FinalScene from "./scenes/FinalScene";
+
+export default function App() {
+  const {
+    birthday,
+    memories,
+    letter,
+    loading,
+    error
+  } = useBirthdayData();
+
+  const [currentScene, setCurrentScene] =
+    useState("welcome");
+
+  const [unlockedScenes, setUnlockedScenes] =
+    useState(["welcome"]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }, [currentScene]);
+
+  function navigateTo(sceneId) {
+    const targetIndex = scenes.findIndex(
+      scene => scene.id === sceneId
+    );
+
+    const currentIndex = scenes.findIndex(
+      scene => scene.id === currentScene
+    );
+
+    if (targetIndex === -1) return;
+
+    // Boleh membuka scene yang sudah pernah dikunjungi
+    // atau tepat satu scene berikutnya.
+    if (
+      targetIndex > currentIndex + 1 &&
+      !unlockedScenes.includes(sceneId)
+    ) {
+      return;
+    }
+
+    setUnlockedScenes(previous => {
+      if (previous.includes(sceneId)) {
+        return previous;
+      }
+
+      return [...previous, sceneId];
+    });
+
+    setCurrentScene(sceneId);
+  }
+
+  function goNext() {
+    const index = scenes.findIndex(
+      scene => scene.id === currentScene
+    );
+
+    const next = scenes[index + 1];
+
+    if (next) {
+      navigateTo(next.id);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="app-status">
+        <span className="loading-heart">♡</span>
+        <h1>Preparing your surprise...</h1>
+        <p>Made with love, just for you.</p>
+      </div>
+    );
+  }
+
+  if (error || !birthday || !letter) {
+    return (
+      <div className="app-status">
+        <h1>Oops! ♡</h1>
+        <p>
+          {error || "Birthday data could not be loaded."}
+        </p>
+
         <button
           type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          className="btn btn--primary"
+          onClick={() => window.location.reload()}
         >
-          Count is {count}
+          Try Again
         </button>
-      </section>
+      </div>
+    );
+  }
 
-      <div className="ticks"></div>
+  const sceneContent = {
+    welcome: (
+      <WelcomeScene
+        birthday={birthday}
+        onContinue={goNext}
+      />
+    ),
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
+    cake: (
+      <CakeScene birthday={birthday} />
+    ),
+
+    memories: (
+      <MemoriesScene memories={memories} />
+    ),
+
+    photobooth: (
+      <PhotoBoothScene birthday={birthday} />
+    ),
+
+    letter: (
+      <LetterScene letter={letter} />
+    ),
+
+    final: (
+      <FinalScene
+        birthday={birthday}
+        onNavigate={navigateTo}
+      />
+    )
+  };
+
+  return (
+    <div className="birthday-app">
+      <DecorativeBackground />
+
+      <div className="app-shell">
+        <header className="app-header">
+          <button
+            type="button"
+            className="brand"
+            onClick={() => navigateTo("welcome")}
+            aria-label="Kembali ke halaman utama"
+          >
+            <span className="brand__icon">♡</span>
+
+            <span className="brand__text">
+              Princess Birthday
+            </span>
+          </button>
+
+          <span className="header-label">
+            Made with Love ✦
+          </span>
+        </header>
+
+        <SceneNavigation
+          currentScene={currentScene}
+          unlockedScenes={unlockedScenes}
+          onNavigate={navigateTo}
+        />
+
+        <main
+          className="app-main"
+          id="main-content"
+        >
+          <div
+            key={currentScene}
+            className="scene-transition"
+          >
+            {sceneContent[currentScene]}
+          </div>
+        </main>
+
+        <div className="app-footer-note">
+          A little love, in every detail ♡
         </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </div>
+    </div>
+  );
 }
-
-export default App

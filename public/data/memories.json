@@ -1,0 +1,27 @@
+
+[
+  {
+    "id": "memory-01",
+    "title": "Our First Moment",
+    "date": "Our beginning",
+    "description": "A beautiful beginning of our story.",
+    "image": "images/memories/memory-01.jpg",
+    "rotation": -5
+  },
+  {
+    "id": "memory-02",
+    "title": "Sweet Memories",
+    "date": "A special day",
+    "description": "Every little moment with you means so much.",
+    "image": "images/memories/memory-02.jpg",
+    "rotation": 4
+  },
+  {
+    "id": "memory-03",
+    "title": "My Favorite Person",
+    "date": "Forever us",
+    "description": "You are my favorite part of every day.",
+    "image": "images/memories/memory-03.jpg",
+    "rotation": -3
+  }
+]
