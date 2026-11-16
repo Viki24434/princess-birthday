@@ -1,79 +1,121 @@
 
-import { useState } from "react";
-import SceneLayout from "../components/SceneLayout";
-import GiftBox from "../components/GiftBox";
+const scenes = [
+  {
+    id: "welcome",
+    label: "Pembuka"
+  },
+  {
+    id: "cake",
+    label: "Kue Ulang Tahun"
+  },
+  {
+    id: "memories",
+    label: "Kenangan Kita"
+  },
+  {
+    id: "photobooth",
+    label: "Foto-Foto"
+  },
+  {
+    id: "letter",
+    label: "Surat Buat Kamu"
+  },
+  {
+    id: "final",
+    label: "Penutup"
+  }
+];
 
-export default function WelcomeScene({
-  onContinue
+export default function SceneNavigation({
+  currentScene,
+  unlockedScenes = [],
+  onNavigate
 }) {
-  const [giftOpened, setGiftOpened] = useState(false);
+  const currentIndex = scenes.findIndex(
+    (scene) => scene.id === currentScene
+  );
+
+  const previousScene = scenes[currentIndex - 1];
+  const nextScene = scenes[currentIndex + 1];
 
   return (
-    <SceneLayout
-      className="welcome-scene"
-      eyebrow="Ada sesuatu buat kamu"
-      title={
-        giftOpened
-          ? "Selamat ulang tahun, sayang ♡"
-          : "Hai, sayang... ♡"
-      }
-      description={
-        giftOpened
-          ? "Hehe, akhirnya dibuka juga."
-          : "Aku bikin sesuatu buat kamu, nih."
-      }
-    >
-      {!giftOpened ? (
-        <>
-          <GiftBox
-            onOpened={() => setGiftOpened(true)}
-          />
+    <>
+      {/* Navigasi progres halaman */}
+      <nav
+        className="scene-progress"
+        aria-label="Perjalanan kejutan ulang tahun"
+      >
+        {scenes.map((scene, index) => {
+          const isActive = currentScene === scene.id;
 
-          <div className="scene-message">
-            <span className="script-text">
-              Khusus buat kamu ♡
-            </span>
+          const isUnlocked = unlockedScenes.includes(
+            scene.id
+          );
 
-            <p>
-              Sebenernya sederhana aja, tapi aku
-              bikinnya khusus buat kamu.
-              Semoga kamu suka, yaa.
-            </p>
-          </div>
+          return (
+            <button
+              key={scene.id}
+              type="button"
+              className={[
+                "progress-dot",
+                isActive ? "is-active" : "",
+                isUnlocked ? "is-unlocked" : ""
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              disabled={!isUnlocked}
+              onClick={() => onNavigate(scene.id)}
+              aria-label={`Buka halaman ${scene.label}`}
+              aria-current={
+                isActive ? "step" : undefined
+              }
+              title={scene.label}
+            >
+              <span>{index + 1}</span>
+            </button>
+          );
+        })}
+      </nav>
 
-          <p className="gift-instruction">
-            Coba ketuk kadonya, sayang ♡
-          </p>
-        </>
-      ) : (
-        <div className="gift-reveal">
-          <div
-            className="gift-reveal__heart"
-            aria-hidden="true"
-          >
-            ♡
-          </div>
+      {/* Tombol navigasi bawah */}
+      <footer className="bottom-navigation">
+        <button
+          type="button"
+          className="btn btn--secondary"
+          disabled={!previousScene}
+          onClick={() => {
+            if (previousScene) {
+              onNavigate(previousScene.id);
+            }
+          }}
+        >
+          ← Kembali
+        </button>
 
-          <p>
-            Hari ini kan hari spesial kamu.
-            Jadi aku pengen bikin sesuatu
-            yang bisa kamu inget nantinya.
-          </p>
+        <span className="navigation-caption">
+          {currentIndex + 1} / {scenes.length}
+        </span>
 
-          <p>
-            Masih ada kejutan kecil lainnya,
-            lanjut yuk? ❤️
-          </p>
-
+        {nextScene ? (
           <button
             type="button"
-            className="btn btn--primary btn--large"
-            onClick={onContinue}
+            className="btn btn--primary"
+            onClick={() => onNavigate(nextScene.id)}
           >
-            Lanjut, yuk ♡
+            Lanjut →
           </button>
-        </div>
-      )}
-    </SceneLayout>
+        ) : (
+          <button
+            type="button"
+            className="btn btn--primary"
+            onClick={() => onNavigate("welcome")}
+          >
+            Ulang Lagi ♡
+          </button>
+        )}
+      </footer>
+    </>
   );
 }
+
+export { scenes };
