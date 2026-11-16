@@ -1,98 +1,79 @@
 
-const scenes = [
-  { id: "welcome", label: "Welcome" },
-  { id: "cake", label: "Cake" },
-  { id: "memories", label: "Memories" },
-  { id: "photobooth", label: "Photo" },
-  { id: "letter", label: "Letter" },
-  { id: "final", label: "Final" }
-];
+import { useState } from "react";
+import SceneLayout from "../components/SceneLayout";
+import GiftBox from "../components/GiftBox";
 
-export default function SceneNavigation({
-  currentScene,
-  unlockedScenes,
-  onNavigate
+export default function WelcomeScene({
+  onContinue
 }) {
-  const currentIndex = scenes.findIndex(
-    scene => scene.id === currentScene
-  );
-
-  const previous = scenes[currentIndex - 1];
-  const next = scenes[currentIndex + 1];
+  const [giftOpened, setGiftOpened] = useState(false);
 
   return (
-    <>
-      <nav
-        className="scene-progress"
-        aria-label="Birthday journey"
-      >
-        {scenes.map((scene, index) => {
-          const unlocked =
-            unlockedScenes.includes(scene.id);
+    <SceneLayout
+      className="welcome-scene"
+      eyebrow="Ada sesuatu buat kamu"
+      title={
+        giftOpened
+          ? "Selamat ulang tahun, sayang ♡"
+          : "Hai, sayang... ♡"
+      }
+      description={
+        giftOpened
+          ? "Hehe, akhirnya dibuka juga."
+          : "Aku bikin sesuatu buat kamu, nih."
+      }
+    >
+      {!giftOpened ? (
+        <>
+          <GiftBox
+            onOpened={() => setGiftOpened(true)}
+          />
 
-          return (
-            <button
-              key={scene.id}
-              type="button"
-              className={[
-                "progress-dot",
-                currentScene === scene.id
-                  ? "is-active"
-                  : "",
-                unlocked ? "is-unlocked" : ""
-              ].join(" ")}
-              disabled={!unlocked}
-              onClick={() => onNavigate(scene.id)}
-              aria-label={`Buka ${scene.label}`}
-              aria-current={
-                currentScene === scene.id
-                  ? "step"
-                  : undefined
-              }
-              title={scene.label}
-            >
-              <span>{index + 1}</span>
-            </button>
-          );
-        })}
-      </nav>
+          <div className="scene-message">
+            <span className="script-text">
+              Khusus buat kamu ♡
+            </span>
 
-      <footer className="bottom-navigation">
-        <button
-          type="button"
-          className="btn btn--secondary"
-          disabled={!previous}
-          onClick={() =>
-            previous && onNavigate(previous.id)
-          }
-        >
-          ← Back
-        </button>
+            <p>
+              Sebenernya sederhana aja, tapi aku
+              bikinnya khusus buat kamu.
+              Semoga kamu suka, yaa.
+            </p>
+          </div>
 
-        <span className="navigation-caption">
-          {currentIndex + 1} / {scenes.length}
-        </span>
+          <p className="gift-instruction">
+            Coba ketuk kadonya, sayang ♡
+          </p>
+        </>
+      ) : (
+        <div className="gift-reveal">
+          <div
+            className="gift-reveal__heart"
+            aria-hidden="true"
+          >
+            ♡
+          </div>
 
-        {next ? (
+          <p>
+            Hari ini kan hari spesial kamu.
+            Jadi aku pengen bikin sesuatu
+            yang bisa kamu inget nantinya.
+          </p>
+
+          <p>
+            Masih ada kejutan kecil lainnya,
+            lanjut yuk? ❤️
+          </p>
+
           <button
             type="button"
-            className="btn btn--primary"
-            onClick={() => onNavigate(next.id)}
+            className="btn btn--primary btn--large"
+            onClick={onContinue}
           >
-            Continue →
+            Lanjut, yuk ♡
           </button>
-        ) : (
-          <button
-            type="button"
-            className="btn btn--primary"
-            onClick={() => onNavigate("welcome")}
-          >
-            Replay ♡
-          </button>
-        )}
-      </footer>
-    </>
+        </div>
+      )}
+    </SceneLayout>
   );
 }
-
-export { scenes };

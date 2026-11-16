@@ -902,3 +902,91 @@
   color: var(--pink-600);
   animation: heart-pulse 1.5s infinite;
 }
+
+
+/* ========================================
+   INTERACTIVE GIFT OPENING
+======================================== */
+
+.gift-container {
+  position: relative;
+  width: 320px;
+  max-width: 100%;
+  height: 290px;
+  display: grid;
+  place-items: center;
+}
+
+.gift-interactive {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.gift-interactive:disabled {
+  cursor: default;
+  opacity: 1;
+}
+
+.gift-glow {
+  position: absolute;
+  z-index: 0;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #fff2b3;
+  filter: blur(35px);
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+}
+
+.gift-instruction {
+  color: var(--pink-600);
+  font-size: 13px;
+  text-align: center;
+  animation: instruction-pulse 2s infinite;
+}
+
+.gift-reveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 480px;
+  text-align: center;
+  animation: scene-enter 700ms ease both;
+}
+
+.gift-reveal__heart {
+  display: grid;
+  place-items: center;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: var(--pink-200);
+  color: var(--pink-600);
+  font-size: 95px;
+  box-shadow: var(--shadow-soft);
+  animation: heart-pulse 2.5s infinite;
+}
+
+.gift-reveal p {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+@keyframes instruction-pulse {
+  0%, 100% {
+    opacity: 0.65;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
