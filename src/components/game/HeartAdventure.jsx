@@ -65,15 +65,62 @@ const partner = {
   h: 42
 };
 
+
+const spriteFiles = {
+  cewekKanan: "cewek/kanan.png",
+  cewekKiri: "cewek/kiri.png",
+  cewekNormal: "cewek/normal.png",
+  cewekSenang: "cewek/senang.png",
+
+  cowokKanan: "cowok/kanan.png",
+  cowokKiri: "cowok/kiri.png",
+  cowokNormal: "cowok/normal.png",
+  cowokSenang: "cowok/senang.png"
+};
+
+function loadHeadSprites() {
+  const sprites = {};
+
+  Object.entries(spriteFiles).forEach(([key, file]) => {
+    const image = new Image();
+
+    image.src =
+      `${import.meta.env.BASE_URL}game/characters/${file}`;
+
+    image.onerror = () => {
+      console.warn("Gagal memuat sprite:", file);
+    };
+
+    sprites[key] = image;
+  });
+
+  return sprites;
+}
+
+function drawHead(ctx, image, x, y, width, height) {
+  if (
+    image &&
+    image.complete &&
+    image.naturalWidth > 0
+  ) {
+    ctx.drawImage(image, x, y, width, height);
+    return true;
+  }
+
+  return false;
+}
+
+
 function createGame() {
   return {
     player: {
-      x: 55,
-      y: GROUND_Y - PLAYER_HEIGHT,
-      vx: 0,
-      vy: 0,
-      onGround: true,
-      onLadder: false
+    x: 55,
+    y: GROUND_Y - PLAYER_HEIGHT,
+    vx: 0,
+    vy: 0,
+    onGround: true,
+    onLadder: false,
+    facing: "kanan"
     },
     checkpoint: 55,
     collected: new Set(),
@@ -127,59 +174,279 @@ function drawLadder(ctx, ladder) {
   }
 }
 
-function drawPlayer(ctx, player) {
-  // telinga
-  ctx.fillStyle = "#FFF9FC";
-  ctx.fillRect(player.x + 5, player.y - 16, 8, 22);
-  ctx.fillRect(player.x + 18, player.y - 16, 8, 22);
 
-  ctx.fillStyle = "#F4BDD2";
-  ctx.fillRect(player.x + 8, player.y - 10, 3, 12);
-  ctx.fillRect(player.x + 21, player.y - 10, 3, 12);
+function drawPlayer(ctx, player, time, sprites) {
+  const x = player.x;
+  const y = player.y;
 
-  // badan
-  ctx.fillStyle = "#FFFDFE";
-  ctx.fillRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+  const isWalking =
+    Math.abs(player.vx) > 0.1 &&
+    player.onGround;
 
-  // mata
-  ctx.fillStyle = "#D884AA";
-  ctx.fillRect(player.x + 7, player.y + 12, 4, 4);
-  ctx.fillRect(player.x + 19, player.y + 12, 4, 4);
+  const isClimbing = player.onLadder;
 
-  // pipi + kaki
-  ctx.fillStyle = "#F5B7CF";
-  ctx.fillRect(player.x + 10, player.y + 24, 10, 5);
-  ctx.fillRect(player.x + 3, player.y + 36, 10, 5);
-  ctx.fillRect(player.x + 17, player.y + 36, 10, 5);
+  const isJumping =
+    !player.onGround &&
+    !player.onLadder;
+
+  const walkFrame = Math.sin(time / 105);
+
+  const legOffset = isClimbing
+    ? Math.sin(time / 150) * 4
+    : isWalking
+      ? walkFrame * 5
+      : 0;
+
+  const armOffset = isClimbing
+    ? Math.sin(time / 150) * 5
+    : isWalking
+      ? walkFrame * 4
+      : 0;
+
+  ctx.save();
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  // =========================
+  // KAKI DAN SEPATU
+  // =========================
+
+  ctx.strokeStyle = "#F2D8C8";
+  ctx.lineWidth = 6;
+
+  if (isJumping) {
+    // Kaki sedikit terangkat saat melompat
+    ctx.beginPath();
+    ctx.moveTo(x + 11, y + 29);
+    ctx.lineTo(x + 7, y + 37);
+    ctx.moveTo(x + 21, y + 29);
+    ctx.lineTo(x + 25, y + 37);
+    ctx.stroke();
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(x + 11, y + 29);
+    ctx.lineTo(x + 11 + legOffset, y + 39);
+    ctx.moveTo(x + 21, y + 29);
+    ctx.lineTo(x + 21 - legOffset, y + 39);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(
+    x + 5 + legOffset,
+    y + 37,
+    12,
+    5
+  );
+  ctx.fillRect(
+    x + 17 - legOffset,
+    y + 37,
+    12,
+    5
+  );
+
+  // =========================
+  // BADAN DAN BAJU PINK
+  // =========================
+
+  ctx.fillStyle = "#F1A3C3";
+  ctx.beginPath();
+  ctx.roundRect(
+    x + 5,
+    y + 16,
+    22,
+    19,
+    5
+  );
+  ctx.fill();
+
+  // Detail baju
+  ctx.fillStyle = "#FFE4EE";
+  ctx.fillRect(x + 14, y + 20, 4, 4);
+
+  // =========================
+  // TANGAN
+  // =========================
+
+  ctx.strokeStyle = "#F1A3C3";
+  ctx.lineWidth = 6;
+
+  ctx.beginPath();
+
+  if (isJumping) {
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 2, y + 12);
+
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 30, y + 12);
+  } else if (isClimbing) {
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 5, y + 12 + armOffset);
+
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 27, y + 12 - armOffset);
+  } else {
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 4, y + 29 + armOffset);
+
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 28, y + 29 - armOffset);
+  }
+
+  ctx.stroke();
+
+  // =========================
+  // KEPALA KARAKTER
+  // =========================
+
+  let head;
+
+  if (player.facing === "kiri") {
+    head = sprites.cewekKiri;
+  } else {
+    head = sprites.cewekKanan;
+  }
+
+  // Kepala digambar terakhir agar berada
+  // di depan badan dan bagian leher.
+  const headX = x - 7;
+  const headY = y - 18;
+
+  const headWidth = 46;
+  const headHeight = 43;
+
+  const loaded = drawHead(
+    ctx,
+    head,
+    headX,
+    headY,
+    headWidth,
+    headHeight
+  );
+
+  // Kepala sementara jika PNG belum termuat
+  if (!loaded) {
+    ctx.fillStyle = "#FFE2D2";
+    ctx.beginPath();
+    ctx.arc(
+      x + 16,
+      y + 5,
+      17,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
+
+  ctx.restore();
 }
 
-function drawPartner(ctx) {
-  // rambut
-  ctx.fillStyle = "#6A4A5D";
-  ctx.fillRect(partner.x + 5, partner.y - 8, 18, 14);
 
-  // kepala
-  ctx.fillStyle = "#FFE5D8";
-  ctx.fillRect(partner.x + 6, partner.y + 2, 16, 13);
 
-  // badan dress
-  ctx.fillStyle = "#EFA6C4";
-  ctx.fillRect(partner.x + 4, partner.y + 15, 20, 22);
+function drawPartner(ctx, time, sprites) {
+  const x = partner.x;
+  const y = partner.y;
 
-  // kaki
-  ctx.fillStyle = "#FFE5D8";
-  ctx.fillRect(partner.x + 8, partner.y + 37, 4, 5);
-  ctx.fillRect(partner.x + 16, partner.y + 37, 4, 5);
+  const wave = Math.sin(time / 240) * 5;
 
-  // hati kecil
-  drawHeart(ctx, partner.x + 14, partner.y - 10, 12, "#E774A4");
+  ctx.save();
+  ctx.lineCap = "round";
+
+  // =========================
+  // KAKI DAN SEPATU
+  // =========================
+
+  ctx.fillStyle = "#D6BBA7";
+
+  ctx.fillRect(x + 7, y + 29, 6, 11);
+  ctx.fillRect(x + 18, y + 29, 6, 11);
+
+  ctx.fillStyle = "#3B3443";
+
+  ctx.fillRect(x + 4, y + 38, 11, 5);
+  ctx.fillRect(x + 17, y + 38, 11, 5);
+
+  // =========================
+  // BADAN BAJU HITAM
+  // =========================
+
+  ctx.fillStyle = "#302B35";
+
+  ctx.beginPath();
+  ctx.roundRect(
+    x + 4,
+    y + 15,
+    24,
+    20,
+    5
+  );
+  ctx.fill();
+
+  // Kerah
+  ctx.fillStyle = "#4F4753";
+
+  ctx.beginPath();
+  ctx.moveTo(x + 10, y + 17);
+  ctx.lineTo(x + 16, y + 22);
+  ctx.lineTo(x + 21, y + 17);
+  ctx.fill();
+
+  // =========================
+  // TANGAN MELAMBAI
+  // =========================
+
+  ctx.strokeStyle = "#302B35";
+  ctx.lineWidth = 6;
+
+  ctx.beginPath();
+
+  // Tangan kiri
+  ctx.moveTo(x + 6, y + 19);
+  ctx.lineTo(x + 2, y + 30);
+
+  // Tangan kanan melambai
+  ctx.moveTo(x + 25, y + 19);
+  ctx.lineTo(x + 32 + wave, y + 7);
+
+  ctx.stroke();
+
+  // =========================
+  // KEPALA COWOK
+  // =========================
+
+  const head = sprites.cowokSenang;
+
+  const loaded = drawHead(
+    ctx,
+    head,
+    x - 7,
+    y - 18,
+    44,
+    42
+  );
+
+  if (!loaded) {
+    ctx.fillStyle = "#FFE0D0";
+    ctx.beginPath();
+    ctx.arc(
+      x + 15,
+      y + 5,
+      17,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
+
+  ctx.restore();
 }
+
 
 function getCameraX(playerX) {
   return Math.max(0, Math.min(playerX - 230, WORLD_WIDTH - WIDTH));
 }
 
-function drawWorld(ctx, game, time) {
+function drawWorld(ctx, game, time, sprites) {
   const player = game.player;
   const cameraX = getCameraX(player.x);
 
@@ -306,7 +573,7 @@ function drawWorld(ctx, game, time) {
   ctx.fillRect(castleX + 134, castleY + 67, 18, 24);
 
   // pasangan di akhir
-  drawPartner(ctx);
+    drawPartner(ctx, time, sprites);
 
   // bendera kecil di kastil
   ctx.fillStyle = "#B96A8D";
@@ -319,7 +586,7 @@ function drawWorld(ctx, game, time) {
   ctx.fill();
 
   // player
-  drawPlayer(ctx, player);
+    drawPlayer(ctx, player, time, sprites);
 
   ctx.restore();
 }
@@ -339,6 +606,7 @@ function getLadderForPlayer(player) {
 export default function HeartAdventure({ onComplete }) {
   const canvasRef = useRef(null);
   const gameRef = useRef(createGame());
+  const spritesRef = useRef({});
 
   const controlsRef = useRef({
     left: false,
@@ -383,6 +651,14 @@ export default function HeartAdventure({ onComplete }) {
   function releaseControl(key) {
     controlsRef.current[key] = false;
   }
+
+    useEffect(() => {
+    spritesRef.current = loadHeadSprites();
+
+    return () => {
+        spritesRef.current = {};
+    };
+    }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -486,6 +762,12 @@ export default function HeartAdventure({ onComplete }) {
       });
 
       player.vx = controls.right ? 5.2 : controls.left ? -5.2 : 0;
+
+    if (player.vx > 0) {
+    player.facing = "kanan";
+    } else if (player.vx < 0) {
+    player.facing = "kiri";
+    }
 
       const ladder = getLadderForPlayer(player);
       const wantsLadder = ladder && (controls.up || controls.down);
@@ -631,7 +913,12 @@ export default function HeartAdventure({ onComplete }) {
         update(delta);
       }
 
-      drawWorld(ctx, gameRef.current, time);
+        drawWorld(
+        ctx,
+        gameRef.current,
+        time,
+        spritesRef.current
+        );
       frameId = requestAnimationFrame(frame);
     }
 
