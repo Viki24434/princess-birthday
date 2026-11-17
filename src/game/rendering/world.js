@@ -28,6 +28,7 @@ import { drawFireworks } from "../effects/fireworks";
 import {
   drawBackgroundMemories
 } from "./memories";
+import { drawCheckpoints } from "./checkpoints";
 
 // =====================================
 // LAYER KHUSUS UNTUK KEDUA KARAKTER
@@ -141,6 +142,9 @@ export function drawWorld(ctx, game, time, sprites) {
 
     // Tanah, jurang, platform, tangga
     drawTerrain(ctx);
+
+    // Bendera checkpoint
+    drawCheckpoints(ctx, game, time);
 
   // Hati yang dikumpulkan
   drawCollectibles(ctx, game, time);

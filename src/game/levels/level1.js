@@ -282,3 +282,22 @@ export const backgroundMemories = [
     rotation: 0.06
   }
 ];
+
+
+export const CHECKPOINTS = [
+  {
+    x: 1600,
+    respawnX: 1560,
+    message: "Yeay, makin dekat sama kamu! ♡"
+  },
+  {
+    x: 2150,
+    respawnX: 2100,
+    message: "Semangat yaa, sayang! Dikit lagi ♡"
+  },
+  {
+    x: 2850,
+    respawnX: 2850,
+    message: "Akhirnya kastilnya udah dekat! ♡"
+  }
+];

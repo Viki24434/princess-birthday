@@ -8,7 +8,8 @@ import {
 
 import {
   heartItems,
-  FLAG
+  FLAG,
+  CHECKPOINTS
 } from "../levels/level1";
 
 import { overlaps } from "../engine/collision";
@@ -19,24 +20,36 @@ import { isPlayerHit } from "../entities/enemies";
 // ====================================
 
 
+
 export function updateCheckpoint(game) {
-  const x = game.player.x;
+  const playerX = game.player.x;
 
-  // Setelah berhasil melewati tangga balok
-  if (x > 2850) {
-    game.checkpoint = 2850;
-  }
+  for (const checkpoint of CHECKPOINTS) {
+    // Belum melewati checkpoint ini
+    if (playerX < checkpoint.x) {
+      continue;
+    }
 
-  // Setelah melewati bagian mob terakhir
-  else if (x > 2150) {
-    game.checkpoint = 2100;
-  }
+    // Sudah pernah diaktifkan
+    if (
+      (game.checkpoint ?? 0) >=
+      checkpoint.respawnX
+    ) {
+      continue;
+    }
 
-  // Checkpoint tengah level
-  else if (x > 1600) {
-    game.checkpoint = 1560;
+    // Simpan posisi respawn terbaru
+    game.checkpoint = checkpoint.respawnX;
+
+    // Efek visual saat checkpoint aktif
+    game.checkpointCelebration = {
+      x: checkpoint.x,
+      message: checkpoint.message,
+      startedAt: performance.now()
+    };
   }
 }
+
 
 // ====================================
 // JATUH KE JURANG
