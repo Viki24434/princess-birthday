@@ -33,12 +33,14 @@ export function createGame() {
       vy: 0,
       onGround: true,
       onLadder: false,
-      facing: "kanan"
+      facing: "depan",
+      holdingHands: false,
     },
 
     checkpoint: 55,
     collected: new Set(),
     warned: false,
+    coupleOpacity: 1,
 
     enemies: enemyTemplates.map((enemy) => ({
       ...enemy

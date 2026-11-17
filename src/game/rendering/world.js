@@ -14,22 +14,15 @@ import {
 } from "./objects";
 
 import { drawFlagPole } from "./flag";
-
-import {
-  drawCastle,
-  drawCastleStairs
-} from "./castle";
-
-import { drawFireworks } from "../effects/fireworks";
+import { drawCastle } from "./castle";
 
 import {
   drawPlayer,
-  drawPartner
+  drawPartner,
+  drawHoldingHands
 } from "./characters";
 
-// =====================================
-// KAMERA MENGIKUTI PEMAIN
-// =====================================
+import { drawFireworks } from "../effects/fireworks";
 
 function getCameraX(playerX) {
   return Math.max(
@@ -41,83 +34,88 @@ function getCameraX(playerX) {
   );
 }
 
-// =====================================
-// RENDER SELURUH DUNIA GAME
-// =====================================
-
 export function drawWorld(ctx, game, time, sprites) {
   const player = game.player;
+  const partner = game.partner;
 
   const cameraX = getCameraX(player.x);
 
-  // Background menggunakan posisi kamera
-  // tetapi belum ditranslasi
+  // Background tetap seperti sebelumnya
   drawBackground(ctx, cameraX);
 
   ctx.save();
-
-  // Menggeser dunia mengikuti karakter
   ctx.translate(-cameraX, 0);
 
-  // Tanah, platform, jurang, tangga
+  // Dunia game
   drawTerrain(ctx);
-
-  // Hati collectible
   drawCollectibles(ctx, game, time);
-
-  // Mob
   drawEnemies(ctx, game.enemies);
 
-    // Kastil
-    drawCastle(ctx);
+  // Kastil dan bendera
+  drawCastle(ctx, game);
+  drawFlagPole(ctx, game);
 
-    // Tangga menuju balkon kastil
-    drawCastleStairs(ctx);
+  // =====================================
+  // KEDUA KARAKTER + TRANSPARANSI
+  // =====================================
 
-    // Tiang bendera
-    drawFlagPole(ctx, game);
+  ctx.save();
 
-    // Cowok menggunakan posisi animasi
-    drawPartner(
-    ctx,
-    time,
-    sprites,
-    game.partner
-    );
+  ctx.globalAlpha = game.coupleOpacity ?? 1;
 
-    // Cewek
-    drawPlayer(
+  drawPlayer(
     ctx,
     player,
     time,
     sprites
-    );
+  );
 
-    // Hati kecil saat mereka bertemu
-    if (
+  drawPartner(
+    ctx,
+    time,
+    sprites,
+    partner
+  );
+
+  // Gambar tangan yang saling berpegangan
+  drawHoldingHands(
+    ctx,
+    player,
+    partner
+  );
+
+  ctx.restore();
+
+  // =====================================
+  // HATI KECIL SAAT BERTEMU / MERAYAKAN
+  // =====================================
+
+  if (
     game.finishStep === "meet" ||
     game.finishStep === "celebrate"
-    ) {
+  ) {
     const centerX =
-        (player.x + game.partner.x) / 2 + 15;
+      (player.x + partner.x) / 2 + 15;
 
     const heartY =
-        Math.min(player.y, game.partner.y) -
-        24 +
-        Math.sin(time / 240) * 4;
+      Math.min(player.y, partner.y) -
+      24 +
+      Math.sin(time / 240) * 4;
 
     drawHeart(
-        ctx,
-        centerX,
-        heartY,
-        20,
-        "#F076A8"
+      ctx,
+      centerX,
+      heartY,
+      20,
+      "#F076A8"
     );
-    }
+  }
 
-    // Kembang api digambar di atas dunia game
-    drawFireworks(ctx, game.fireworks);
+  // Kembang api
+  drawFireworks(
+    ctx,
+    game.fireworks ?? []
+  );
 
-    ctx.restore();
-
+  ctx.restore();
 }

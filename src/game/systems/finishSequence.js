@@ -9,7 +9,7 @@ import {
   FLAG,
   FINISH_WALK_X,
   CASTLE_X,
-  CASTLE_STAIRS
+  CASTLE_DOOR_X
 } from "../levels/level1";
 
 import {
@@ -19,46 +19,49 @@ import {
 
 const GROUND_PLAYER_Y = GROUND_Y - PLAYER_HEIGHT;
 
-const PAIR_GAP = 42;
-const TOGETHER_SPEED = 2.4;
+const PAIR_GAP = 36;
+const WALK_SPEED = 2.4;
 
 const MEET_DURATION = 45;
+const ENTER_DURATION = 50;
+const APPEAR_DURATION = 65;
 const CELEBRATION_DURATION = 260;
 
-// =====================================
-// POSISI KARAKTER DI TANGGA KASTIL
-// =====================================
+// Titik saat pasangan masuk ke pintu
+const DOOR_TARGET_X = CASTLE_DOOR_X - 14;
 
-function getCastleStairY(x) {
-  const {
-    startX,
-    endX,
-    steps,
-    stepHeight
-  } = CASTLE_STAIRS;
+// Posisi di balkon atas kastil
+const BALCONY_PLAYER_X = CASTLE_X + 70;
+const BALCONY_PLAYER_Y = 170 - PLAYER_HEIGHT;
 
-  const progress = Math.max(
-    0,
-    Math.min(1, (x - startX) / (endX - startX))
-  );
-
-  const currentStep = Math.min(
-    steps,
-    Math.floor(progress * steps + 0.000001)
-  );
-
-  return GROUND_PLAYER_Y - currentStep * stepHeight;
+function moveTowards(current, target, speed) {
+  return current < target
+    ? Math.min(current + speed, target)
+    : Math.max(current - speed, target);
 }
 
-// =====================================
-// MEMULAI ANIMASI AKHIR
-// =====================================
+function startStep(game, step) {
+  game.finishStep = step;
+  game.finishTimer = 0;
+}
+
+function setHoldingHands(game, holding) {
+  game.player.holdingHands = holding;
+  game.partner.holdingHands = holding;
+}
+
+function stopPair(game) {
+  game.player.vx = 0;
+  game.partner.vx = 0;
+}
 
 export function beginFinishSequence(game) {
   const player = game.player;
 
-  game.finishStep = "slide";
-  game.finishTimer = 0;
+  startStep(game, "slide");
+
+  game.coupleOpacity = 1;
+  setHoldingHands(game, false);
 
   player.x = FLAG.x - PLAYER_WIDTH - 5;
   player.facing = "kanan";
@@ -72,15 +75,14 @@ export function beginFinishSequence(game) {
   game.partner.vx = 0;
 }
 
-// =====================================
-// UPDATE SELURUH ANIMASI AKHIR
-// =====================================
-
 export function updateFinishSequence(game, delta) {
   const player = game.player;
   const partner = game.partner;
 
-  // 1. MELUNCUR DARI TIANG BENDERA
+  // ==================================
+  // 1. TURUN DARI TIANG BENDERA
+  // ==================================
+
   if (game.finishStep === "slide") {
     game.flagY = Math.min(
       FLAG.bottom - 50,
@@ -110,13 +112,17 @@ export function updateFinishSequence(game, delta) {
     if (flagDown && playerDown) {
       player.isFlagSliding = false;
       player.onGround = true;
-      game.finishStep = "walk";
+
+      startStep(game, "walk");
     }
 
     return false;
   }
 
-  // 2. BERJALAN MENDEKATI COWOK
+  // ==================================
+  // 2. CEWEK MENDEKATI COWOK
+  // ==================================
+
   if (game.finishStep === "walk") {
     player.x = Math.min(
       FINISH_WALK_X,
@@ -131,44 +137,54 @@ export function updateFinishSequence(game, delta) {
 
     if (player.x >= FINISH_WALK_X) {
       player.vx = 0;
-
-      game.finishStep = "meet";
-      game.finishTimer = 0;
+      startStep(game, "meet");
     }
 
     return false;
   }
 
-  // 3. MEREKA BERTEMU
+  // ==================================
+  // 3. SALING MENDEKAT
+  // ==================================
+
   if (game.finishStep === "meet") {
     game.finishTimer += delta;
 
-    player.vx = 0;
-    partner.vx = 0;
+    stopPair(game);
+
+    // Cowok mendekat sedikit agar
+    // posisi tangan keduanya sesuai.
+    partner.x = moveTowards(
+      partner.x,
+      player.x + PAIR_GAP,
+      1.5 * delta
+    );
 
     if (game.finishTimer >= MEET_DURATION) {
-      game.finishStep = "together";
+      setHoldingHands(game, true);
+      startStep(game, "together");
     }
 
     return false;
   }
 
-  // 4. BERJALAN DAN NAIK KASTIL BERSAMA
+  // ==================================
+  // 4. BERJALAN BERSAMA KE PINTU
+  // ==================================
+
   if (game.finishStep === "together") {
     player.x = Math.min(
-      CASTLE_STAIRS.endX,
-      player.x + TOGETHER_SPEED * delta
+      DOOR_TARGET_X,
+      player.x + WALK_SPEED * delta
     );
 
-    // Cowok berada sedikit di depan cewek
     partner.x = player.x + PAIR_GAP;
 
-    // Keduanya naik melalui tangga yang sama
-    player.y = getCastleStairY(player.x);
-    partner.y = getCastleStairY(partner.x);
+    player.y = GROUND_PLAYER_Y;
+    partner.y = GROUND_PLAYER_Y;
 
-    player.vx = TOGETHER_SPEED;
-    partner.vx = TOGETHER_SPEED;
+    player.vx = WALK_SPEED;
+    partner.vx = WALK_SPEED;
 
     player.vy = 0;
     partner.vy = 0;
@@ -176,50 +192,134 @@ export function updateFinishSequence(game, delta) {
     player.onGround = true;
     player.onLadder = false;
     player.facing = "kanan";
+    partner.facing = "kanan";
 
-    if (player.x >= CASTLE_STAIRS.endX) {
-      player.vx = 0;
-      partner.vx = 0;
-
-      game.finishStep = "celebrate";
-      game.finishTimer = 0;
-      game.fireworkClock = 0;
-
-      // Kembang api pembuka
-      spawnFirework(
-        game.fireworks,
-        CASTLE_X + 90,
-        55
-      );
+    if (player.x >= DOOR_TARGET_X) {
+      stopPair(game);
+      startStep(game, "enter");
     }
 
     return false;
   }
 
-  // 5. KEMBANG API DI ATAS KASTIL
+  // ==================================
+  // 5. MASUK PINTU — FADE OUT
+  // ==================================
+
+  if (game.finishStep === "enter") {
+    game.finishTimer += delta;
+
+    const progress = Math.min(
+      game.finishTimer / ENTER_DURATION,
+      1
+    );
+
+    // Sedikit maju ke dalam pintu
+    player.x = DOOR_TARGET_X + progress * 12;
+    partner.x = player.x + PAIR_GAP;
+
+    player.y = GROUND_PLAYER_Y;
+    partner.y = GROUND_PLAYER_Y;
+
+    player.vx = 1;
+    partner.vx = 1;
+
+    // Perlahan menghilang
+    game.coupleOpacity = 1 - progress;
+
+    if (progress >= 1) {
+      stopPair(game);
+
+      // Pindah posisi saat tidak terlihat
+      player.x = BALCONY_PLAYER_X;
+      partner.x = BALCONY_PLAYER_X + PAIR_GAP;
+
+      // Awalnya sedikit di bawah balkon
+      player.y = BALCONY_PLAYER_Y + 24;
+      partner.y = BALCONY_PLAYER_Y + 24;
+
+      player.facing = "depan";
+      partner.facing = "depan";
+
+      startStep(game, "appear");
+    }
+
+    return false;
+  }
+
+  // ==================================
+  // 6. MUNCUL DI BALKON — FADE IN
+  // ==================================
+
+  if (game.finishStep === "appear") {
+    game.finishTimer += delta;
+
+    const progress = Math.min(
+      game.finishTimer / APPEAR_DURATION,
+      1
+    );
+
+    // Gerakan naik lebih lembut
+    const eased = 1 - Math.pow(1 - progress, 3);
+
+    player.y =
+      BALCONY_PLAYER_Y + 24 * (1 - eased);
+
+    partner.y =
+      BALCONY_PLAYER_Y + 24 * (1 - eased);
+
+    game.coupleOpacity = eased;
+
+    stopPair(game);
+
+    if (progress >= 1) {
+      game.coupleOpacity = 1;
+
+      player.y = BALCONY_PLAYER_Y;
+      partner.y = BALCONY_PLAYER_Y;
+
+      startStep(game, "celebrate");
+      game.fireworkClock = 0;
+
+      spawnFirework(
+        game.fireworks,
+        CASTLE_X + 90,
+        55
+      );
+      player.facing = "depan";
+      partner.facing = "depan";
+    }
+
+    return false;
+  }
+
+  // ==================================
+  // 7. KEMBANG API DAN PERAYAAN
+  // ==================================
+
   if (game.finishStep === "celebrate") {
     game.finishTimer += delta;
     game.fireworkClock += delta;
 
+    stopPair(game);
+    setHoldingHands(game, true);
+
     updateFireworks(game.fireworks, delta);
 
-    // Ledakan baru setiap beberapa frame
     if (game.fireworkClock >= 24) {
       game.fireworkClock = 0;
 
-      const x =
-        CASTLE_X - 75 + Math.random() * 270;
-
-      const y =
-        20 + Math.random() * 90;
-
-      spawnFirework(game.fireworks, x, y);
+      spawnFirework(
+        game.fireworks,
+        CASTLE_X - 75 + Math.random() * 270,
+        20 + Math.random() * 90
+      );
     }
 
-    // Setelah beberapa detik, tampilkan
-    // halaman kemenangan
-    if (game.finishTimer >= CELEBRATION_DURATION) {
-      game.finishStep = "done";
+    if (
+      game.finishTimer >= CELEBRATION_DURATION
+    ) {
+      startStep(game, "done");
       return true;
     }
 

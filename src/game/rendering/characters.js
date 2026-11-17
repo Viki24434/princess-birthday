@@ -122,6 +122,14 @@ export function drawPlayer(ctx, player, time, sprites) {
     ctx.moveTo(x + 25, y + 20);
     ctx.lineTo(x + 35, y + 17);
 
+    }else if (player.holdingHands) {
+    // Tangan kiri santai
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 4, y + 29);
+
+    // Tangan kanan menuju cowok
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 30, y + 27);
     } else if (isJumping) {
     ctx.moveTo(x + 7, y + 20);
     ctx.lineTo(x + 2, y + 12);
@@ -184,10 +192,12 @@ export function drawPlayer(ctx, player, time, sprites) {
 
   ctx.stroke();
 
-  // Kepala dari file PNG
-  const head = player.facing === "kiri"
-    ? sprites.cewekKiri
-    : sprites.cewekKanan;
+    const head =
+    player.facing === "depan"
+        ? sprites.cewekSenang
+        : player.facing === "kiri"
+        ? sprites.cewekKiri
+        : sprites.cewekKanan;
 
   const loaded = drawHead(
     ctx,
@@ -302,27 +312,43 @@ export function drawPartner(
   ctx.lineWidth = 6;
   ctx.beginPath();
 
-  if (isWalking) {
-    ctx.moveTo(x + 6, y + 19);
-    ctx.lineTo(x + 2, y + 29 + armSwing);
+  if (character.holdingHands) {
+  // Tangan kiri memegang tangan cewek
+  ctx.moveTo(x + 6, y + 19);
+  ctx.lineTo(x + 1, y + 27);
 
-    ctx.moveTo(x + 25, y + 19);
-    ctx.lineTo(x + 29, y + 29 - armSwing);
-  } else {
-    // Melambai saat diam
-    ctx.moveTo(x + 6, y + 19);
-    ctx.lineTo(x + 2, y + 30);
+  // Tangan kanan santai
+  ctx.moveTo(x + 25, y + 19);
+  ctx.lineTo(x + 29, y + 29);
 
-    ctx.moveTo(x + 25, y + 19);
-    ctx.lineTo(x + 32 + wave, y + 7);
-  }
+    } else if (isWalking) {
+        ctx.moveTo(x + 6, y + 19);
+        ctx.lineTo(x + 2, y + 29 + armSwing);
+
+        ctx.moveTo(x + 25, y + 19);
+        ctx.lineTo(x + 29, y + 29 - armSwing);
+    } else {
+        // Melambai saat diam
+        ctx.moveTo(x + 6, y + 19);
+        ctx.lineTo(x + 2, y + 30);
+
+        ctx.moveTo(x + 25, y + 19);
+        ctx.lineTo(x + 32 + wave, y + 7);
+    }
 
   ctx.stroke();
 
   // Kepala cowok
+
+    const head =
+    character.facing === "kanan"
+        ? sprites.cowokKanan
+        : character.facing === "kiri"
+        ? sprites.cowokKiri
+        : sprites.cowokSenang;
   const loaded = drawHead(
     ctx,
-    sprites.cowokSenang,
+    head,
     x - 7,
     y - 18,
     44,
@@ -341,6 +367,47 @@ export function drawPartner(
     );
     ctx.fill();
   }
+
+  ctx.restore();
+}
+
+
+export function drawHoldingHands(ctx, player, partner) {
+  if (
+    !player.holdingHands ||
+    !partner.holdingHands
+  ) {
+    return;
+  }
+
+  const leftHandX = player.x + 30;
+  const leftHandY = player.y + 27;
+
+  const rightHandX = partner.x + 1;
+  const rightHandY = partner.y + 27;
+
+  ctx.save();
+
+  ctx.lineCap = "round";
+  ctx.strokeStyle = "#F2D8C8";
+  ctx.lineWidth = 4;
+
+  ctx.beginPath();
+  ctx.moveTo(leftHandX, leftHandY);
+  ctx.lineTo(rightHandX, rightHandY);
+  ctx.stroke();
+
+  // Pertemuan kedua tangan
+  ctx.fillStyle = "#F2D8C8";
+  ctx.beginPath();
+  ctx.arc(
+    (leftHandX + rightHandX) / 2,
+    (leftHandY + rightHandY) / 2,
+    3,
+    0,
+    Math.PI * 2
+  );
+  ctx.fill();
 
   ctx.restore();
 }
