@@ -1,14 +1,22 @@
 
 export default function AdventureFailModal({
   message,
+  type,
   onRetry
 }) {
   if (!message) return null;
 
+  const isMob = type === "mob";
+
   return (
     <div className="adventure__fail-backdrop">
       <div
-        className="adventure__fail-modal"
+        className={[
+          "adventure__fail-modal",
+          isMob
+            ? "adventure__fail-modal--mob"
+            : ""
+        ].join(" ")}
         role="dialog"
         aria-modal="true"
         aria-labelledby="adventure-fail-title"
@@ -17,11 +25,13 @@ export default function AdventureFailModal({
           className="adventure__fail-emoji"
           aria-hidden="true"
         >
-          🥺
+          {isMob ? "💥" : "🥺"}
         </span>
 
         <h2 id="adventure-fail-title">
-          Yahh, gagal duluu ♡
+          {isMob
+            ? "Aduhh, ketabrak monster! ♡"
+            : "Yahh, jatuh duluu ♡"}
         </h2>
 
         <p>{message}</p>

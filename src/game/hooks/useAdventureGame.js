@@ -73,6 +73,7 @@ export function useAdventureGame() {
   const [score, setScore] = useState(0);
   const [notice, setNotice] = useState("");
   const [failMessage, setFailMessage] = useState("");
+  const [failType, setFailType] = useState(null);
 
   // ====================================
   // MULAI / ULANG GAME
@@ -91,12 +92,13 @@ export function useAdventureGame() {
   }
 
     function resumeGame() {
-    resetControls(controlsRef.current);
+        resetControls(controlsRef.current);
 
-    setFailMessage("");
+        setFailMessage("");
 
-    statusRef.current = "playing";
-    setStatus("playing");
+        statusRef.current = "playing";
+        setStatus("playing");
+        setFailType(null);
     }
 
   // ====================================
@@ -146,23 +148,25 @@ export function useAdventureGame() {
     // RESPAWN
     // ====================================
 
+
     function respawn(type) {
-        // Kembalikan karakter ke checkpoint
-        respawnPlayer(gameRef.current);
+    // Kembali ke checkpoint terakhir
+    respawnPlayer(gameRef.current);
 
-        // Pesan sesuai penyebab gagal
-        setFailMessage(getRandomDeathMessage(type));
+    // Ucapan acak sesuai penyebab gagal
+    setFailMessage(getRandomDeathMessage(type));
 
-        // Jangan tampilkan pesan biasa di bawah game
-        setNotice("");
+    // Simpan penyebab gagal untuk animasi modal
+    setFailType(type);
 
-        // Hentikan semua input
-        resetControls(controlsRef.current);
+    setNotice("");
 
-        // Jeda game sampai modal ditutup
-        statusRef.current = "paused";
-        setStatus("paused");
+    resetControls(controlsRef.current);
+
+    statusRef.current = "paused";
+    setStatus("paused");
     }
+
 
     // ====================================
     // UPDATE GAME
@@ -290,13 +294,13 @@ export function useAdventureGame() {
     };
   }, []);
 
-  // Data dan fungsi yang digunakan React
     return {
     canvasRef,
     status,
     score,
     notice,
     failMessage,
+    failType,
     startGame,
     resumeGame,
     handlePress,

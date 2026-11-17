@@ -150,7 +150,7 @@ export function drawWorld(ctx, game, time, sprites) {
   drawCollectibles(ctx, game, time);
 
   // Mob
-  drawEnemies(ctx, game.enemies);
+  drawEnemies(ctx, game.enemies, time);
 
   // Kastil dan bendera
   drawCastle(ctx, game);

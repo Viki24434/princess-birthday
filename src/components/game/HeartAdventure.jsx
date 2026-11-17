@@ -22,6 +22,7 @@ export default function HeartAdventure({ onComplete }) {
     score,
     notice,
     failMessage,
+    failType,
     startGame,
     resumeGame,
     handlePress,
@@ -65,6 +66,7 @@ export default function HeartAdventure({ onComplete }) {
         {/* MODAL KETIKA GAGAL */}
         <AdventureFailModal
           message={failMessage}
+          type={failType}
           onRetry={resumeGame}
         />
       </div>

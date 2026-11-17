@@ -343,3 +343,80 @@
     font-size: 11px;
   }
 }
+
+
+/* =====================================
+   EFEK SAAT TERKENA MONSTER
+===================================== */
+
+.adventure__fail-modal--mob {
+  animation: mobImpact 0.45s ease-out both;
+}
+
+.adventure__fail-modal--mob
+.adventure__fail-emoji {
+  display: inline-block;
+  animation: mobEmojiBounce 0.55s ease-out;
+}
+
+@keyframes mobImpact {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  25% {
+    opacity: 1;
+    transform:
+      translateX(-7px)
+      scale(1.05);
+  }
+
+  45% {
+    transform:
+      translateX(6px)
+      scale(0.98);
+  }
+
+  65% {
+    transform:
+      translateX(-3px)
+      scale(1.01);
+  }
+
+  100% {
+    opacity: 1;
+    transform:
+      translateX(0)
+      scale(1);
+  }
+}
+
+@keyframes mobEmojiBounce {
+  0% {
+    transform:
+      scale(0.4)
+      rotate(-20deg);
+  }
+
+  55% {
+    transform:
+      scale(1.35)
+      rotate(12deg);
+  }
+
+  100% {
+    transform:
+      scale(1)
+      rotate(0);
+  }
+}
+
+/* Hormati pengaturan pengurangan animasi */
+@media (prefers-reduced-motion: reduce) {
+  .adventure__fail-modal--mob,
+  .adventure__fail-modal--mob
+  .adventure__fail-emoji {
+    animation: none;
+  }
+}

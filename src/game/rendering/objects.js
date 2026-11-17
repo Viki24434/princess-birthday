@@ -55,37 +55,222 @@ export function drawCollectibles(ctx, game, time) {
 // MOB BERGERAK
 // =====================================
 
-export function drawEnemies(ctx, enemies) {
+
+export function drawEnemies(ctx, enemies, time = 0) {
   enemies.forEach((enemy) => {
     const x = enemy.x;
     const y = enemy.y;
+    const w = enemy.w;
+    const h = enemy.h;
 
-    // Tubuh
-    ctx.fillStyle = "#A889BD";
+    // Setiap mob punya fase animasi berbeda
+    const phase = enemy.minX * 0.03;
+
+    // Gerakan kaki
+    const walk = Math.sin(time / 115 + phase);
+
+    // Badan sedikit memantul
+    const bounce =
+      Math.abs(Math.sin(time / 170 + phase)) * 2;
+
+    // Badan sedikit berubah bentuk
+    const squash =
+      Math.sin(time / 170 + phase) * 0.035;
+
+    // Berkedip sesekali
+    const blinking =
+      (time + enemy.minX * 7) % 2800 < 120;
+
+    // Mob atas punya warna berbeda
+    const upperGuard = y < 200;
+
+    ctx.save();
+
+    // ====================================
+    // BAYANGAN DI BAWAH MOB
+    // ====================================
+
+    ctx.fillStyle = "rgba(89, 55, 99, 0.18)";
+
     ctx.beginPath();
     ctx.ellipse(
-      x + 15,
-      y + 16,
-      15,
-      12,
+      x + w / 2,
+      y + h,
+      11 - bounce,
+      3,
       0,
       0,
       Math.PI * 2
     );
     ctx.fill();
 
-    // Mata
-    ctx.fillStyle = "#FFFFFF";
-    ctx.fillRect(x + 7, y + 12, 5, 5);
-    ctx.fillRect(x + 18, y + 12, 5, 5);
+    // ====================================
+    // TRANSFORMASI ANIMASI
+    // ====================================
 
-    // Pupil
-    ctx.fillStyle = "#6F547E";
-    ctx.fillRect(x + 9, y + 14, 2, 3);
-    ctx.fillRect(x + 20, y + 14, 2, 3);
+    ctx.translate(
+      x + w / 2,
+      y - bounce
+    );
 
-    // Kaki
-    ctx.fillRect(x + 5, y + 26, 6, 2);
-    ctx.fillRect(x + 19, y + 26, 6, 2);
+    ctx.scale(
+      1 + squash,
+      1 - squash
+    );
+
+    // ====================================
+    // KAKI BERJALAN
+    // ====================================
+
+    ctx.fillStyle = upperGuard
+      ? "#73568F"
+      : "#87689B";
+
+    ctx.beginPath();
+    ctx.roundRect(
+      -10 + walk * 2,
+      h - 6,
+      8,
+      7,
+      3
+    );
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.roundRect(
+      3 - walk * 2,
+      h - 6,
+      8,
+      7,
+      3
+    );
+    ctx.fill();
+
+    // ====================================
+    // TUBUH MONSTER
+    // ====================================
+
+    ctx.fillStyle = upperGuard
+      ? "#9271B1"
+      : "#A889BD";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      0,
+      h / 2 + 2,
+      w / 2,
+      h / 2 - 2,
+      0,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+
+    // Kilau kecil pada badan
+    ctx.fillStyle = "rgba(255,255,255,0.17)";
+
+    ctx.beginPath();
+    ctx.ellipse(
+      -5,
+      9,
+      5,
+      3,
+      -0.5,
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+
+    // ====================================
+    // MATA BERKEDIP
+    // ====================================
+
+    if (blinking) {
+      // Mata tertutup
+      ctx.strokeStyle = "#554164";
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+
+      ctx.beginPath();
+      ctx.moveTo(-9, 14);
+      ctx.lineTo(-4, 14);
+
+      ctx.moveTo(4, 14);
+      ctx.lineTo(9, 14);
+      ctx.stroke();
+
+    } else {
+      // Mata putih
+      ctx.fillStyle = "#FFFFFF";
+
+      ctx.beginPath();
+      ctx.roundRect(-10, 11, 7, 7, 2);
+      ctx.roundRect(3, 11, 7, 7, 2);
+      ctx.fill();
+
+      // Pupil mengikuti arah jalan
+      const lookX = enemy.dir === -1
+        ? -1
+        : 1;
+
+      ctx.fillStyle = "#50405F";
+
+      ctx.fillRect(
+        -8 + lookX,
+        13,
+        3,
+        4
+      );
+
+      ctx.fillRect(
+        5 + lookX,
+        13,
+        3,
+        4
+      );
+    }
+
+    // ====================================
+    // MULUT KECIL
+    // ====================================
+
+    ctx.strokeStyle = "#684B7B";
+    ctx.lineWidth = 1.5;
+
+    ctx.beginPath();
+    ctx.arc(
+      0,
+      20,
+      3,
+      0.1,
+      Math.PI - 0.1
+    );
+    ctx.stroke();
+
+    // ====================================
+    // PIPI MONSTER
+    // ====================================
+
+    ctx.fillStyle = "#E8A7C6";
+
+    ctx.beginPath();
+    ctx.arc(-11, 20, 2.5, 0, Math.PI * 2);
+    ctx.arc(11, 20, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // ====================================
+    // TANDA KHUSUS PENJAGA ATAS
+    // ====================================
+
+    if (upperGuard) {
+      ctx.fillStyle = "#FFE19A";
+      ctx.font = "bold 12px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("✦", 0, 3);
+    }
+
+    ctx.restore();
   });
 }
