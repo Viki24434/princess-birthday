@@ -13,29 +13,31 @@ import {
 export function createGame() {
   return {
 
-    // Posisi cowok yang dapat dianimasikan
-    partner: {
-    ...partner,
-    vx: 0
+    player: {
+    x: 55,
+    y: GROUND_Y - PLAYER_HEIGHT,
+    vx: 0,
+    vy: 0,
+    onGround: true,
+    onLadder: false,
+    facing: "kanan",
+    holdingHands: false,
+    isFlagSliding: false
     },
 
+    partner: {
+    ...partner,
+    vx: 0,
+    facing: "kiri",
+    holdingHands: false
+    },
+    
     // Tahapan animasi kemenangan
     finishTimer: 0,
 
     // Partikel kembang api
     fireworks: [],
     fireworkClock: 0,
-
-    player: {
-      x: 55,
-      y: GROUND_Y - PLAYER_HEIGHT,
-      vx: 0,
-      vy: 0,
-      onGround: true,
-      onLadder: false,
-      facing: "depan",
-      holdingHands: false,
-    },
 
     checkpoint: 55,
     collected: new Set(),

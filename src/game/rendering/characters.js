@@ -1,39 +1,65 @@
 
 import { partner } from "../levels/level1";
 
-function drawHead(ctx, image, x, y, width, height) {
-  if (
-    image &&
-    image.complete &&
-    image.naturalWidth > 0
-  ) {
-    ctx.drawImage(image, x, y, width, height);
-    return true;
+// ====================================
+// PENGATURAN UKURAN KEPALA
+// ====================================
+
+const HEAD_SIZE = {
+  cowok: {
+    width: 34,
+    height: 34,
+    offsetX: -2,
+    offsetY: -18
+  },
+  cewek: {
+    width: 36,
+    height: 36,
+    offsetX: -3,
+    offsetY: -14
+  }
+};
+
+function drawHead(ctx, image, x, y, config) {
+  const headX = x + config.offsetX;
+  const headY = y + config.offsetY;
+
+  if (image?.complete && image.naturalWidth > 0) {
+    ctx.drawImage(
+      image,
+      headX,
+      headY,
+      config.width,
+      config.height
+    );
+    return;
   }
 
-  return false;
+  // Kepala sementara ketika PNG belum dimuat
+  ctx.fillStyle = "#F4D5C5";
+  ctx.beginPath();
+  ctx.arc(x + 15, y + 5, 14, 0, Math.PI * 2);
+  ctx.fill();
 }
 
-// ========================================
-// KARAKTER CEWEK — PEMAIN
-// ========================================
+// ====================================
+// COWOK — KARAKTER YANG DIMAINKAN
+// ====================================
 
 export function drawPlayer(ctx, player, time, sprites) {
   const x = player.x;
   const y = player.y;
 
+  const isFlagSliding = player.isFlagSliding === true;
+  const isClimbing = player.onLadder;
+
   const isWalking =
     Math.abs(player.vx) > 0.1 &&
     player.onGround;
 
-    const isFlagSliding =
-    player.isFlagSliding === true;
-
-  const isClimbing = player.onLadder;
-
-    const isJumping =
+  const isJumping =
     !player.onGround &&
-    !player.onLadder &&
+    !isClimbing &&
     !isFlagSliding;
 
   const walkFrame = Math.sin(time / 105);
@@ -54,10 +80,12 @@ export function drawPlayer(ctx, player, time, sprites) {
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
 
-  // Kaki
-  ctx.strokeStyle = "#F2D8C8";
-  ctx.lineWidth = 6;
+  // =========================
+  // KAKI
+  // =========================
 
+  ctx.strokeStyle = "#D8B79F";
+  ctx.lineWidth = 6;
   ctx.beginPath();
 
   if (isJumping) {
@@ -76,112 +104,84 @@ export function drawPlayer(ctx, player, time, sprites) {
 
   ctx.stroke();
 
-  // Sepatu
-  ctx.fillStyle = "#FFFFFF";
+  // Sepatu hitam
+  ctx.fillStyle = "#36313B";
 
-  ctx.fillRect(
-    x + 5 + legOffset,
-    y + 37,
+  ctx.fillRect(x + 5 + legOffset, y + 37, 12, 5);
+  ctx.fillRect(x + 17 - legOffset, y + 37, 12, 5);
+
+    // =========================
+    // LEHER COWOK
+    // =========================
+
+    ctx.fillStyle = "#D8B79F";
+
+    ctx.beginPath();
+    ctx.roundRect(
+    x + 13,
+    y + 11,
+    6,
     12,
-    5
-  );
+    2
+    );
+    ctx.fill();
 
-  ctx.fillRect(
-    x + 17 - legOffset,
-    y + 37,
-    12,
-    5
-  );
 
-  // Baju pink
-  ctx.fillStyle = "#F1A3C3";
+  // =========================
+  // BADAN BAJU HITAM
+  // =========================
 
+  ctx.fillStyle = "#302B35";
   ctx.beginPath();
   ctx.roundRect(x + 5, y + 16, 22, 19, 5);
   ctx.fill();
 
-  // Detail baju
-  ctx.fillStyle = "#FFE4EE";
-  ctx.fillRect(x + 14, y + 20, 4, 4);
+  // Detail kerah
+  ctx.fillStyle = "#514855";
+  ctx.beginPath();
+  ctx.moveTo(x + 11, y + 17);
+  ctx.lineTo(x + 16, y + 22);
+  ctx.lineTo(x + 21, y + 17);
+  ctx.fill();
 
+  // =========================
+  // TANGAN
+  // =========================
 
-    // =====================================
-    // ANIMASI TANGAN
-    // =====================================
+  ctx.strokeStyle = "#302B35";
+  ctx.lineWidth = 6;
+  ctx.beginPath();
 
-    ctx.strokeStyle = "#F1A3C3";
-    ctx.lineWidth = 6;
-    ctx.beginPath();
-
-    if (isFlagSliding) {
-    // Tangan kiri berada di samping badan
-    ctx.moveTo(x + 7, y + 20);
-    ctx.lineTo(x + 5, y + 29);
-
-    // Tangan kanan menjangkau tiang
-    ctx.moveTo(x + 25, y + 20);
-    ctx.lineTo(x + 35, y + 17);
-
-    }else if (player.holdingHands) {
-    // Tangan kiri santai
+  if (isFlagSliding) {
+    // Memegang tiang bendera
     ctx.moveTo(x + 7, y + 20);
     ctx.lineTo(x + 4, y + 29);
 
-    // Tangan kanan menuju cowok
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 35, y + 17);
+
+  } else if (player.holdingHands) {
+    // Tangan kanan menggandeng cewek
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 4, y + 29);
+
     ctx.moveTo(x + 25, y + 20);
     ctx.lineTo(x + 30, y + 27);
-    } else if (isJumping) {
+
+  } else if (isJumping) {
     ctx.moveTo(x + 7, y + 20);
     ctx.lineTo(x + 2, y + 12);
 
     ctx.moveTo(x + 25, y + 20);
     ctx.lineTo(x + 30, y + 12);
 
-    } else if (isClimbing) {
-    ctx.moveTo(x + 7, y + 20);
-    ctx.lineTo(x + 5, y + 12 + armOffset);
-
-    ctx.moveTo(x + 25, y + 20);
-    ctx.lineTo(x + 27, y + 12 - armOffset);
-
-    } else {
-    ctx.moveTo(x + 7, y + 20);
-    ctx.lineTo(x + 4, y + 29 + armOffset);
-
-    ctx.moveTo(x + 25, y + 20);
-    ctx.lineTo(x + 28, y + 29 - armOffset);
-    }
-
-    ctx.stroke();
-
-    // Tambahkan tangan kecil yang memegang tiang
-    if (isFlagSliding) {
-    ctx.fillStyle = "#F2D8C8";
-
-    ctx.beginPath();
-    ctx.arc(
-        x + 35,
-        y + 17,
-        4,
-        0,
-        Math.PI * 2
-    );
-    ctx.fill();
-    }
-
-
-  if (isJumping) {
-    ctx.moveTo(x + 7, y + 20);
-    ctx.lineTo(x + 2, y + 12);
-
-    ctx.moveTo(x + 25, y + 20);
-    ctx.lineTo(x + 30, y + 12);
   } else if (isClimbing) {
     ctx.moveTo(x + 7, y + 20);
     ctx.lineTo(x + 5, y + 12 + armOffset);
 
     ctx.moveTo(x + 25, y + 20);
     ctx.lineTo(x + 27, y + 12 - armOffset);
+
   } else {
     ctx.moveTo(x + 7, y + 20);
     ctx.lineTo(x + 4, y + 29 + armOffset);
@@ -192,37 +192,33 @@ export function drawPlayer(ctx, player, time, sprites) {
 
   ctx.stroke();
 
-    const head =
-    player.facing === "depan"
-        ? sprites.cewekSenang
-        : player.facing === "kiri"
-        ? sprites.cewekKiri
-        : sprites.cewekKanan;
-
-  const loaded = drawHead(
-    ctx,
-    head,
-    x - 7,
-    y - 18,
-    46,
-    43
-  );
-
-  // Kepala sementara saat gambar belum termuat
-  if (!loaded) {
-    ctx.fillStyle = "#FFE2D2";
+  // Tangan yang menyentuh bendera
+  if (isFlagSliding) {
+    ctx.fillStyle = "#D8B79F";
     ctx.beginPath();
-    ctx.arc(x + 16, y + 5, 17, 0, Math.PI * 2);
+    ctx.arc(x + 35, y + 17, 4, 0, Math.PI * 2);
     ctx.fill();
   }
+
+  // =========================
+  // KEPALA COWOK
+  // =========================
+
+  const head =
+    player.facing === "depan"
+      ? sprites.cowokSenang
+      : player.facing === "kiri"
+        ? sprites.cowokKiri
+        : sprites.cowokKanan;
+
+  drawHead(ctx, head, x, y, HEAD_SIZE.cowok);
 
   ctx.restore();
 }
 
-// ========================================
-// KARAKTER COWOK — MENUNGGU DI KASTIL
-// ========================================
-
+// ====================================
+// CEWEK — MENUNGGU DI KASTIL
+// ====================================
 
 export function drawPartner(
   ctx,
@@ -233,8 +229,7 @@ export function drawPartner(
   const x = character.x;
   const y = character.y;
 
-  const isWalking =
-    Math.abs(character.vx ?? 0) > 0.1;
+  const isWalking = Math.abs(character.vx ?? 0) > 0.1;
 
   const legSwing = isWalking
     ? Math.sin(time / 105) * 4
@@ -244,147 +239,108 @@ export function drawPartner(
     ? Math.sin(time / 105) * 4
     : 0;
 
-  const wave = isWalking
-    ? 0
-    : Math.sin(time / 240) * 5;
+  const wave = Math.sin(time / 240) * 5;
 
   ctx.save();
   ctx.lineCap = "round";
+  ctx.lineJoin = "round";
 
-  // Kaki
-  ctx.fillStyle = "#D6BBA7";
+  // =========================
+  // KAKI
+  // =========================
 
-  ctx.fillRect(
-    x + 7 + legSwing,
-    y + 29,
-    6,
-    11
-  );
+  ctx.fillStyle = "#F2D8C8";
 
-  ctx.fillRect(
-    x + 18 - legSwing,
-    y + 29,
-    6,
-    11
-  );
+  ctx.fillRect(x + 7 + legSwing, y + 29, 6, 11);
+  ctx.fillRect(x + 18 - legSwing, y + 29, 6, 11);
 
-  // Sepatu
-  ctx.fillStyle = "#3B3443";
+  // Sepatu putih
+  ctx.fillStyle = "#FFFFFF";
 
-  ctx.fillRect(
-    x + 4 + legSwing,
-    y + 38,
-    11,
-    5
-  );
+  ctx.fillRect(x + 4 + legSwing, y + 38, 11, 5);
+  ctx.fillRect(x + 17 - legSwing, y + 38, 11, 5);
 
-  ctx.fillRect(
-    x + 17 - legSwing,
-    y + 38,
-    11,
-    5
-  );
+  // =========================
+  // BADAN BAJU PINK
+  // =========================
 
-  // Baju hitam
-  ctx.fillStyle = "#302B35";
+  ctx.fillStyle = "#F1A3C3";
   ctx.beginPath();
-  ctx.roundRect(
-    x + 4,
-    y + 15,
-    24,
-    20,
-    5
-  );
+  ctx.roundRect(x + 4, y + 15, 24, 20, 5);
   ctx.fill();
 
-  // Kerah
-  ctx.fillStyle = "#4F4753";
-  ctx.beginPath();
+  // Detail baju
+  ctx.fillStyle = "#FFE4EE";
+  ctx.fillRect(x + 14, y + 19, 4, 5);
 
-  ctx.moveTo(x + 10, y + 17);
-  ctx.lineTo(x + 16, y + 22);
-  ctx.lineTo(x + 21, y + 17);
+  // =========================
+  // TANGAN
+  // =========================
 
-  ctx.fill();
-
-  // Kedua tangan
-  ctx.strokeStyle = "#302B35";
+  ctx.strokeStyle = "#F1A3C3";
   ctx.lineWidth = 6;
   ctx.beginPath();
 
   if (character.holdingHands) {
-  // Tangan kiri memegang tangan cewek
-  ctx.moveTo(x + 6, y + 19);
-  ctx.lineTo(x + 1, y + 27);
+    // Tangan kiri menggandeng cowok
+    ctx.moveTo(x + 6, y + 19);
+    ctx.lineTo(x + 1, y + 27);
 
-  // Tangan kanan santai
-  ctx.moveTo(x + 25, y + 19);
-  ctx.lineTo(x + 29, y + 29);
+    // Tangan kanan santai
+    ctx.moveTo(x + 25, y + 19);
+    ctx.lineTo(x + 29, y + 29);
 
-    } else if (isWalking) {
-        ctx.moveTo(x + 6, y + 19);
-        ctx.lineTo(x + 2, y + 29 + armSwing);
+  } else if (isWalking) {
+    ctx.moveTo(x + 6, y + 19);
+    ctx.lineTo(x + 2, y + 29 + armSwing);
 
-        ctx.moveTo(x + 25, y + 19);
-        ctx.lineTo(x + 29, y + 29 - armSwing);
-    } else {
-        // Melambai saat diam
-        ctx.moveTo(x + 6, y + 19);
-        ctx.lineTo(x + 2, y + 30);
+    ctx.moveTo(x + 25, y + 19);
+    ctx.lineTo(x + 29, y + 29 - armSwing);
 
-        ctx.moveTo(x + 25, y + 19);
-        ctx.lineTo(x + 32 + wave, y + 7);
-    }
+  } else {
+    // Melambaikan tangan saat menunggu
+    ctx.moveTo(x + 6, y + 19);
+    ctx.lineTo(x + 2, y + 30);
+
+    ctx.moveTo(x + 25, y + 19);
+    ctx.lineTo(x + 32 + wave, y + 7);
+  }
 
   ctx.stroke();
 
-  // Kepala cowok
+  // =========================
+  // KEPALA CEWEK
+  // =========================
 
-    const head =
+  const head =
     character.facing === "kanan"
-        ? sprites.cowokKanan
-        : character.facing === "kiri"
-        ? sprites.cowokKiri
-        : sprites.cowokSenang;
-  const loaded = drawHead(
-    ctx,
-    head,
-    x - 7,
-    y - 18,
-    44,
-    42
-  );
+      ? sprites.cewekKanan
+      : character.facing === "kiri"
+        ? sprites.cewekKiri
+        : sprites.cewekSenang;
 
-  if (!loaded) {
-    ctx.fillStyle = "#FFE0D0";
-    ctx.beginPath();
-    ctx.arc(
-      x + 15,
-      y + 5,
-      17,
-      0,
-      Math.PI * 2
-    );
-    ctx.fill();
-  }
+  drawHead(ctx, head, x, y, HEAD_SIZE.cewek);
 
   ctx.restore();
 }
 
+// ====================================
+// EFEK BERPEGANGAN TANGAN
+// ====================================
 
-export function drawHoldingHands(ctx, player, partner) {
+export function drawHoldingHands(ctx, player, character) {
   if (
     !player.holdingHands ||
-    !partner.holdingHands
+    !character.holdingHands
   ) {
     return;
   }
 
-  const leftHandX = player.x + 30;
-  const leftHandY = player.y + 27;
+  const hand1X = player.x + 30;
+  const hand1Y = player.y + 27;
 
-  const rightHandX = partner.x + 1;
-  const rightHandY = partner.y + 27;
+  const hand2X = character.x + 1;
+  const hand2Y = character.y + 27;
 
   ctx.save();
 
@@ -393,20 +349,20 @@ export function drawHoldingHands(ctx, player, partner) {
   ctx.lineWidth = 4;
 
   ctx.beginPath();
-  ctx.moveTo(leftHandX, leftHandY);
-  ctx.lineTo(rightHandX, rightHandY);
+  ctx.moveTo(hand1X, hand1Y);
+  ctx.lineTo(hand2X, hand2Y);
   ctx.stroke();
 
-  // Pertemuan kedua tangan
-  ctx.fillStyle = "#F2D8C8";
+  // Titik kedua tangan bertemu
   ctx.beginPath();
   ctx.arc(
-    (leftHandX + rightHandX) / 2,
-    (leftHandY + rightHandY) / 2,
+    (hand1X + hand2X) / 2,
+    (hand1Y + hand2Y) / 2,
     3,
     0,
     Math.PI * 2
   );
+  ctx.fillStyle = "#F2D8C8";
   ctx.fill();
 
   ctx.restore();
