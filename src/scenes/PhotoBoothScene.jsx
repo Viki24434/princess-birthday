@@ -15,6 +15,14 @@ const frames = [
   { id: "royal", label: "Hari Spesial", symbol: "✦" }
 ];
 
+const frameStickers = {
+  princess: ["🎀", "✧", "♛", "🎀"],
+  "love-strip": ["💗", "♡", "♡", "💗"],
+  scrapbook: ["🌸", "✿", "✎", "🌼"],
+  royal: ["✦", "❦", "❦", "✦"]
+};
+
+
 function getCameraError(error) {
   switch (error?.name) {
     case "NotAllowedError":
@@ -330,6 +338,20 @@ export default function PhotoBoothScene({ birthday }) {
                     : "none"
               }}
             />
+
+            <div
+              className={`booth-frame-stickers booth-frame-stickers--${selectedFrame}`}
+              aria-hidden="true"
+            >
+              {frameStickers[selectedFrame].map((sticker, index) => (
+                <span
+                  key={index}
+                  className={`booth-frame-stickers__item booth-frame-stickers__item--${index + 1}`}
+                >
+                  {sticker}
+                </span>
+              ))}
+            </div>
 
             {cameraStatus === "idle" && (
               <div className="booth-placeholder">
