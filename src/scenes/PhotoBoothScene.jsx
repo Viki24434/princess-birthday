@@ -12,14 +12,18 @@ const frames = [
   { id: "princess", label: "Putri Cantik", symbol: "♛" },
   { id: "love-strip", label: "Foto Kita", symbol: "♡" },
   { id: "scrapbook", label: "Kenangan Manis", symbol: "✿" },
-  { id: "royal", label: "Hari Spesial", symbol: "✦" }
+  { id: "royal", label: "Hari Spesial", symbol: "✦" },
+  { id: "birthday-doodle", label: "Birthday Doodle", symbol: "♡" }
 ];
 
 const frameStickers = {
   princess: ["🎀", "✧", "♛", "🎀"],
   "love-strip": ["💗", "♡", "♡", "💗"],
   scrapbook: ["🌸", "✿", "✎", "🌼"],
-  royal: ["✦", "❦", "❦", "✦"]
+  royal: ["✦", "❦", "❦", "✦"],
+
+  // Frame baru, tanpa gambar dekorasi dulu
+  "birthday-doodle": []
 };
 
 
@@ -41,7 +45,7 @@ function getCameraError(error) {
 
 export default function PhotoBoothScene({ birthday }) {
   const defaultFrame =
-    birthday?.photoBooth?.defaultFrame || "princess";
+    birthday?.photoBooth?.defaultFrame || "birthday-doodle";
 
   const [selectedFrame, setSelectedFrame] = useState(
     frames.some(frame => frame.id === defaultFrame)
@@ -53,9 +57,7 @@ export default function PhotoBoothScene({ birthday }) {
   const [cameraStatus, setCameraStatus] = useState("idle");
   const [error, setError] = useState("");
 
-  const [photoCount, setPhotoCount] = useState(
-    birthday?.photoBooth?.captureCount === 1 ? 1 : 4
-  );
+  const [photoCount, setPhotoCount] = useState(3);
   const [timerSeconds, setTimerSeconds] = useState(
     birthday?.photoBooth?.countdown === 5 ? 5 : 3
   );
@@ -343,7 +345,7 @@ export default function PhotoBoothScene({ birthday }) {
               className={`booth-frame-stickers booth-frame-stickers--${selectedFrame}`}
               aria-hidden="true"
             >
-              {frameStickers[selectedFrame].map((sticker, index) => (
+              {(frameStickers[selectedFrame] ?? []).map((sticker, index) => (
                 <span
                   key={index}
                   className={`booth-frame-stickers__item booth-frame-stickers__item--${index + 1}`}
@@ -431,6 +433,7 @@ export default function PhotoBoothScene({ birthday }) {
               >
                 <option value={1}>1 foto</option>
                 <option value={4}>4 foto otomatis</option>
+                <option value={3}>3 foto otomatis (1:3)</option>
               </select>
             </label>
 

@@ -2,6 +2,8 @@ import {
   drawFrameDecorations
 } from "./photoFrameDecorations";
 
+import { composeThreeShot } from "./threeShotComposer";
+
 const themes = {
   princess: {
     background: "#FFF1F7",
@@ -38,7 +40,16 @@ const themes = {
     title: "Hari Spesial Kamu ♡",
     subtitle: "Sedikit kenangan dari aku",
     symbol: "✦"
-  }
+  },
+  "birthday-doodle": {
+    background: "#181319",
+    accent: "#FFF3F8",
+    border: "#D9A8BF",
+    soft: "#241A25",
+    title: "Birthday Booth ♡",
+    subtitle: "Made with love",
+    symbol: "♡"
+  },
 };
 
 function roundRectPath(ctx, x, y, width, height, radius) {
@@ -372,6 +383,11 @@ export async function composeBirthdayPhoto(
   const images = await Promise.all(
     photoSources.map(loadImage)
   );
+
+  // Layout khusus untuk 3 foto, rasio 1:3.
+  if (images.length === 3) {
+    return composeThreeShot(images, themeId);
+  }
 
   const theme = themes[themeId] || themes.princess;
   const isStrip = images.length > 1;
