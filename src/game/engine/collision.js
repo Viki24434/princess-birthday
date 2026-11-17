@@ -21,24 +21,34 @@ export function overlaps(a, b) {
 }
 
 // Mencari tangga yang bisa dinaiki pemain
+
 export function getLadderForPlayer(player) {
   const centerX = player.x + PLAYER_WIDTH / 2;
+  const feetY = player.y + PLAYER_HEIGHT;
 
-  const playerTop = player.y;
-  const playerBottom = player.y + PLAYER_HEIGHT;
+  const horizontalTolerance = 12;
+  const topTolerance = 14;
 
   return ladders.find((ladder) => {
-    const insideX =
-      centerX >= ladder.x - 10 &&
-      centerX <= ladder.x + ladder.w + 10;
+    const left = ladder.x - horizontalTolerance;
+    const right =
+      ladder.x + ladder.w + horizontalTolerance;
 
-    const overlapsY =
-      playerBottom > ladder.y &&
-      playerTop < ladder.y + ladder.h;
+    const top = ladder.y - topTolerance;
+    const bottom = ladder.y + ladder.h + 4;
 
-    return insideX && overlapsY;
-  });
+    const alignedHorizontally =
+      centerX >= left && centerX <= right;
+
+    // Kaki boleh tepat di atas ujung tangga.
+    // Tidak harus masuk dulu ke area tangga.
+    const alignedVertically =
+      feetY >= top && player.y <= bottom;
+
+    return alignedHorizontally && alignedVertically;
+  }) ?? null;
 }
+
 
 // Menghalangi pemain menembus tangga balok
 // dari samping.

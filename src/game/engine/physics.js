@@ -25,12 +25,16 @@ function clamp(value, min, max) {
 // GERAKAN PEMAIN
 // ====================================
 
+
 export function updatePlayer(
   player,
   controls,
   delta
 ) {
-  // Gerak horizontal
+  // ====================================
+  // 1. GERAK HORIZONTAL
+  // ====================================
+
   player.vx = controls.right
     ? PLAYER_SPEED
     : controls.left
@@ -45,113 +49,236 @@ export function updatePlayer(
   }
 
   // ====================================
-  // SISTEM TANGGA
+  // 2. DETEKSI TANGGA
   // ====================================
 
+  // Cek posisi karakter sekarang
+  let ladder = getLadderForPlayer(player);
 
-    const ladder = getLadderForPlayer(player);
+  // FIX:
+  // Saat berdiri tepat di atas tangga,
+  // collision kadang belum mendeteksi
+  // bagian tangga di bawah kaki.
+  //
+  // Kita cek sedikit lebih bawah
+  // agar tombol ↓ langsung berfungsi.
+  if (!ladder && controls.down) {
+    const probePlayer = {
+      ...player,
+      y: player.y + 14
+    };
 
-    const wantsLadder =
-    ladder && (controls.up || controls.down);
+    ladder = getLadderForPlayer(probePlayer);
+  }
 
-    // ====================================
-    // PANAH ATAS: LOMPAT / NAIK TANGGA
-    // ====================================
+  const wantsLadder =
+    !!ladder && (controls.up || controls.down);
 
-    // Reset ketika tombol atas dilepaskan
-    if (!controls.up) {
+  // ====================================
+  // 3. PANAH ATAS: LOMPAT / NAIK
+  // ====================================
+
+  // Reset ketika tombol ↑ dilepaskan
+  if (!controls.up) {
     controls.upJumpHandled = false;
-    }
+  }
 
-    // Proses sekali setiap tombol atas ditekan
-    if (controls.up && !controls.upJumpHandled) {
+  // Sekali untuk setiap tekanan ↑
+  if (
+    controls.up &&
+    !controls.upJumpHandled
+  ) {
     controls.upJumpHandled = true;
 
-    // Jika tidak dekat tangga,
-    // panah atas digunakan untuk melompat
+    // Kalau tidak dekat tangga,
+    // gunakan ↑ untuk melompat.
     if (
-        !ladder &&
-        !player.onLadder &&
-        player.onGround
+      !ladder &&
+      !player.onLadder &&
+      player.onGround
     ) {
-        controls.jump = true;
+      controls.jump = true;
     }
-    }
-
-
-  if (wantsLadder && !player.onLadder) {
-    player.onLadder = true;
-    player.onGround = false;
-    player.vy = 0;
-
-    // Posisikan pemain di tengah tangga
-    player.x =
-      ladder.x +
-      ladder.w / 2 -
-      PLAYER_WIDTH / 2;
   }
+
+  // ====================================
+  // 4. MELOMPAT KELUAR DARI TANGGA
+  // ====================================
+
+  if (
+    player.onLadder &&
+    controls.jump
+  ) {
+    player.onLadder = false;
+    player.onGround = false;
+    player.vy = JUMP_FORCE;
+  }
+
+  // ====================================
+  // 5. MASUK KE TANGGA
+  // ====================================
+
+  if (
+    wantsLadder &&
+    !player.onLadder &&
+    !controls.jump
+  ) {
+    const ladderBottom =
+      ladder.y + ladder.h;
+
+    const playerFeet =
+      player.y + PLAYER_HEIGHT;
+
+    const atLadderBottom =
+      playerFeet >= ladderBottom - 0.5;
+
+    // Dari bawah boleh naik.
+    // Dari atas boleh langsung turun.
+    //
+    // Jangan masuk lagi ke tangga
+    // kalau sudah sampai bawah
+    // dan hanya menekan ↓.
+    if (!atLadderBottom || controls.up) {
+      player.onLadder = true;
+      player.onGround = false;
+
+      player.vx = 0;
+      player.vy = 0;
+
+      // Sejajarkan dengan tangga
+      player.x =
+        ladder.x +
+        (ladder.w - PLAYER_WIDTH) / 2;
+    }
+  }
+
+  // ====================================
+  // 6. PERGERAKAN DI TANGGA
+  // ====================================
 
   if (player.onLadder) {
     const activeLadder =
-      getLadderForPlayer(player);
+      getLadderForPlayer(player) ||
+      ladder;
 
     if (!activeLadder) {
+      // Keluar jika tidak lagi
+      // berada di sekitar tangga
       player.onLadder = false;
+      player.onGround = false;
+
     } else {
-      player.vy = 0;
-
-      // Naik tangga
-      if (controls.up) {
-        player.y -= 3.4 * delta;
-      }
-
-      // Turun tangga
-      if (controls.down) {
-        player.y += 3.4 * delta;
-      }
-
-      // Bergerak sedikit ke samping
-      player.x += player.vx * 0.45 * delta;
-
-      player.x = clamp(
-        player.x,
-        0,
-        WORLD_WIDTH - PLAYER_WIDTH
-      );
+      const climbSpeed = 3.4;
 
       const topLimit =
-        activeLadder.y - PLAYER_HEIGHT + 6;
+        activeLadder.y - PLAYER_HEIGHT;
 
       const bottomLimit =
         activeLadder.y +
         activeLadder.h -
         PLAYER_HEIGHT;
 
-      player.y = clamp(
-        player.y,
-        topLimit,
-        bottomLimit
-      );
+      // ====================================
+      // KELUAR TANGGA DENGAN ← / →
+      // ====================================
 
-      // Bisa melompat keluar dari tangga
-      if (controls.jump) {
+      const movingSideways =
+        controls.left || controls.right;
+
+      const movingVertically =
+        controls.up || controls.down;
+
+      if (
+        movingSideways &&
+        !movingVertically
+      ) {
         player.onLadder = false;
-        player.vy = -11;
+        player.onGround = false;
+
+      } else {
+        // ====================================
+        // TETAP DI TENGAH TANGGA
+        // ====================================
+
+        player.x =
+          activeLadder.x +
+          (activeLadder.w - PLAYER_WIDTH) / 2;
+
+        player.vx = 0;
+        player.vy = 0;
+        player.onGround = false;
+
+        // ====================================
+        // NAIK
+        // ====================================
+
+        if (
+          controls.up &&
+          !controls.down
+        ) {
+          player.y -= climbSpeed * delta;
+        }
+
+        // ====================================
+        // TURUN
+        // ====================================
+
+        else if (
+          controls.down &&
+          !controls.up
+        ) {
+          player.y += climbSpeed * delta;
+        }
+
+        // Batasi posisi atas dan bawah
+        player.y = clamp(
+          player.y,
+          topLimit,
+          bottomLimit
+        );
+
+        // ====================================
+        // SAMPAI DI BAWAH TANGGA
+        // ====================================
+
+        if (
+          controls.down &&
+          player.y >= bottomLimit - 0.5
+        ) {
+          player.y = bottomLimit;
+          player.vy = 0;
+
+          player.onLadder = false;
+          player.onGround = true;
+        }
+
+        // ====================================
+        // PENTING:
+        // Lewati gravitasi dan collision
+        // selama masih menggunakan tangga.
+        // ====================================
+
+        controls.jump = false;
+        return;
       }
     }
   }
 
   // ====================================
-  // LOMPAT DAN GRAVITASI
+  // 7. LOMPAT DAN GRAVITASI NORMAL
   // ====================================
 
   if (!player.onLadder) {
-    if (controls.jump && player.onGround) {
+    // Melompat dari tanah / platform
+    if (
+      controls.jump &&
+      player.onGround
+    ) {
       player.vy = JUMP_FORCE;
       player.onGround = false;
     }
 
-    // Simpan posisi sebelumnya
+    // Simpan posisi sebelum bergerak
     const previousX = player.x;
 
     const previousBottom =
@@ -163,7 +290,7 @@ export function updatePlayer(
       MAX_FALL_SPEED
     );
 
-    // Gerakkan pemain
+    // Gerakkan karakter
     player.x += player.vx * delta;
     player.y += player.vy * delta;
 
@@ -174,7 +301,7 @@ export function updatePlayer(
       WORLD_WIDTH - PLAYER_WIDTH
     );
 
-    // Collision samping tangga balok
+    // Collision tangga balok
     resolveStairCollision(
       player,
       previousX,
@@ -188,6 +315,10 @@ export function updatePlayer(
     );
   }
 
-  // Lompat diproses sekali per tekanan
+  // ====================================
+  // 8. RESET TOMBOL LOMPAT
+  // ====================================
+
   controls.jump = false;
 }
+

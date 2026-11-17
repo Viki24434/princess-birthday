@@ -120,64 +120,104 @@ export const heartItems = [
   { x: 2730, y: 200 }
 ];
 
-// Mob yang bergerak bolak-balik
+
 export const enemyTemplates = [
+  // =====================================
+  // MOB JALUR BAWAH
+  // =====================================
+
   {
-    x: 360, y: 302, w: 30, h: 28,
-    minX: 250, maxX: 430,
-    speed: 1.2, dir: 1
+    x: 360,
+    y: 302,
+    w: 30,
+    h: 28,
+    minX: 250,
+    maxX: 430,
+    speed: 1.2,
+    dir: 1
   },
   {
-    x: 820, y: 302, w: 30, h: 28,
-    minX: 650, maxX: 930,
-    speed: 1.4, dir: -1
+    x: 820,
+    y: 302,
+    w: 30,
+    h: 28,
+    minX: 650,
+    maxX: 930,
+    speed: 1.4,
+    dir: -1
   },
   {
-    x: 1260, y: 302, w: 30, h: 28,
-    minX: 1130, maxX: 1380,
-    speed: 1.3, dir: 1
+    x: 1260,
+    y: 302,
+    w: 30,
+    h: 28,
+    minX: 1130,
+    maxX: 1380,
+    speed: 1.3,
+    dir: 1
   },
   {
-    x: 1760, y: 302, w: 30, h: 28,
-    minX: 1590, maxX: 1940,
-    speed: 1.5, dir: -1
+    x: 1760,
+    y: 302,
+    w: 30,
+    h: 28,
+    minX: 1590,
+    maxX: 1940,
+    speed: 1.5,
+    dir: -1
   },
   {
-    x: 2290, y: 302, w: 30, h: 28,
-    minX: 2140, maxX: 2410,
-    speed: 1.2, dir: 1
+    x: 2290,
+    y: 302,
+    w: 30,
+    h: 28,
+    minX: 2140,
+    maxX: 2410,
+    speed: 1.2,
+    dir: 1
   },
-    {
+
+  // =====================================
+  // MOB PENJAGA PLATFORM ATAS
+  // =====================================
+
+  // Penjaga jembatan pertama
+  {
     x: 970,
     y: 130,
     w: 28,
     h: 28,
     minX: 945,
     maxX: 1100,
-    speed: 1.1
-    },
+    speed: 1.1,
+    dir: 1
+  },
 
-    {
+  // Penjaga jembatan kedua
+  {
     x: 1890,
     y: 132,
     w: 28,
     h: 28,
     minX: 1860,
     maxX: 2020,
-    speed: 1.2
-    },
+    speed: 1.2,
+    dir: -1
+  },
 
-    {
+  // Penjaga platform terakhir
+  {
     x: 2310,
     y: 132,
     w: 28,
     h: 28,
     minX: 2280,
     maxX: 2380,
-    speed: 1.0
-    }
-
+    speed: 1.0,
+    dir: 1
+  }
 ];
+
 
 // Tiang bendera — diberi jarak dari tangga
 export const FLAG = {

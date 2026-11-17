@@ -12,15 +12,28 @@ import { overlaps } from "../engine/collision";
 
 export function updateEnemies(enemies, delta) {
   for (const enemy of enemies) {
+
+    // Pastikan arah mob valid
+    if (enemy.dir !== 1 && enemy.dir !== -1) {
+      enemy.dir = 1;
+    }
+
+    // Pulihkan posisi jika sebelumnya NaN
+    if (!Number.isFinite(enemy.x)) {
+      enemy.x = enemy.minX;
+    }
+
+    // Bergerak horizontal saja.
+    // Posisi Y tetap sesuai platform.
     enemy.x += enemy.speed * enemy.dir * delta;
 
-    // Berbalik ketika mencapai batas kiri
+    // Berbalik di batas kiri
     if (enemy.x <= enemy.minX) {
       enemy.x = enemy.minX;
       enemy.dir = 1;
     }
 
-    // Berbalik ketika mencapai batas kanan
+    // Berbalik di batas kanan
     if (enemy.x >= enemy.maxX) {
       enemy.x = enemy.maxX;
       enemy.dir = -1;
