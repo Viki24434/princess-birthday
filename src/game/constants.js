@@ -1,7 +1,7 @@
 
 export const WIDTH = 720;
 export const HEIGHT = 400;
-export const WORLD_WIDTH = 3100;
+export const WORLD_WIDTH = 3500;
 
 export const PLAYER_WIDTH = 30;
 export const PLAYER_HEIGHT = 42;

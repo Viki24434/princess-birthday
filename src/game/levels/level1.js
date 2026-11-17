@@ -6,7 +6,7 @@ export const platforms = [
   { x: 1070, y: 330, w: 360, h: 70 },
   { x: 1530, y: 330, w: 450, h: 70 },
   { x: 2080, y: 330, w: 370, h: 70 },
-  { x: 2530, y: 330, w: 570, h: 70 },
+  { x: 2530, y: 330, w: 970, h: 70 },
 
   // Platform melayang
   { x: 220, y: 260, w: 140, h: 16 },
@@ -72,19 +72,26 @@ export const enemyTemplates = [
   }
 ];
 
-// Tiang bendera
+// Tiang bendera — diberi jarak dari tangga
 export const FLAG = {
-  x: 2825,
+  x: 3010,
   top: 90,
   bottom: 330
 };
 
-// Kastil dan pasangan
-export const CASTLE_DOOR_X = 2940;
+// Posisi kastil
+export const CASTLE_X = 3260;
+export const CASTLE_DOOR_X = CASTLE_X + 70;
 
+// Cowok menunggu di depan kastil
+// Bukan lagi di balkon kastil
 export const partner = {
-  x: 2930,
-  y: 128,
+  x: 3140,
+  y: 288,
   w: 28,
   h: 42
 };
+
+// Posisi cewek berhenti setelah bendera turun
+// Berjarak sedikit dari karakter cowok
+export const FINISH_WALK_X = 3098;

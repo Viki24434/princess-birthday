@@ -1,6 +1,6 @@
-
+import { CASTLE_X } from "../levels/level1";
 export function drawCastle(ctx) {
-  const castleX = 2860;
+  const castleX = CASTLE_X;
 
   ctx.save();
 

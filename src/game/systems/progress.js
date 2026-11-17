@@ -18,12 +18,22 @@ import { isPlayerHit } from "../entities/enemies";
 // CHECKPOINT
 // ====================================
 
+
 export function updateCheckpoint(game) {
   const x = game.player.x;
 
-  if (x > 2500) {
-    game.checkpoint = 2520;
-  } else if (x > 1600) {
+  // Setelah berhasil melewati tangga balok
+  if (x > 2850) {
+    game.checkpoint = 2850;
+  }
+
+  // Setelah melewati bagian mob terakhir
+  else if (x > 2150) {
+    game.checkpoint = 2100;
+  }
+
+  // Checkpoint tengah level
+  else if (x > 1600) {
     game.checkpoint = 1560;
   }
 }

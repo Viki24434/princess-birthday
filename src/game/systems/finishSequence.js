@@ -6,7 +6,7 @@ import {
 
 import {
   FLAG,
-  CASTLE_DOOR_X
+  FINISH_WALK_X
 } from "../levels/level1";
 
 // Memulai animasi akhir level
@@ -60,9 +60,11 @@ export function updateFinishSequence(game, delta) {
   // TAHAP 2: JALAN MENUJU KASTIL
   // ====================================
 
+
   if (game.finishStep === "walk") {
+    // Berjalan otomatis menuju cowok
     player.x = Math.min(
-      CASTLE_DOOR_X,
+      FINISH_WALK_X,
       player.x + 2.8 * delta
     );
 
@@ -72,12 +74,14 @@ export function updateFinishSequence(game, delta) {
     player.onGround = true;
     player.facing = "kanan";
 
-    if (player.x >= CASTLE_DOOR_X) {
+    // Berhenti di depan cowok
+    if (player.x >= FINISH_WALK_X) {
       player.vx = 0;
       game.finishStep = "done";
       return true;
     }
   }
+
 
   return game.finishStep === "done";
 }
