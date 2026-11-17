@@ -48,10 +48,36 @@ export function updatePlayer(
   // SISTEM TANGGA
   // ====================================
 
-  const ladder = getLadderForPlayer(player);
 
-  const wantsLadder =
+    const ladder = getLadderForPlayer(player);
+
+    const wantsLadder =
     ladder && (controls.up || controls.down);
+
+    // ====================================
+    // PANAH ATAS: LOMPAT / NAIK TANGGA
+    // ====================================
+
+    // Reset ketika tombol atas dilepaskan
+    if (!controls.up) {
+    controls.upJumpHandled = false;
+    }
+
+    // Proses sekali setiap tombol atas ditekan
+    if (controls.up && !controls.upJumpHandled) {
+    controls.upJumpHandled = true;
+
+    // Jika tidak dekat tangga,
+    // panah atas digunakan untuk melompat
+    if (
+        !ladder &&
+        !player.onLadder &&
+        player.onGround
+    ) {
+        controls.jump = true;
+    }
+    }
+
 
   if (wantsLadder && !player.onLadder) {
     player.onLadder = true;

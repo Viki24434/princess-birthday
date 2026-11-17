@@ -17,88 +17,66 @@ export function resetControls(controls) {
 // KONTROL KEYBOARD
 // ====================================
 
+
 export function registerKeyboardControls(
   controlsRef,
   statusRef
 ) {
+  const keyMap = {
+    ArrowLeft: "left",
+    KeyA: "left",
+    ArrowRight: "right",
+    KeyD: "right",
+    ArrowUp: "up",
+    KeyW: "up",
+    ArrowDown: "down",
+    KeyS: "down",
+    Space: "jump"
+  };
+
   function keyDown(event) {
-    if (statusRef.current !== "playing") {
+    const control = keyMap[event.code];
+
+    if (!control) return;
+
+    if (statusRef.current !== "playing") return;
+
+    event.preventDefault();
+
+    if (control === "jump") {
+      if (!event.repeat) {
+        controlsRef.current.jump = true;
+      }
       return;
     }
 
-    const key = event.key.toLowerCase();
-    const controls = controlsRef.current;
-
-    const supportedKeys = [
-      "arrowleft",
-      "arrowright",
-      "arrowup",
-      "arrowdown",
-      "a",
-      "d",
-      "w",
-      "s",
-      " "
-    ];
-
-    if (supportedKeys.includes(key)) {
-      event.preventDefault();
-    }
-
-    if (key === "arrowleft" || key === "a") {
-      controls.left = true;
-    }
-
-    if (key === "arrowright" || key === "d") {
-      controls.right = true;
-    }
-
-    if (key === "arrowup" || key === "w") {
-      controls.up = true;
-    }
-
-    if (key === "arrowdown" || key === "s") {
-      controls.down = true;
-    }
-
-    if (key === " " && !event.repeat) {
-      controls.jump = true;
-    }
+    controlsRef.current[control] = true;
   }
 
   function keyUp(event) {
-    const key = event.key.toLowerCase();
-    const controls = controlsRef.current;
+    const control = keyMap[event.code];
 
-    if (key === "arrowleft" || key === "a") {
-      controls.left = false;
-    }
+    if (!control) return;
 
-    if (key === "arrowright" || key === "d") {
-      controls.right = false;
-    }
+    event.preventDefault();
 
-    if (key === "arrowup" || key === "w") {
-      controls.up = false;
-    }
-
-    if (key === "arrowdown" || key === "s") {
-      controls.down = false;
+    if (control !== "jump") {
+      controlsRef.current[control] = false;
     }
   }
 
   window.addEventListener("keydown", keyDown);
   window.addEventListener("keyup", keyUp);
 
-  // Cleanup saat komponen dilepas
   return () => {
     window.removeEventListener("keydown", keyDown);
     window.removeEventListener("keyup", keyUp);
   };
 }
 
+
 // ====================================
-// KONTROL TOUCH / POINTER
+// KONTROL HP
 // ====================================
 
 export function pressControl(
@@ -109,9 +87,7 @@ export function pressControl(
 ) {
   event.preventDefault();
 
-  if (statusRef.current !== "playing") {
-    return;
-  }
+  if (statusRef.current !== "playing") return;
 
   event.currentTarget.setPointerCapture?.(
     event.pointerId
@@ -121,11 +97,7 @@ export function pressControl(
 }
 
 export function releaseControl(key, controlsRef) {
-  // Tombol lompat diproses sekali
-  // oleh physics agar tap cepat tetap terbaca.
-  if (key === "jump") {
-    return;
-  }
+  if (key === "jump") return;
 
   controlsRef.current[key] = false;
 }
