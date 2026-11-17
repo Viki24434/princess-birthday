@@ -25,6 +25,10 @@ import {
 
 import { drawFireworks } from "../effects/fireworks";
 
+import {
+  drawBackgroundMemories
+} from "./memories";
+
 // =====================================
 // LAYER KHUSUS UNTUK KEDUA KARAKTER
 // =====================================
@@ -126,13 +130,17 @@ export function drawWorld(ctx, game, time, sprites) {
   const cameraX = getCameraX(player.x);
 
   // Background
-  drawBackground(ctx, cameraX);
 
-  ctx.save();
-  ctx.translate(-cameraX, 0);
+    drawBackground(ctx, cameraX);
 
-  // Tanah, jurang, platform, tangga
-  drawTerrain(ctx);
+    ctx.save();
+    ctx.translate(-cameraX, 0);
+
+    // Foto dan tulisan kenangan di background
+    drawBackgroundMemories(ctx, cameraX);
+
+    // Tanah, jurang, platform, tangga
+    drawTerrain(ctx);
 
   // Hati yang dikumpulkan
   drawCollectibles(ctx, game, time);

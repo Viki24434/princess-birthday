@@ -104,3 +104,34 @@ export const partner = {
 // Posisi cewek berhenti setelah bendera turun
 // Berjarak sedikit dari karakter cowok
 export const FINISH_WALK_X = 3098;
+
+export const backgroundMemories = [
+  {
+    x: 350,
+    y: 55,
+    image: "game/memories/kenangan-1.jpg",
+    text: "Masih inget ini? ♡",
+    rotation: -0.07
+  },
+  {
+    x: 920,
+    y: 70,
+    image: "game/memories/kenangan-2.jpg",
+    text: "Momen favoritku ♡",
+    rotation: 0.05
+  },
+  {
+    x: 1590,
+    y: 60,
+    image: "game/memories/main-bareng.jpg",
+    text: "Waktu kita main ♡",
+    rotation: -0.04
+  },
+  {
+    x: 2250,
+    y: 65,
+    image: "game/memories/kenangan-3.jpg",
+    text: "Sama kamu terus ♡",
+    rotation: 0.06
+  }
+];
