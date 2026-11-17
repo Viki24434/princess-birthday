@@ -1,26 +1,103 @@
 
+
 export const platforms = [
-  // Tanah utama
-  { x: 0, y: 330, w: 480, h: 70 },
-  { x: 560, y: 330, w: 420, h: 70 },
+  // =====================================
+  // TANAH UTAMA — JANGAN HAPUS JURANG
+  // =====================================
+
+  { x: 0,    y: 330, w: 480, h: 70 },
+  { x: 560,  y: 330, w: 420, h: 70 },
   { x: 1070, y: 330, w: 360, h: 70 },
   { x: 1530, y: 330, w: 450, h: 70 },
   { x: 2080, y: 330, w: 370, h: 70 },
   { x: 2530, y: 330, w: 970, h: 70 },
 
-  // Platform melayang
-  { x: 220, y: 260, w: 140, h: 16 },
-  { x: 720, y: 245, w: 140, h: 16 },
-  { x: 1180, y: 220, w: 120, h: 16 },
+  // =====================================
+  // PLATFORM TENGAH
+  // =====================================
+
+  // Area awal — latihan melompat
+  { x: 220,  y: 260, w: 140, h: 16 },
+
+  // Area 2
+  { x: 720,  y: 245, w: 140, h: 16 },
+
+  // Area 3
+  { x: 1180, y: 235, w: 150, h: 16 },
+
+  // Area 4
   { x: 1660, y: 245, w: 150, h: 16 },
-  { x: 2190, y: 250, w: 120, h: 16 }
+
+  // Area 5
+  { x: 2190, y: 250, w: 140, h: 16 },
+
+  // =====================================
+  // JALUR ATAS PERTAMA
+  // =====================================
+
+  // Platform atas setelah tangga
+  { x: 715,  y: 158, w: 200, h: 16 },
+
+  // Jembatan di atas jurang
+  { x: 915,  y: 158, w: 230, h: 16 },
+
+  // Platform setelah jembatan
+  { x: 1145, y: 158, w: 205, h: 16 },
+
+  // =====================================
+  // JALUR ATAS KEDUA
+  // =====================================
+
+  // Platform awal
+  { x: 1640, y: 160, w: 195, h: 16 },
+
+  // Jembatan panjang, dijaga mob
+  { x: 1835, y: 160, w: 245, h: 16 },
+
+  // Platform lanjutan
+  { x: 2080, y: 160, w: 170, h: 16 },
+
+  // Platform terakhir sebelum turun
+  { x: 2250, y: 160, w: 165, h: 16 }
 ];
 
-// Tangga biasa
+
+
 export const ladders = [
-  { x: 772, y: 245, w: 36, h: 85 },
-  { x: 1690, y: 245, w: 36, h: 85 }
+  // Tangga menuju jalur atas pertama
+  {
+    x: 785,
+    y: 158,
+    w: 36,
+    h: 172
+  },
+
+  // Tangga untuk naik / turun
+  // di ujung jalur atas pertama
+  {
+    x: 1205,
+    y: 158,
+    w: 36,
+    h: 172
+  },
+
+  // Tangga menuju jalur atas kedua
+  {
+    x: 1705,
+    y: 160,
+    w: 36,
+    h: 170
+  },
+
+  // Tangga keluar dari jalur atas kedua
+  {
+    x: 2215,
+    y: 160,
+    w: 36,
+    h: 170
+  }
 ];
+
 
 // Tangga balok sebelum bendera
 export const END_STAIRS = [
@@ -69,7 +146,37 @@ export const enemyTemplates = [
     x: 2290, y: 302, w: 30, h: 28,
     minX: 2140, maxX: 2410,
     speed: 1.2, dir: 1
-  }
+  },
+    {
+    x: 970,
+    y: 130,
+    w: 28,
+    h: 28,
+    minX: 945,
+    maxX: 1100,
+    speed: 1.1
+    },
+
+    {
+    x: 1890,
+    y: 132,
+    w: 28,
+    h: 28,
+    minX: 1860,
+    maxX: 2020,
+    speed: 1.2
+    },
+
+    {
+    x: 2310,
+    y: 132,
+    w: 28,
+    h: 28,
+    minX: 2280,
+    maxX: 2380,
+    speed: 1.0
+    }
+
 ];
 
 // Tiang bendera — diberi jarak dari tangga
