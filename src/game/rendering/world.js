@@ -1,6 +1,7 @@
 
 import {
   WIDTH,
+  HEIGHT,
   WORLD_WIDTH
 } from "../constants";
 
@@ -24,6 +25,32 @@ import {
 
 import { drawFireworks } from "../effects/fireworks";
 
+// =====================================
+// LAYER KHUSUS UNTUK KEDUA KARAKTER
+// =====================================
+
+// Canvas sementara dibuat satu kali,
+// bukan dibuat ulang setiap frame.
+let coupleCanvas = null;
+let coupleCtx = null;
+
+function getCoupleLayer() {
+  if (!coupleCanvas) {
+    coupleCanvas = document.createElement("canvas");
+
+    coupleCanvas.width = WIDTH;
+    coupleCanvas.height = HEIGHT;
+
+    coupleCtx = coupleCanvas.getContext("2d");
+  }
+
+  return { coupleCanvas, coupleCtx };
+}
+
+// =====================================
+// KAMERA
+// =====================================
+
 function getCameraX(playerX) {
   return Math.max(
     0,
@@ -34,21 +61,83 @@ function getCameraX(playerX) {
   );
 }
 
+// =====================================
+// GAMBAR KEDUA KARAKTER SEBAGAI
+// SATU GAMBAR UTUH
+// =====================================
+
+function drawCoupleLayer(game, time, sprites, cameraX) {
+  const { coupleCanvas, coupleCtx } = getCoupleLayer();
+
+  if (!coupleCtx) return null;
+
+  // Bersihkan gambar frame sebelumnya
+  coupleCtx.setTransform(1, 0, 0, 1, 0, 0);
+  coupleCtx.globalAlpha = 1;
+
+  coupleCtx.clearRect(
+    0,
+    0,
+    WIDTH,
+    HEIGHT
+  );
+
+  coupleCtx.save();
+
+  // Samakan posisi kamera
+  coupleCtx.translate(-cameraX, 0);
+
+  // Cowok — karakter pemain
+  drawPlayer(
+    coupleCtx,
+    game.player,
+    time,
+    sprites
+  );
+
+  // Cewek — pasangan yang menunggu
+  drawPartner(
+    coupleCtx,
+    time,
+    sprites,
+    game.partner
+  );
+
+  // Pegangan tangan
+  drawHoldingHands(
+    coupleCtx,
+    game.player,
+    game.partner
+  );
+
+  coupleCtx.restore();
+
+  return coupleCanvas;
+}
+
+// =====================================
+// RENDER DUNIA GAME
+// =====================================
+
 export function drawWorld(ctx, game, time, sprites) {
   const player = game.player;
   const partner = game.partner;
 
   const cameraX = getCameraX(player.x);
 
-  // Background tetap seperti sebelumnya
+  // Background
   drawBackground(ctx, cameraX);
 
   ctx.save();
   ctx.translate(-cameraX, 0);
 
-  // Dunia game
+  // Tanah, jurang, platform, tangga
   drawTerrain(ctx);
+
+  // Hati yang dikumpulkan
   drawCollectibles(ctx, game, time);
+
+  // Mob
   drawEnemies(ctx, game.enemies);
 
   // Kastil dan bendera
@@ -56,38 +145,44 @@ export function drawWorld(ctx, game, time, sprites) {
   drawFlagPole(ctx, game);
 
   // =====================================
-  // KEDUA KARAKTER + TRANSPARANSI
+  // OPACITY KEDUA KARAKTER
   // =====================================
 
-  ctx.save();
-
-  ctx.globalAlpha = game.coupleOpacity ?? 1;
-
-  drawPlayer(
-    ctx,
-    player,
-    time,
-    sprites
-  );
-
-  drawPartner(
-    ctx,
+  // Gambar karakter lebih dulu dengan
+  // opacity penuh pada canvas terpisah.
+  const coupleLayer = drawCoupleLayer(
+    game,
     time,
     sprites,
-    partner
+    cameraX
   );
 
-  // Gambar tangan yang saling berpegangan
-  drawHoldingHands(
-    ctx,
-    player,
-    partner
-  );
+  if (coupleLayer) {
+    ctx.save();
 
-  ctx.restore();
+    // Batasi opacity dari 0 sampai 1
+    const opacity = Math.max(
+      0,
+      Math.min(1, game.coupleOpacity ?? 1)
+    );
+
+    // Opacity diterapkan sekali pada
+    // hasil gabungan kedua karakter.
+    ctx.globalAlpha = opacity;
+
+    // Karena dunia sudah digeser kamera,
+    // gambar layer pada cameraX.
+    ctx.drawImage(
+      coupleLayer,
+      cameraX,
+      0
+    );
+
+    ctx.restore();
+  }
 
   // =====================================
-  // HATI KECIL SAAT BERTEMU / MERAYAKAN
+  // HATI SAAT BERTEMU
   // =====================================
 
   if (
@@ -111,7 +206,10 @@ export function drawWorld(ctx, game, time, sprites) {
     );
   }
 
-  // Kembang api
+  // =====================================
+  // KEMBANG API
+  // =====================================
+
   drawFireworks(
     ctx,
     game.fireworks ?? []
