@@ -13,6 +13,7 @@ import {
 
 import AdventureOverlay from "./AdventureOverlay";
 import AdventureControls from "./AdventureControls";
+import AdventureFailModal from "./AdventureFailModal";
 
 export default function HeartAdventure({ onComplete }) {
   const {
@@ -20,19 +21,17 @@ export default function HeartAdventure({ onComplete }) {
     status,
     score,
     notice,
+    failMessage,
     startGame,
+    resumeGame,
     handlePress,
     handleRelease
   } = useAdventureGame();
 
   return (
     <div className="adventure">
-      {/* INFORMASI GAME */}
+      {/* JUDUL LEVEL */}
       <div className="adventure__topbar">
-        <span>
-          ♡ Hati: {score} / {REQUIRED_HEARTS}
-        </span>
-
         <span>Level 1 — Menuju Kastil</span>
       </div>
 
@@ -45,14 +44,32 @@ export default function HeartAdventure({ onComplete }) {
           aria-label="Petualangan menuju kastil"
         />
 
+        {/* JUMLAH HATI — POJOK KANAN ATAS */}
+        <div
+          className="adventure__heart-hud"
+          aria-live="polite"
+        >
+          <span aria-hidden="true">♡</span>
+          <span>
+            {score} / {REQUIRED_HEARTS}
+          </span>
+        </div>
+
+        {/* TAMPILAN MULAI DAN MENANG */}
         <AdventureOverlay
           status={status}
           onStart={startGame}
           onComplete={onComplete}
         />
+
+        {/* MODAL KETIKA GAGAL */}
+        <AdventureFailModal
+          message={failMessage}
+          onRetry={resumeGame}
+        />
       </div>
 
-      {/* PESAN PERMAINAN */}
+      {/* PESAN INFO LAINNYA */}
       {notice && (
         <p
           className="adventure__notice"
@@ -62,7 +79,7 @@ export default function HeartAdventure({ onComplete }) {
         </p>
       )}
 
-      {/* KONTROL GAME */}
+      {/* KONTROL */}
       <AdventureControls
         status={status}
         onPress={handlePress}

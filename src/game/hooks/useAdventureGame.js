@@ -35,6 +35,32 @@ import {
 import { loadHeadSprites } from "../assets/sprites";
 import { drawWorld } from "../rendering/world";
 
+
+const deathMessages = {
+  fall: [
+    "Aduhhh sayang, kok malah nyemplung sih 😭♡",
+    "Hehe, jurangnya jangan dipeluk juga dong 😭",
+    "Pelan-pelan yaa, aku masih nungguin kamu di kastil 🥺♡",
+    "Yahh jatuh lagi. Ayo semangat, dikit lagi ketemu aku! ♡"
+  ],
+
+  mob: [
+    "Awww, malah ditabrak monster. Sini aku obatin 🥺♡",
+    "Ih monsternya nakal banget, gangguin kamu terus 😤",
+    "Sayang, monsternya dihindarin, jangan diajak kenalan 😭",
+    "Ayo semangat! Jangan kalah sama monster kecil itu 😚♡"
+  ]
+};
+
+function getRandomDeathMessage(type) {
+  const messages = deathMessages[type];
+
+  return messages[
+    Math.floor(Math.random() * messages.length)
+  ];
+}
+
+
 export function useAdventureGame() {
   const canvasRef = useRef(null);
   const gameRef = useRef(createGame());
@@ -46,6 +72,7 @@ export function useAdventureGame() {
   const [status, setStatus] = useState("ready");
   const [score, setScore] = useState(0);
   const [notice, setNotice] = useState("");
+  const [failMessage, setFailMessage] = useState("");
 
   // ====================================
   // MULAI / ULANG GAME
@@ -60,7 +87,17 @@ export function useAdventureGame() {
     setStatus("playing");
     setScore(0);
     setNotice("");
+    setFailMessage("");
   }
+
+    function resumeGame() {
+    resetControls(controlsRef.current);
+
+    setFailMessage("");
+
+    statusRef.current = "playing";
+    setStatus("playing");
+    }
 
   // ====================================
   // KONTROL TOMBOL LAYAR
@@ -109,12 +146,22 @@ export function useAdventureGame() {
     // RESPAWN
     // ====================================
 
-    function respawn() {
-      respawnPlayer(gameRef.current);
+    function respawn(type) {
+        // Kembalikan karakter ke checkpoint
+        respawnPlayer(gameRef.current);
 
-      setNotice(
-        "Ups, jatuh atau kena mob. Coba lagi yaa, sayang ♡"
-      );
+        // Pesan sesuai penyebab gagal
+        setFailMessage(getRandomDeathMessage(type));
+
+        // Jangan tampilkan pesan biasa di bawah game
+        setNotice("");
+
+        // Hentikan semua input
+        resetControls(controlsRef.current);
+
+        // Jeda game sampai modal ditutup
+        statusRef.current = "paused";
+        setStatus("paused");
     }
 
     // ====================================
@@ -155,10 +202,10 @@ export function useAdventureGame() {
       updateCheckpoint(game);
 
       // Jatuh ke jurang
-      if (isPlayerInVoid(game)) {
-        respawn();
+        if (isPlayerInVoid(game)) {
+        respawn("fall");
         return;
-      }
+        }
 
       // Mengumpulkan hati
       if (collectHearts(game)) {
@@ -167,10 +214,10 @@ export function useAdventureGame() {
       }
 
       // Terkena mob
-      if (hasHitEnemy(game)) {
-        respawn();
+        if (hasHitEnemy(game)) {
+        respawn("mob");
         return;
-      }
+        }
 
       // Menyentuh tiang bendera
       const flagResult = checkFlagContact(game);
@@ -244,13 +291,15 @@ export function useAdventureGame() {
   }, []);
 
   // Data dan fungsi yang digunakan React
-  return {
+    return {
     canvasRef,
     status,
     score,
     notice,
+    failMessage,
     startGame,
+    resumeGame,
     handlePress,
     handleRelease
-  };
+    };
 }
