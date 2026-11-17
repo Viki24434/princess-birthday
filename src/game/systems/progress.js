@@ -15,11 +15,11 @@ import {
 import { overlaps } from "../engine/collision";
 import { isPlayerHit } from "../entities/enemies";
 
+import { playGameSound } from "../audio/gameAudio";
+
 // ====================================
 // CHECKPOINT
 // ====================================
-
-
 
 export function updateCheckpoint(game) {
   const playerX = game.player.x;
@@ -40,6 +40,8 @@ export function updateCheckpoint(game) {
 
     // Simpan posisi respawn terbaru
     game.checkpoint = checkpoint.respawnX;
+
+    playGameSound("checkpoint");
 
     // Efek visual saat checkpoint aktif
     game.checkpointCelebration = {
@@ -84,6 +86,8 @@ export function collectHearts(game) {
       game.collected.add(index);
     }
   });
+
+  playGameSound("heart");
 
   // true jika jumlah hati bertambah
   return game.collected.size !== previousCount;

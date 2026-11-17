@@ -17,6 +17,8 @@ import {
   updateFireworks
 } from "../effects/fireworks";
 
+import { playGameSound } from "../audio/gameAudio";
+
 const GROUND_PLAYER_Y = GROUND_Y - PLAYER_HEIGHT;
 
 const PAIR_GAP = 36;
@@ -59,6 +61,8 @@ export function beginFinishSequence(game) {
   const player = game.player;
 
   startStep(game, "slide");
+
+  playGameSound("flag");
 
   game.coupleOpacity = 1;
   setHoldingHands(game, false);
@@ -319,6 +323,9 @@ export function updateFinishSequence(game, delta) {
     if (
       game.finishTimer >= CELEBRATION_DURATION
     ) {
+      playGameSound("win");
+      stopGameMusic();
+
       startStep(game, "done");
       return true;
     }

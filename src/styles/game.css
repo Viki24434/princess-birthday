@@ -420,3 +420,55 @@
     animation: none;
   }
 }
+
+
+/* =====================================
+   TOMBOL PENGATURAN SUARA
+===================================== */
+
+.adventure__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.adventure__sound-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 7px 13px;
+  border: 1px solid #e8b8cf;
+  border-radius: 999px;
+
+  background: #fff5fa;
+  color: #a45d7c;
+
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.adventure__sound-btn:hover {
+  background: #ffe7f2;
+  transform: translateY(-1px);
+}
+
+.adventure__sound-btn:focus-visible {
+  outline: 3px solid #d78baa;
+  outline-offset: 3px;
+}
+
+@media (max-width: 600px) {
+  .adventure__sound-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}

@@ -35,6 +35,13 @@ import {
 import { loadHeadSprites } from "../assets/sprites";
 import { drawWorld } from "../rendering/world";
 
+import {
+  unlockGameAudio,
+  startGameMusic,
+  stopGameMusic,
+  playGameSound
+} from "../audio/gameAudio";
+
 
 const deathMessages = {
   fall: [
@@ -89,6 +96,8 @@ export function useAdventureGame() {
     setScore(0);
     setNotice("");
     setFailMessage("");
+    unlockGameAudio();
+    startGameMusic();
   }
 
     function resumeGame() {
@@ -99,6 +108,9 @@ export function useAdventureGame() {
         statusRef.current = "playing";
         setStatus("playing");
         setFailType(null);
+
+        unlockGameAudio();
+        startGameMusic();
     }
 
   // ====================================
@@ -165,6 +177,12 @@ export function useAdventureGame() {
 
     statusRef.current = "paused";
     setStatus("paused");
+
+    playGameSound(
+        type === "mob" ? "hit" : "fall"
+    );
+
+    stopGameMusic();
     }
 
 
@@ -195,12 +213,25 @@ export function useAdventureGame() {
       // Gerakkan mob
       updateEnemies(game.enemies, delta);
 
+        const wasOnGround = game.player.onGround;
+        const previousY = game.player.y;
+
       // Gerakkan karakter
       updatePlayer(
         player,
         controlsRef.current,
         delta
       );
+
+        if (
+        wasOnGround &&
+        !game.player.onGround &&
+        game.player.vy < 0 &&
+        game.player.y < previousY &&
+        !game.player.onLadder
+        ) {
+        playGameSound("jump");
+        }
 
       // Simpan checkpoint
       updateCheckpoint(game);

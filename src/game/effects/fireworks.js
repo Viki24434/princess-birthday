@@ -1,3 +1,4 @@
+import { playGameSound } from "../audio/gameAudio";
 
 const FIREWORK_COLORS = [
   "#FF8AB6",
@@ -35,6 +36,8 @@ export function spawnFirework(particles, x, y) {
       radius: 1.5 + Math.random() * 2,
       color
     });
+
+    playGameSound("firework");
   }
 }
 

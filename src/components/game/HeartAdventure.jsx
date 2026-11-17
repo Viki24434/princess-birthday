@@ -15,6 +15,15 @@ import AdventureOverlay from "./AdventureOverlay";
 import AdventureControls from "./AdventureControls";
 import AdventureFailModal from "./AdventureFailModal";
 
+import { useState, useEffect } from "react";
+
+import {
+  getGameSoundEnabled,
+  setGameSoundEnabled,
+  unlockGameAudio,
+  stopGameMusic
+} from "../../game/audio/gameAudio";
+
 export default function HeartAdventure({ onComplete }) {
   const {
     canvasRef,
@@ -29,11 +38,43 @@ export default function HeartAdventure({ onComplete }) {
     handleRelease
   } = useAdventureGame();
 
+
+  const [soundEnabled, setSoundEnabled] =
+    useState(getGameSoundEnabled);
+
+  function toggleSound() {
+    const next = !soundEnabled;
+
+    setGameSoundEnabled(next);
+    setSoundEnabled(next);
+
+    if (next) {
+      unlockGameAudio();
+    }
+  }
+
+  // Hentikan musik saat keluar dari scene
+  useEffect(() => {
+    return () => {
+      stopGameMusic();
+    };
+  }, []);
+
+
   return (
     <div className="adventure">
       {/* JUDUL LEVEL */}
       <div className="adventure__topbar">
         <span>Level 1 — Menuju Kastil</span>
+
+        <button
+          type="button"
+          className="adventure__sound-btn"
+          onClick={toggleSound}
+          aria-pressed={soundEnabled}
+        >
+          {soundEnabled ? "🔊 Suara" : "🔇 Senyap"}
+        </button>
       </div>
 
       {/* LAYAR GAME */}
