@@ -26,11 +26,15 @@ export function drawPlayer(ctx, player, time, sprites) {
     Math.abs(player.vx) > 0.1 &&
     player.onGround;
 
+    const isFlagSliding =
+    player.isFlagSliding === true;
+
   const isClimbing = player.onLadder;
 
-  const isJumping =
+    const isJumping =
     !player.onGround &&
-    !player.onLadder;
+    !player.onLadder &&
+    !isFlagSliding;
 
   const walkFrame = Math.sin(time / 105);
 
@@ -100,10 +104,63 @@ export function drawPlayer(ctx, player, time, sprites) {
   ctx.fillStyle = "#FFE4EE";
   ctx.fillRect(x + 14, y + 20, 4, 4);
 
-  // Tangan
-  ctx.strokeStyle = "#F1A3C3";
-  ctx.lineWidth = 6;
-  ctx.beginPath();
+
+    // =====================================
+    // ANIMASI TANGAN
+    // =====================================
+
+    ctx.strokeStyle = "#F1A3C3";
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+
+    if (isFlagSliding) {
+    // Tangan kiri berada di samping badan
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 5, y + 29);
+
+    // Tangan kanan menjangkau tiang
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 35, y + 17);
+
+    } else if (isJumping) {
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 2, y + 12);
+
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 30, y + 12);
+
+    } else if (isClimbing) {
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 5, y + 12 + armOffset);
+
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 27, y + 12 - armOffset);
+
+    } else {
+    ctx.moveTo(x + 7, y + 20);
+    ctx.lineTo(x + 4, y + 29 + armOffset);
+
+    ctx.moveTo(x + 25, y + 20);
+    ctx.lineTo(x + 28, y + 29 - armOffset);
+    }
+
+    ctx.stroke();
+
+    // Tambahkan tangan kecil yang memegang tiang
+    if (isFlagSliding) {
+    ctx.fillStyle = "#F2D8C8";
+
+    ctx.beginPath();
+    ctx.arc(
+        x + 35,
+        y + 17,
+        4,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+    }
+
 
   if (isJumping) {
     ctx.moveTo(x + 7, y + 20);
