@@ -40,13 +40,16 @@ export default function AdventureOverlay({
           💖
         </span>
 
-        <h2>Akhirnya sampai juga, sayang! ♡</h2>
+        <h2>Kita berhasil sampai ke atas, sayang! ♡</h2>
 
         <p>
-          Hehe, kamu berhasil lewatin semuanya.
-          Aku udah nungguin kamu di sini, nih.
-          Sekarang masih ada satu hal lagi
-          yang pengen aku kasih ke kamu.
+        Yeay, akhirnya kita sampai juga!
+        Lihat tuh, kembang apinya cantik banget.
+        Makasih yaa udah mau lewatin
+        petualangan kecil ini bareng aku.
+
+        Tapi tunggu, masih ada sesuatu
+        yang pengen aku kasih ke kamu. ♡
         </p>
 
         <button

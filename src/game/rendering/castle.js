@@ -1,4 +1,10 @@
-import { CASTLE_X } from "../levels/level1";
+import {
+  CASTLE_X,
+  CASTLE_STAIRS
+} from "../levels/level1";
+
+import { GROUND_Y } from "../constants";
+
 export function drawCastle(ctx) {
   const castleX = CASTLE_X;
 
@@ -56,6 +62,57 @@ export function drawCastle(ctx) {
   // Balkon tempat pasangan menunggu
   ctx.fillStyle = "#C98BA9";
   ctx.fillRect(castleX + 50, 170, 92, 10);
+
+  ctx.restore();
+}
+
+export function drawCastleStairs(ctx) {
+  const {
+    startX,
+    endX,
+    steps,
+    stepHeight
+  } = CASTLE_STAIRS;
+
+  const stepWidth = (endX - startX) / steps;
+
+  ctx.save();
+
+  for (let i = 1; i <= steps; i++) {
+    const x = startX + i * stepWidth;
+    const y = GROUND_Y - i * stepHeight;
+
+    const height = GROUND_Y - y;
+
+    // Balok tangga
+    ctx.fillStyle = "#C990AC";
+    ctx.fillRect(
+      x,
+      y,
+      stepWidth + 1,
+      height
+    );
+
+    // Permukaan balok
+    ctx.fillStyle = "#FFE1EE";
+    ctx.fillRect(
+      x,
+      y,
+      stepWidth + 1,
+      5
+    );
+
+    // Garis samping
+    ctx.strokeStyle = "#A96C8A";
+    ctx.lineWidth = 1;
+
+    ctx.strokeRect(
+      x,
+      y,
+      stepWidth + 1,
+      height
+    );
+  }
 
   ctx.restore();
 }

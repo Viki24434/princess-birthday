@@ -213,51 +213,109 @@ export function drawPlayer(ctx, player, time, sprites) {
 // KARAKTER COWOK — MENUNGGU DI KASTIL
 // ========================================
 
-export function drawPartner(ctx, time, sprites) {
-  const x = partner.x;
-  const y = partner.y;
 
-  const wave = Math.sin(time / 240) * 5;
+export function drawPartner(
+  ctx,
+  time,
+  sprites,
+  character = partner
+) {
+  const x = character.x;
+  const y = character.y;
+
+  const isWalking =
+    Math.abs(character.vx ?? 0) > 0.1;
+
+  const legSwing = isWalking
+    ? Math.sin(time / 105) * 4
+    : 0;
+
+  const armSwing = isWalking
+    ? Math.sin(time / 105) * 4
+    : 0;
+
+  const wave = isWalking
+    ? 0
+    : Math.sin(time / 240) * 5;
 
   ctx.save();
   ctx.lineCap = "round";
 
   // Kaki
   ctx.fillStyle = "#D6BBA7";
-  ctx.fillRect(x + 7, y + 29, 6, 11);
-  ctx.fillRect(x + 18, y + 29, 6, 11);
+
+  ctx.fillRect(
+    x + 7 + legSwing,
+    y + 29,
+    6,
+    11
+  );
+
+  ctx.fillRect(
+    x + 18 - legSwing,
+    y + 29,
+    6,
+    11
+  );
 
   // Sepatu
   ctx.fillStyle = "#3B3443";
-  ctx.fillRect(x + 4, y + 38, 11, 5);
-  ctx.fillRect(x + 17, y + 38, 11, 5);
+
+  ctx.fillRect(
+    x + 4 + legSwing,
+    y + 38,
+    11,
+    5
+  );
+
+  ctx.fillRect(
+    x + 17 - legSwing,
+    y + 38,
+    11,
+    5
+  );
 
   // Baju hitam
   ctx.fillStyle = "#302B35";
-
   ctx.beginPath();
-  ctx.roundRect(x + 4, y + 15, 24, 20, 5);
+  ctx.roundRect(
+    x + 4,
+    y + 15,
+    24,
+    20,
+    5
+  );
   ctx.fill();
 
   // Kerah
   ctx.fillStyle = "#4F4753";
-
   ctx.beginPath();
+
   ctx.moveTo(x + 10, y + 17);
   ctx.lineTo(x + 16, y + 22);
   ctx.lineTo(x + 21, y + 17);
+
   ctx.fill();
 
-  // Tangan kiri dan tangan kanan melambai
+  // Kedua tangan
   ctx.strokeStyle = "#302B35";
   ctx.lineWidth = 6;
   ctx.beginPath();
 
-  ctx.moveTo(x + 6, y + 19);
-  ctx.lineTo(x + 2, y + 30);
+  if (isWalking) {
+    ctx.moveTo(x + 6, y + 19);
+    ctx.lineTo(x + 2, y + 29 + armSwing);
 
-  ctx.moveTo(x + 25, y + 19);
-  ctx.lineTo(x + 32 + wave, y + 7);
+    ctx.moveTo(x + 25, y + 19);
+    ctx.lineTo(x + 29, y + 29 - armSwing);
+  } else {
+    // Melambai saat diam
+    ctx.moveTo(x + 6, y + 19);
+    ctx.lineTo(x + 2, y + 30);
+
+    ctx.moveTo(x + 25, y + 19);
+    ctx.lineTo(x + 32 + wave, y + 7);
+  }
 
   ctx.stroke();
 
@@ -274,7 +332,13 @@ export function drawPartner(ctx, time, sprites) {
   if (!loaded) {
     ctx.fillStyle = "#FFE0D0";
     ctx.beginPath();
-    ctx.arc(x + 15, y + 5, 17, 0, Math.PI * 2);
+    ctx.arc(
+      x + 15,
+      y + 5,
+      17,
+      0,
+      Math.PI * 2
+    );
     ctx.fill();
   }
 

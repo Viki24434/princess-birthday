@@ -6,11 +6,26 @@ import {
 
 import {
   enemyTemplates,
-  FLAG
+  FLAG,
+  partner
 } from "../levels/level1";
 
 export function createGame() {
   return {
+
+    // Posisi cowok yang dapat dianimasikan
+    partner: {
+    ...partner,
+    vx: 0
+    },
+
+    // Tahapan animasi kemenangan
+    finishTimer: 0,
+
+    // Partikel kembang api
+    fireworks: [],
+    fireworkClock: 0,
+
     player: {
       x: 55,
       y: GROUND_Y - PLAYER_HEIGHT,

@@ -81,6 +81,15 @@ export const FLAG = {
 
 // Posisi kastil
 export const CASTLE_X = 3260;
+
+export const CASTLE_STAIRS = {
+  startX: CASTLE_X - 70,
+  endX: CASTLE_X + 70,
+  steps: 8,
+  stepHeight: 20
+};
+
+
 export const CASTLE_DOOR_X = CASTLE_X + 70;
 
 // Cowok menunggu di depan kastil

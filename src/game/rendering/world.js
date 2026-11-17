@@ -9,11 +9,18 @@ import { drawTerrain } from "./terrain";
 
 import {
   drawCollectibles,
-  drawEnemies
+  drawEnemies,
+  drawHeart
 } from "./objects";
 
 import { drawFlagPole } from "./flag";
-import { drawCastle } from "./castle";
+
+import {
+  drawCastle,
+  drawCastleStairs
+} from "./castle";
+
+import { drawFireworks } from "../effects/fireworks";
 
 import {
   drawPlayer,
@@ -61,17 +68,56 @@ export function drawWorld(ctx, game, time, sprites) {
   // Mob
   drawEnemies(ctx, game.enemies);
 
-  // Kastil
-  drawCastle(ctx);
+    // Kastil
+    drawCastle(ctx);
 
-  // Tiang dan bendera
-  drawFlagPole(ctx, game);
+    // Tangga menuju balkon kastil
+    drawCastleStairs(ctx);
 
-  // Pasangan yang menunggu
-  drawPartner(ctx, time, sprites);
+    // Tiang bendera
+    drawFlagPole(ctx, game);
 
-  // Karakter pemain
-  drawPlayer(ctx, player, time, sprites);
+    // Cowok menggunakan posisi animasi
+    drawPartner(
+    ctx,
+    time,
+    sprites,
+    game.partner
+    );
 
-  ctx.restore();
+    // Cewek
+    drawPlayer(
+    ctx,
+    player,
+    time,
+    sprites
+    );
+
+    // Hati kecil saat mereka bertemu
+    if (
+    game.finishStep === "meet" ||
+    game.finishStep === "celebrate"
+    ) {
+    const centerX =
+        (player.x + game.partner.x) / 2 + 15;
+
+    const heartY =
+        Math.min(player.y, game.partner.y) -
+        24 +
+        Math.sin(time / 240) * 4;
+
+    drawHeart(
+        ctx,
+        centerX,
+        heartY,
+        20,
+        "#F076A8"
+    );
+    }
+
+    // Kembang api digambar di atas dunia game
+    drawFireworks(ctx, game.fireworks);
+
+    ctx.restore();
+
 }
