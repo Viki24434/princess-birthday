@@ -31,7 +31,14 @@ import {
 
 import { drawCastle } from "../../game/rendering/castle";
 
+import { updatePlayer } from "../../game/engine/physics";
 
+import { overlaps } from "../../game/engine/collision";
+
+import {
+  updateEnemies,
+  isPlayerHit
+} from "../../game/entities/enemies";
 
 function createGame() {
   return {
@@ -51,15 +58,6 @@ function createGame() {
     flagY: FLAG.top + 15,
     finishStep: null,
   };
-}
-
-function overlaps(a, b) {
-  return (
-    a.x < b.x + b.w &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.h &&
-    a.y + a.h > b.y
-  );
 }
 
 function drawHeart(ctx, x, y, size, color) {
@@ -316,18 +314,6 @@ function drawWorld(ctx, game, time, sprites) {
   ctx.restore();
 }
 
-function getLadderForPlayer(player) {
-  const centerX = player.x + PLAYER_WIDTH / 2;
-  const playerTop = player.y;
-  const playerBottom = player.y + PLAYER_HEIGHT;
-
-  return ladders.find((ladder) => {
-    const insideX = centerX >= ladder.x - 10 && centerX <= ladder.x + ladder.w + 10;
-    const overlapsY = playerBottom > ladder.y && playerTop < ladder.y + ladder.h;
-    return insideX && overlapsY;
-  });
-}
-
 export default function HeartAdventure({ onComplete }) {
   const canvasRef = useRef(null);
   const gameRef = useRef(createGame());
@@ -470,228 +456,76 @@ export default function HeartAdventure({ onComplete }) {
     function update(delta) {
       const game = gameRef.current;
       const player = game.player;
-      const controls = controlsRef.current;
 
-      game.enemies.forEach((enemy) => {
-        enemy.x += enemy.speed * enemy.dir * delta;
+      if (statusRef.current === "finishing") {
+        // Tahap 1: bendera turun dan
+        // karakter meluncur di tiang.
+        if (game.finishStep === "slide") {
+          game.flagY = Math.min(
+            FLAG.bottom - 50,
+            game.flagY + 3.6 * delta
+          );
 
-        if (enemy.x <= enemy.minX) {
-          enemy.x = enemy.minX;
-          enemy.dir = 1;
-        }
-
-        if (enemy.x >= enemy.maxX) {
-          enemy.x = enemy.maxX;
-          enemy.dir = -1;
-        }
-      });
-
-      player.vx = controls.right ? 5.2 : controls.left ? -5.2 : 0;
-
-
-    if (statusRef.current === "finishing") {
-      // Tahap 1: bendera turun dan
-      // karakter meluncur di tiang.
-      if (game.finishStep === "slide") {
-        game.flagY = Math.min(
-          FLAG.bottom - 50,
-          game.flagY + 3.6 * delta
-        );
-
-        player.x = FLAG.x + 7;
-        player.vx = 0;
-        player.vy = 0;
-        player.onLadder = false;
-        player.facing = "kanan";
-
-        player.y = Math.min(
-          GROUND_Y - PLAYER_HEIGHT,
-          player.y + 4.2 * delta
-        );
-
-        const flagDown =
-          game.flagY >= FLAG.bottom - 50;
-
-        const playerDown =
-          player.y >= GROUND_Y - PLAYER_HEIGHT;
-
-        if (playerDown) {
-          player.onGround = true;
-        }
-
-        if (flagDown && playerDown) {
-          game.finishStep = "walk";
-        }
-      }
-
-      // Tahap 2: karakter berjalan sendiri
-      // menuju pintu kastil.
-      else if (game.finishStep === "walk") {
-        player.x = Math.min(
-          CASTLE_DOOR_X,
-          player.x + 2.8 * delta
-        );
-
-        player.vx = 2.8;
-        player.facing = "kanan";
-
-        if (player.x >= CASTLE_DOOR_X) {
+          player.x = FLAG.x + 7;
           player.vx = 0;
-          game.finishStep = "done";
-
-          statusRef.current = "won";
-          setStatus("won");
-          setNotice("");
-        }
-      }
-
-      return;
-    }
-
-    if (player.vx > 0) {
-    player.facing = "kanan";
-    } else if (player.vx < 0) {
-    player.facing = "kiri";
-    }
-
-      const ladder = getLadderForPlayer(player);
-      const wantsLadder = ladder && (controls.up || controls.down);
-
-      if (wantsLadder && !player.onLadder) {
-        player.onLadder = true;
-        player.onGround = false;
-        player.vy = 0;
-        player.x = ladder.x + ladder.w / 2 - PLAYER_WIDTH / 2;
-      }
-
-      if (player.onLadder) {
-        const activeLadder = getLadderForPlayer(player);
-
-        if (!activeLadder) {
-          player.onLadder = false;
-        } else {
           player.vy = 0;
+          player.onLadder = false;
+          player.facing = "kanan";
 
-          if (controls.up) {
-            player.y -= 3.4 * delta;
-          }
+          player.y = Math.min(
+            GROUND_Y - PLAYER_HEIGHT,
+            player.y + 4.2 * delta
+          );
 
-          if (controls.down) {
-            player.y += 3.4 * delta;
-          }
+          const flagDown =
+            game.flagY >= FLAG.bottom - 50;
 
-          player.x += player.vx * 0.45 * delta;
-          player.x = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x));
+          const playerDown =
+            player.y >= GROUND_Y - PLAYER_HEIGHT;
 
-          const topLimit = activeLadder.y - PLAYER_HEIGHT + 6;
-          const bottomLimit = activeLadder.y + activeLadder.h - PLAYER_HEIGHT;
-
-          if (player.y < topLimit) {
-            player.y = topLimit;
-          }
-
-          if (player.y > bottomLimit) {
-            player.y = bottomLimit;
-          }
-
-          if (controls.jump) {
-            player.onLadder = false;
-            player.vy = -11;
-          }
-        }
-      }
-
-      if (!player.onLadder) {
-        if (controls.jump && player.onGround) {
-          player.vy = -12.5;
-          player.onGround = false;
-        }
-
-
-        // Simpan posisi sebelum karakter bergerak
-        const previousX = player.x;
-        const previousBottom = player.y + PLAYER_HEIGHT;
-
-        // Gravitasi
-        player.vy = Math.min(
-          player.vy + 0.64 * delta,
-          16
-        );
-
-        // Gerakkan karakter terlebih dahulu
-        player.x += player.vx * delta;
-        player.y += player.vy * delta;
-
-        // Batas horizontal dunia
-        player.x = Math.max(
-          0,
-          Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x)
-        );
-
-        // Collision samping tangga balok
-        for (const stair of END_STAIRS) {
-          const verticalOverlap =
-            player.y + PLAYER_HEIGHT > stair.y + 2 &&
-            player.y < stair.y + stair.h;
-
-          const landingFromAbove =
-            previousBottom <= stair.y + 6 &&
-            player.vy >= 0;
-
-          if (!verticalOverlap || landingFromAbove) {
-            continue;
-          }
-
-          // Menabrak balok dari sebelah kiri
-          if (
-            player.vx > 0 &&
-            previousX + PLAYER_WIDTH <= stair.x + 2 &&
-            player.x + PLAYER_WIDTH > stair.x
-          ) {
-            player.x = stair.x - PLAYER_WIDTH;
-            player.vx = 0;
-          }
-
-          // Menabrak balok dari sebelah kanan
-          if (
-            player.vx < 0 &&
-            previousX >= stair.x + stair.w - 2 &&
-            player.x < stair.x + stair.w
-          ) {
-            player.x = stair.x + stair.w;
-            player.vx = 0;
-          }
-        }
-
-
-        player.x = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x));
-
-        player.onGround = false;
-
-        player.onGround = false;
-
-        for (const platform of [...platforms, ...END_STAIRS]) {
-          const crossingTop =
-            previousBottom <= platform.y + 6 &&
-            player.y + PLAYER_HEIGHT >= platform.y;
-
-          const horizontallyInside =
-            player.x + PLAYER_WIDTH > platform.x &&
-            player.x < platform.x + platform.w;
-
-          if (
-            player.vy >= 0 &&
-            crossingTop &&
-            horizontallyInside
-          ) {
-            player.y = platform.y - PLAYER_HEIGHT;
-            player.vy = 0;
+          if (playerDown) {
             player.onGround = true;
           }
+
+          if (flagDown && playerDown) {
+            game.finishStep = "walk";
+          }
         }
+
+        // Tahap 2: karakter berjalan sendiri
+        // menuju pintu kastil.
+        else if (game.finishStep === "walk") {
+          player.x = Math.min(
+            CASTLE_DOOR_X,
+            player.x + 2.8 * delta
+          );
+
+          player.vx = 2.8;
+          player.facing = "kanan";
+
+          if (player.x >= CASTLE_DOOR_X) {
+            player.vx = 0;
+            game.finishStep = "done";
+
+            statusRef.current = "won";
+            setStatus("won");
+            setNotice("");
+          }
+        }
+
+        return;
       }
 
-      controls.jump = false;
+      // Gerakkan semua mob
+      updateEnemies(game.enemies, delta);
+
+      // Jalankan gerakan pemain,
+      // gravitasi, tangga, dan collision
+      updatePlayer(
+        player,
+        controlsRef.current,
+        delta
+      );
 
       if (player.x > 1600) {
         game.checkpoint = 1560;
@@ -727,11 +561,10 @@ export default function HeartAdventure({ onComplete }) {
         h: PLAYER_HEIGHT
       };
 
-      if (game.enemies.some((enemy) => overlaps(playerBox, enemy))) {
+      if (isPlayerHit(player, game.enemies)) {
         respawn();
         return;
       }
-
 
       const flagHitbox = {
         x: FLAG.x - 10,
