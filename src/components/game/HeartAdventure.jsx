@@ -24,15 +24,25 @@ const platforms = [
   { x: 1660, y: 245, w: 150, h: 16 },
   { x: 2190, y: 250, w: 120, h: 16 },
 
-  // Anak tangga menuju kastil
-  { x: 2550, y: 300, w: 70, h: 16 },
-  { x: 2625, y: 270, w: 70, h: 16 },
-  { x: 2700, y: 240, w: 70, h: 16 },
-  { x: 2775, y: 210, w: 70, h: 16 },
-
-  // Balkon kastil
-  { x: 2840, y: 170, w: 180, h: 16 }
 ];
+
+
+const END_STAIRS = [
+  { x: 2550, y: 298, w: 54, h: 32 },
+  { x: 2604, y: 266, w: 54, h: 64 },
+  { x: 2658, y: 234, w: 54, h: 96 },
+  { x: 2712, y: 202, w: 54, h: 128 },
+  { x: 2766, y: 170, w: 54, h: 160 }
+];
+
+const FLAG = {
+  x: 2825,
+  top: 90,
+  bottom: 330
+};
+
+const CASTLE_DOOR_X = 2940;
+
 
 const ladders = [
   { x: 772, y: 245, w: 36, h: 85 },
@@ -125,7 +135,9 @@ function createGame() {
     checkpoint: 55,
     collected: new Set(),
     warned: false,
-    enemies: enemyTemplates.map((enemy) => ({ ...enemy }))
+    enemies: enemyTemplates.map((enemy) => ({ ...enemy })),
+    flagY: FLAG.top + 15,
+    finishStep: null,
   };
 }
 
@@ -172,6 +184,103 @@ function drawLadder(ctx, ladder) {
   for (let y = ladder.y + 10; y < ladder.y + ladder.h - 4; y += 14) {
     ctx.fillRect(ladder.x + 5, y, ladder.w - 10, 4);
   }
+}
+
+function drawEndStairs(ctx) {
+  END_STAIRS.forEach((block) => {
+    for (
+      let y = block.y;
+      y < GROUND_Y;
+      y += 32
+    ) {
+      // Balok utama
+      ctx.fillStyle = "#D795AF";
+      ctx.fillRect(block.x, y, block.w, 32);
+
+      // Garis antarbalok
+      ctx.strokeStyle = "#A85F80";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(
+        block.x + 1,
+        y + 1,
+        block.w - 2,
+        30
+      );
+
+      // Highlight
+      ctx.fillStyle = "#F9D8E5";
+      ctx.fillRect(
+        block.x + 5,
+        y + 5,
+        block.w - 10,
+        4
+      );
+
+      // Ornamen kecil
+      ctx.fillStyle = "#EAB6CB";
+      ctx.fillRect(block.x + 10, y + 17, 12, 5);
+      ctx.fillRect(block.x + 32, y + 17, 9, 5);
+    }
+  });
+}
+
+function drawFlagPole(ctx, game) {
+  // Dasar tiang
+  ctx.fillStyle = "#C6A16A";
+  ctx.fillRect(FLAG.x - 13, 318, 26, 12);
+
+  // Tiang utama
+  ctx.fillStyle = "#FFFFFF";
+  ctx.fillRect(
+    FLAG.x - 4,
+    FLAG.top,
+    8,
+    FLAG.bottom - FLAG.top
+  );
+
+  // Bayangan tiang
+  ctx.fillStyle = "#E1C9D3";
+  ctx.fillRect(
+    FLAG.x + 1,
+    FLAG.top,
+    3,
+    FLAG.bottom - FLAG.top
+  );
+
+  // Bola emas di puncak
+  ctx.beginPath();
+  ctx.arc(
+    FLAG.x,
+    FLAG.top,
+    10,
+    0,
+    Math.PI * 2
+  );
+  ctx.fillStyle = "#E8C77C";
+  ctx.fill();
+
+  // Bendera pink yang bisa turun
+  const flagY = game.flagY;
+
+  ctx.fillStyle = "#E88DB3";
+  ctx.beginPath();
+  ctx.moveTo(FLAG.x - 4, flagY);
+  ctx.lineTo(FLAG.x - 54, flagY);
+  ctx.lineTo(FLAG.x - 43, flagY + 19);
+  ctx.lineTo(FLAG.x - 54, flagY + 38);
+  ctx.lineTo(FLAG.x - 4, flagY + 38);
+  ctx.closePath();
+  ctx.fill();
+
+  // Hati putih pada bendera
+  ctx.fillStyle = "#FFFFFF";
+  ctx.font = "23px Georgia";
+  ctx.textAlign = "center";
+  ctx.fillText(
+    "♡",
+    FLAG.x - 29,
+    flagY + 27
+  );
 }
 
 
@@ -489,6 +598,7 @@ function drawWorld(ctx, game, time, sprites) {
     for (let x = platform.x + 12; x < platform.x + platform.w - 5; x += 37) {
       ctx.fillRect(x, platform.y + 5, 12, 3);
     }
+    drawEndStairs(ctx);
   }
 
   // jurang (visual bawah)
@@ -551,42 +661,68 @@ function drawWorld(ctx, game, time, sprites) {
     ctx.fillRect(enemy.x + 19, enemy.y + 26, 6, 2);
   });
 
-  // kastil akhir
+
+  // =====================================
+  // KASTIL DI AKHIR LEVEL
+  // =====================================
+
   const castleX = 2860;
-  const castleY = 55;
-  const castleW = 180;
-  const castleH = 115;
 
+  // Bangunan utama sampai tanah
   ctx.fillStyle = "#F3D8E5";
-  ctx.fillRect(castleX, castleY + 25, castleW, castleH);
+  ctx.fillRect(castleX, 170, 180, 160);
 
+  // Menara kiri dan kanan
   ctx.fillStyle = "#E0B8CA";
-  ctx.fillRect(castleX + 8, castleY + 12, 28, 35);
-  ctx.fillRect(castleX + 72, castleY, 36, 47);
-  ctx.fillRect(castleX + 144, castleY + 12, 28, 35);
+  ctx.fillRect(castleX + 7, 125, 37, 70);
+  ctx.fillRect(castleX + 136, 125, 37, 70);
 
-  ctx.fillStyle = "#C789A5";
-  ctx.fillRect(castleX + 70, castleY + 70, 40, 70);
+  // Menara tengah
+  ctx.fillRect(castleX + 68, 88, 45, 100);
 
-  ctx.fillStyle = "#FFF6FA";
-  ctx.fillRect(castleX + 28, castleY + 67, 18, 24);
-  ctx.fillRect(castleX + 134, castleY + 67, 18, 24);
-
-  // pasangan di akhir
-    drawPartner(ctx, time, sprites);
-
-  // bendera kecil di kastil
+  // Atap menara
   ctx.fillStyle = "#B96A8D";
-  ctx.fillRect(castleX + 90, castleY - 18, 3, 20);
+
+  [
+    [castleX + 25, 102, 27],
+    [castleX + 90, 60, 34],
+    [castleX + 154, 102, 27]
+  ].forEach(([x, y, size]) => {
+    ctx.beginPath();
+    ctx.moveTo(x - size, y + 25);
+    ctx.lineTo(x, y - 14);
+    ctx.lineTo(x + size, y + 25);
+    ctx.closePath();
+    ctx.fill();
+  });
+
+  // Pintu kastil
+  ctx.fillStyle = "#9B6582";
   ctx.beginPath();
-  ctx.moveTo(castleX + 93, castleY - 18);
-  ctx.lineTo(castleX + 115, castleY - 12);
-  ctx.lineTo(castleX + 93, castleY - 6);
-  ctx.closePath();
+  ctx.roundRect(
+    castleX + 70,
+    260,
+    44,
+    70,
+    [22, 22, 0, 0]
+  );
   ctx.fill();
 
-  // player
-    drawPlayer(ctx, player, time, sprites);
+  // Jendela
+  ctx.fillStyle = "#FFF8DC";
+  ctx.fillRect(castleX + 24, 213, 20, 28);
+  ctx.fillRect(castleX + 136, 213, 20, 28);
+
+  // Balkon tempat pasangan menunggu
+  ctx.fillStyle = "#C98BA9";
+  ctx.fillRect(castleX + 50, 170, 92, 10);
+
+  // Tiang bendera di depan kastil
+  drawFlagPole(ctx, game);
+
+
+  drawPartner(ctx, time, sprites);
+  drawPlayer(ctx, player, time, sprites);
 
   ctx.restore();
 }
@@ -763,6 +899,66 @@ export default function HeartAdventure({ onComplete }) {
 
       player.vx = controls.right ? 5.2 : controls.left ? -5.2 : 0;
 
+
+    if (statusRef.current === "finishing") {
+      // Tahap 1: bendera turun dan
+      // karakter meluncur di tiang.
+      if (game.finishStep === "slide") {
+        game.flagY = Math.min(
+          FLAG.bottom - 50,
+          game.flagY + 3.6 * delta
+        );
+
+        player.x = FLAG.x + 7;
+        player.vx = 0;
+        player.vy = 0;
+        player.onLadder = false;
+        player.facing = "kanan";
+
+        player.y = Math.min(
+          GROUND_Y - PLAYER_HEIGHT,
+          player.y + 4.2 * delta
+        );
+
+        const flagDown =
+          game.flagY >= FLAG.bottom - 50;
+
+        const playerDown =
+          player.y >= GROUND_Y - PLAYER_HEIGHT;
+
+        if (playerDown) {
+          player.onGround = true;
+        }
+
+        if (flagDown && playerDown) {
+          game.finishStep = "walk";
+        }
+      }
+
+      // Tahap 2: karakter berjalan sendiri
+      // menuju pintu kastil.
+      else if (game.finishStep === "walk") {
+        player.x = Math.min(
+          CASTLE_DOOR_X,
+          player.x + 2.8 * delta
+        );
+
+        player.vx = 2.8;
+        player.facing = "kanan";
+
+        if (player.x >= CASTLE_DOOR_X) {
+          player.vx = 0;
+          game.finishStep = "done";
+
+          statusRef.current = "won";
+          setStatus("won");
+          setNotice("");
+        }
+      }
+
+      return;
+    }
+
     if (player.vx > 0) {
     player.facing = "kanan";
     } else if (player.vx < 0) {
@@ -822,18 +1018,70 @@ export default function HeartAdventure({ onComplete }) {
           player.onGround = false;
         }
 
+
+        // Simpan posisi sebelum karakter bergerak
+        const previousX = player.x;
         const previousBottom = player.y + PLAYER_HEIGHT;
 
-        player.vy = Math.min(player.vy + 0.64 * delta, 16);
+        // Gravitasi
+        player.vy = Math.min(
+          player.vy + 0.64 * delta,
+          16
+        );
 
+        // Gerakkan karakter terlebih dahulu
         player.x += player.vx * delta;
         player.y += player.vy * delta;
+
+        // Batas horizontal dunia
+        player.x = Math.max(
+          0,
+          Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x)
+        );
+
+        // Collision samping tangga balok
+        for (const stair of END_STAIRS) {
+          const verticalOverlap =
+            player.y + PLAYER_HEIGHT > stair.y + 2 &&
+            player.y < stair.y + stair.h;
+
+          const landingFromAbove =
+            previousBottom <= stair.y + 6 &&
+            player.vy >= 0;
+
+          if (!verticalOverlap || landingFromAbove) {
+            continue;
+          }
+
+          // Menabrak balok dari sebelah kiri
+          if (
+            player.vx > 0 &&
+            previousX + PLAYER_WIDTH <= stair.x + 2 &&
+            player.x + PLAYER_WIDTH > stair.x
+          ) {
+            player.x = stair.x - PLAYER_WIDTH;
+            player.vx = 0;
+          }
+
+          // Menabrak balok dari sebelah kanan
+          if (
+            player.vx < 0 &&
+            previousX >= stair.x + stair.w - 2 &&
+            player.x < stair.x + stair.w
+          ) {
+            player.x = stair.x + stair.w;
+            player.vx = 0;
+          }
+        }
+
 
         player.x = Math.max(0, Math.min(WORLD_WIDTH - PLAYER_WIDTH, player.x));
 
         player.onGround = false;
 
-        for (const platform of platforms) {
+        player.onGround = false;
+
+        for (const platform of [...platforms, ...END_STAIRS]) {
           const crossingTop =
             previousBottom <= platform.y + 6 &&
             player.y + PLAYER_HEIGHT >= platform.y;
@@ -842,7 +1090,11 @@ export default function HeartAdventure({ onComplete }) {
             player.x + PLAYER_WIDTH > platform.x &&
             player.x < platform.x + platform.w;
 
-          if (player.vy >= 0 && crossingTop && horizontallyInside) {
+          if (
+            player.vy >= 0 &&
+            crossingTop &&
+            horizontallyInside
+          ) {
             player.y = platform.y - PLAYER_HEIGHT;
             player.vy = 0;
             player.onGround = true;
@@ -891,25 +1143,48 @@ export default function HeartAdventure({ onComplete }) {
         return;
       }
 
-      if (overlaps(playerBox, partner)) {
+
+      const flagHitbox = {
+        x: FLAG.x - 10,
+        y: FLAG.top,
+        w: 24,
+        h: FLAG.bottom - FLAG.top
+      };
+
+      if (overlaps(playerBox, flagHitbox)) {
         if (game.collected.size >= REQUIRED_HEARTS) {
-          statusRef.current = "won";
-          setStatus("won");
-          setNotice("");
+          // Mulai animasi penyelesaian level
+          statusRef.current = "finishing";
+          setStatus("finishing");
+
+          game.finishStep = "slide";
+          player.vx = 0;
+          player.vy = 0;
+
+          setNotice(
+            "Yeay, kamu berhasil! Bentar yaa ♡"
+          );
         } else if (!game.warned) {
           game.warned = true;
-          setNotice(`Kumpulin minimal ${REQUIRED_HEARTS} hati dulu yaa, sayang ♡`);
+
+          setNotice(
+            `Kumpulin ${REQUIRED_HEARTS} hati dulu yaa, sayang ♡`
+          );
         }
       } else {
         game.warned = false;
       }
+
     }
 
     function frame(time) {
       const delta = lastTime ? Math.min((time - lastTime) / 16.67, 2) : 1;
       lastTime = time;
 
-      if (statusRef.current === "playing") {
+      if (
+        statusRef.current === "playing" ||
+        statusRef.current === "finishing"
+      ) {
         update(delta);
       }
 
@@ -971,18 +1246,23 @@ export default function HeartAdventure({ onComplete }) {
 
         {status === "won" && (
           <div className="adventure__overlay">
-            <span className="adventure__emoji">💖</span>
-            <h2>Yeay, kamu sampai juga! ♡</h2>
+            <span className="adventure__emoji">🏰</span>
+
+            <h2>Akhirnya sampai juga, sayang! ♡</h2>
+
             <p>
-              Kamu berhasil sampai ke kastil dan ketemu pasangan yang nungguin kamu.
-              Sekarang yuk lanjut ke kejutan berikutnya.
+              Hehe, kamu berhasil lewatin semuanya.
+              Aku udah nungguin kamu di sini, nih.
+              Sekarang masih ada satu hal lagi
+              yang pengen aku kasih ke kamu.
             </p>
+
             <button
               type="button"
               className="btn btn--primary"
               onClick={onComplete}
             >
-              Lanjut Ke Surat ♡
+              Lihat kejutan berikutnya ♡
             </button>
           </div>
         )}
