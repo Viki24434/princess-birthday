@@ -17,7 +17,7 @@ import {
   updateFireworks
 } from "../effects/fireworks";
 
-import { playGameSound } from "../audio/gameAudio";
+import { playGameSound, stopGameMusic } from "../audio/gameAudio";
 
 const GROUND_PLAYER_Y = GROUND_Y - PLAYER_HEIGHT;
 
