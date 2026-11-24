@@ -1,5 +1,6 @@
 
 import { heartItems } from "../levels/level1";
+import { DEFEAT_DURATION } from "../entities/enemies";
 
 // =====================================
 // BENTUK HATI
@@ -56,8 +57,30 @@ export function drawCollectibles(ctx, game, time) {
 // =====================================
 
 
+function drawDefeatedEnemy(ctx, enemy) {
+  const progress = (enemy.defeatTimer ?? 0) / DEFEAT_DURATION;
+  if (progress >= 1) return;
+  ctx.save();
+  ctx.globalAlpha *= 1 - progress;
+  ctx.fillStyle = "#8DB99C";
+  ctx.beginPath();
+  ctx.ellipse(enemy.x + enemy.w / 2, enemy.y + enemy.h - 3, enemy.w / 2 + 2, 3, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "#E4BC61";
+  for (const direction of [-1, 1]) {
+    ctx.beginPath();
+    ctx.arc(enemy.x + enemy.w / 2 + direction * (9 + progress * 10), enemy.y + 8 - progress * 12, 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 export function drawEnemies(ctx, enemies, time = 0) {
   enemies.forEach((enemy) => {
+    if (enemy.defeated) {
+      drawDefeatedEnemy(ctx, enemy);
+      return;
+    }
     const x = enemy.x;
     const y = enemy.y;
     const w = enemy.w;
@@ -81,8 +104,7 @@ export function drawEnemies(ctx, enemies, time = 0) {
     const blinking =
       (time + enemy.minX * 7) % 2800 < 120;
 
-    // Mob atas punya warna berbeda
-    const upperGuard = y < 200;
+    const stompable = enemy.kind === "slime";
 
     ctx.save();
 
@@ -122,9 +144,7 @@ export function drawEnemies(ctx, enemies, time = 0) {
     // KAKI BERJALAN
     // ====================================
 
-    ctx.fillStyle = upperGuard
-      ? "#73568F"
-      : "#87689B";
+    ctx.fillStyle = stompable ? "#679C7C" : "#78608B";
 
     ctx.beginPath();
     ctx.roundRect(
@@ -150,9 +170,7 @@ export function drawEnemies(ctx, enemies, time = 0) {
     // TUBUH MONSTER
     // ====================================
 
-    ctx.fillStyle = upperGuard
-      ? "#9271B1"
-      : "#A889BD";
+    ctx.fillStyle = stompable ? (y < 200 ? "#86B99C" : "#9AC7A6") : "#A187BB";
 
     ctx.beginPath();
 
@@ -236,7 +254,7 @@ export function drawEnemies(ctx, enemies, time = 0) {
     // MULUT KECIL
     // ====================================
 
-    ctx.strokeStyle = "#684B7B";
+    ctx.strokeStyle = stompable ? "#4E755D" : "#684B7B";
     ctx.lineWidth = 1.5;
 
     ctx.beginPath();
@@ -261,14 +279,22 @@ export function drawEnemies(ctx, enemies, time = 0) {
     ctx.fill();
 
     // ====================================
-    // TANDA KHUSUS PENJAGA ATAS
+    // Duri terlihat pada mob yang tidak boleh diinjak.
     // ====================================
 
-    if (upperGuard) {
-      ctx.fillStyle = "#FFE19A";
-      ctx.font = "bold 12px sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("✦", 0, 3);
+    if (!stompable) {
+      ctx.fillStyle = "#E8DDEF";
+      ctx.strokeStyle = "#78608B";
+      ctx.lineWidth = 1.5;
+      for (const spikeX of [-9, 0, 9]) {
+        ctx.beginPath();
+        ctx.moveTo(spikeX - 4, 8);
+        ctx.lineTo(spikeX, 0);
+        ctx.lineTo(spikeX + 4, 8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+      }
     }
 
     ctx.restore();

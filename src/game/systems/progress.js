@@ -13,7 +13,6 @@ import {
 } from "../levels/level1";
 
 import { overlaps } from "../engine/collision";
-import { isPlayerHit } from "../entities/enemies";
 
 import { playGameSound } from "../audio/gameAudio";
 
@@ -93,17 +92,6 @@ export function collectHearts(game) {
     playGameSound("heart");
   }
   return collectedHeart;
-}
-
-// ====================================
-// TABRAKAN DENGAN MOB
-// ====================================
-
-export function hasHitEnemy(game) {
-  return isPlayerHit(
-    game.player,
-    game.enemies
-  );
 }
 
 // ====================================

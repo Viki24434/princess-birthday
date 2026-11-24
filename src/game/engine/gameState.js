@@ -52,7 +52,9 @@ export function createGame() {
     coupleOpacity: 1,
 
     enemies: enemyTemplates.map((enemy) => ({
-      ...enemy
+      ...enemy,
+      defeated: false,
+      defeatTimer: 0
     })),
 
     flagY: FLAG.top + 15,

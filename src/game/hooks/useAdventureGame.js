@@ -9,7 +9,7 @@ import {
 } from "../engine/gameState";
 
 import { updatePlayer } from "../engine/physics";
-import { updateEnemies } from "../entities/enemies";
+import { updateEnemies, resolveEnemyContact } from "../entities/enemies";
 import { updateMovingPlatforms } from "../systems/movingPlatforms";
 import { collectSecret } from "../systems/secretArea";
 
@@ -17,7 +17,6 @@ import {
   updateCheckpoint,
   isPlayerInVoid,
   collectHearts,
-  hasHitEnemy,
   checkFlagContact
 } from "../systems/progress";
 
@@ -260,6 +259,7 @@ export function useAdventureGame() {
       }
 
       // Gerakkan mob
+      const previousPlayer = { x: player.x, y: player.y };
       updateEnemies(game.enemies, delta);
       updateMovingPlatforms(game.movingPlatforms, delta);
 
@@ -299,11 +299,13 @@ export function useAdventureGame() {
         setNotice("");
       }
 
-      // Terkena mob
-        if (hasHitEnemy(game)) {
+      // Benturan samping menyakiti pemain; injakan slime memberi pantulan.
+      const enemyContact = resolveEnemyContact(player, game.enemies, previousPlayer);
+        if (enemyContact.hit) {
         respawn("mob");
         return;
         }
+      if (enemyContact.stomped > 0) playGameSound("stomp");
 
       if (collectSecret(game)) {
         setSecretFound(true);

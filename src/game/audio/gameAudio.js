@@ -10,6 +10,7 @@ const SOUNDS = {
   checkpoint: { file: "checkpoint.wav", volume: 0.55 },
   fall: { file: "fall.wav", volume: 0.5 },
   hit: { file: "hit.wav", volume: 0.55 },
+  stomp: { file: "hit.wav", volume: 0.4 },
   flag: { file: "flag.wav", volume: 0.55 },
   firework: { file: "firework.wav", volume: 0.3 },
   win: { file: "win.wav", volume: 0.65 }

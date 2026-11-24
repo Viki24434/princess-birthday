@@ -104,6 +104,10 @@ export default function AdventureControls({
         ↑ untuk lompat atau naik tangga,
         ↓ untuk turun tangga.</span>
         <span className="adventure__hint-touch">Tahan ← atau → untuk jalan, lalu ketuk Lompat dengan jari lainnya. Gunakan ↑ ↓ saat di tangga.</span>
+        <span className="adventure__mob-guide">
+          <span className="adventure__mob-guide--slime">● Hijau: injak dari atas</span>
+          <span className="adventure__mob-guide--spiked">▲ Berduri: hindari</span>
+        </span>
       </p>
 
       {status === "playing" && (

@@ -235,6 +235,7 @@ export const enemyTemplates = [
   },
   {
     x: 2290,
+    kind: "spiked",
     y: 302,
     w: 30,
     h: 28,
@@ -251,6 +252,7 @@ export const enemyTemplates = [
   // Penjaga jembatan pertama
   {
     x: 970,
+    kind: "spiked",
     y: 130,
     w: 28,
     h: 28,
@@ -263,6 +265,7 @@ export const enemyTemplates = [
   // Penjaga jembatan kedua
   {
     x: 1890,
+    kind: "spiked",
     y: 132,
     w: 28,
     h: 28,
@@ -275,6 +278,7 @@ export const enemyTemplates = [
   // Penjaga platform terakhir
   {
     x: 2310,
+    kind: "spiked",
     y: 132,
     w: 28,
     h: 28,
@@ -291,9 +295,19 @@ export const enemyTemplates = [
   { x: 4010, y: 302, w: 30, h: 28, minX: 3910, maxX: 4100, speed: 1.2, dir: -1 },
   { x: 4450, y: 302, w: 30, h: 28, minX: 4380, maxX: 4520, speed: 1.3, dir: 1 },
   { x: 4990, y: 302, w: 30, h: 28, minX: 4860, maxX: 5130, speed: 1.4, dir: -1 },
-  { x: 3350, y: 144, w: 28, h: 28, minX: 3320, maxX: 3370, speed: 1.1, dir: 1 },
-  { x: 4880, y: 177, w: 28, h: 28, minX: 4850, maxX: 4910, speed: 1.2, dir: -1 }
-];
+  { x: 3350, y: 144, w: 28, h: 28, minX: 3320, maxX: 3370, speed: 1.1, dir: 1, kind: "spiked" },
+  { x: 4880, y: 177, w: 28, h: 28, minX: 4850, maxX: 4910, speed: 1.2, dir: -1, kind: "spiked" },
+
+  // Slime tambahan: kepala bulat aman diinjak saat pemain turun dari lompatan.
+  { x: 180, y: 302, w: 30, h: 28, minX: 145, maxX: 205, speed: 0.8, dir: 1 },
+  { x: 590, y: 302, w: 30, h: 28, minX: 580, maxX: 610, speed: 0.8, dir: 1 },
+  { x: 285, y: 232, w: 28, h: 28, minX: 240, maxX: 310, speed: 0.7, dir: -1 },
+  { x: 1290, y: 130, w: 28, h: 28, minX: 1260, maxX: 1310, speed: 0.8, dir: 1 },
+  { x: 1780, y: 132, w: 28, h: 28, minX: 1760, maxX: 1790, speed: 0.8, dir: -1 },
+  { x: 3150, y: 212, w: 28, h: 28, minX: 3120, maxX: 3155, speed: 0.7, dir: 1 },
+  { x: 4500, y: 176, w: 28, h: 28, minX: 4470, maxX: 4520, speed: 0.8, dir: -1 },
+  { x: 5490, y: 302, w: 30, h: 28, minX: 5450, maxX: 5490, speed: 0.9, dir: -1 }
+].map(enemy => ({ kind: "slime", ...enemy }));
 
 
 // Tiang bendera — diberi jarak dari tangga
