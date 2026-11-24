@@ -12,21 +12,55 @@
 
   background:
     radial-gradient(
-      circle at 10% 15%,
-      #ffe1ed 0%,
-      transparent 30%
+      ellipse at 0% 0%,
+      #f7d3e2 0%,
+      transparent 48%
     ),
     radial-gradient(
-      circle at 90% 85%,
-      #fce1e8 0%,
-      transparent 35%
+      ellipse at 100% 100%,
+      #f5d6df 0%,
+      transparent 48%
     ),
     linear-gradient(
-      150deg,
-      #fff9fb 0%,
-      #fff1f6 55%,
-      #fffaf5 100%
+      135deg,
+      #fff8fb 0%,
+      #fff3f6 55%,
+      #fff8ee 100%
     );
+}
+
+/* Kertas kotak-kotak dengan bintik kecil, seperti halaman scrapbook. */
+.decorative-background::before,
+.decorative-background::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+.decorative-background::before {
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(185, 106, 141, 0.22) 1px, transparent 1.5px),
+    linear-gradient(rgba(185, 106, 141, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(185, 106, 141, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(239, 166, 196, 0.08) 50%, transparent 50%),
+    linear-gradient(rgba(239, 166, 196, 0.08) 50%, transparent 50%);
+  background-size: 24px 24px, 48px 48px, 48px 48px, 48px 48px, 48px 48px;
+  background-position: 12px 12px, 0 0, 0 0, 0 0, 0 0;
+}
+
+/* Bagian tengah lebih tenang agar judul dan isi tetap mudah dibaca. */
+.decorative-background::after {
+  inset: 14px;
+  border: 1px dashed rgba(185, 106, 141, 0.27);
+  border-radius: 26px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 248, 251, 0.94) 0%,
+    rgba(255, 248, 251, 0.82) 30%,
+    rgba(255, 248, 251, 0.3) 65%,
+    transparent 85%
+  );
 }
 
 .background-glow {
@@ -35,7 +69,7 @@
   height: 340px;
   border-radius: 50%;
   filter: blur(65px);
-  opacity: 0.35;
+  opacity: 0.25;
   background: var(--pink-300);
 }
 
@@ -51,9 +85,11 @@
 
 .floating-decoration {
   position: absolute;
-  font-size: 32px;
-  color: var(--pink-300);
-  opacity: 0.65;
+  z-index: 1;
+  font-size: clamp(26px, 3vw, 42px);
+  color: var(--pink-500);
+  opacity: 0.4;
+  text-shadow: 0 3px 0 rgba(255, 255, 255, 0.85);
   animation: float-decoration 6s ease-in-out infinite;
 }
 
@@ -63,6 +99,30 @@
 .deco--four { bottom: 15%; right: 8%; animation-delay: -3s; }
 .deco--five { top: 45%; right: 4%; animation-delay: -4s; }
 .deco--six { bottom: 7%; left: 16%; animation-delay: -5s; }
+
+@media (max-width: 767px) {
+  .decorative-background::after {
+    inset: 7px;
+    border-radius: 18px;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(255, 248, 251, 0.96) 0%,
+      rgba(255, 248, 251, 0.85) 42%,
+      rgba(255, 248, 251, 0.3) 80%,
+      transparent 100%
+    );
+  }
+
+  .floating-decoration {
+    font-size: 26px;
+    opacity: 0.28;
+  }
+
+  .deco--one { left: 3%; }
+  .deco--two { right: 3%; }
+  .deco--four { right: 3%; }
+  .deco--six { left: 7%; }
+}
 
 @keyframes float-decoration {
   0%, 100% { transform: translateY(0) rotate(-8deg); }
