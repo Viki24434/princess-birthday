@@ -5,6 +5,7 @@ import {
   capturePhoto,
   composeBirthdayPhoto
 } from "../utils/photoComposer";
+import { getFrameStickerNames, getStickerSource } from "../utils/photoboothStickers";
 
 import "../styles/photobooth.css";
 
@@ -15,17 +16,6 @@ const frames = [
   { id: "royal", label: "Hari Spesial", symbol: "✦" },
   { id: "birthday-doodle", label: "Birthday Doodle", symbol: "♡" }
 ];
-
-const frameStickers = {
-  princess: ["🎀", "✧", "♛", "🎀"],
-  "love-strip": ["💗", "♡", "♡", "💗"],
-  scrapbook: ["🌸", "✿", "✎", "🌼"],
-  royal: ["✦", "❦", "❦", "✦"],
-
-  // Frame baru, tanpa gambar dekorasi dulu
-  "birthday-doodle": []
-};
-
 
 function getCameraError(error) {
   switch (error?.name) {
@@ -65,8 +55,10 @@ export default function PhotoBoothScene({ birthday }) {
   const [countdown, setCountdown] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false);
   const [photos, setPhotos] = useState([]);
-  const [resultUrl, setResultUrl] = useState(null);
-  const [isRendering, setIsRendering] = useState(false);
+  const [renderedResult, setRenderedResult] = useState(null);
+  const resultMatches = renderedResult?.photos === photos && renderedResult?.frame === selectedFrame;
+  const resultUrl = resultMatches ? renderedResult.url : null;
+  const isRendering = photos.length > 0 && !isCapturing && !resultMatches;
 
   const videoRef = useRef(null);
   const streamRef = useRef(null);
@@ -85,7 +77,7 @@ export default function PhotoBoothScene({ birthday }) {
       resultUrlRef.current = null;
     }
 
-    setResultUrl(null);
+    setRenderedResult(null);
   }
 
   function cancelPendingTimer() {
@@ -262,8 +254,6 @@ export default function PhotoBoothScene({ birthday }) {
 
     let active = true;
 
-    setIsRendering(true);
-
     composeBirthdayPhoto(photos, selectedFrame)
       .then(blob => {
         if (!active) return;
@@ -275,14 +265,13 @@ export default function PhotoBoothScene({ birthday }) {
         }
 
         resultUrlRef.current = url;
-        setResultUrl(url);
-        setIsRendering(false);
+        setRenderedResult({ photos, frame: selectedFrame, url });
       })
       .catch(err => {
         if (!active) return;
 
         setError(err.message);
-        setIsRendering(false);
+        setRenderedResult({ photos, frame: selectedFrame, url: null });
       });
 
     return () => {
@@ -321,7 +310,8 @@ export default function PhotoBoothScene({ birthday }) {
       <div className="booth-container">
         <div className={`booth-camera frame--${selectedFrame}`}>
           <div className="booth-camera__heading">
-            ✦ {activeFrame.label} ✦
+            <span className="booth-camera__eyebrow">BIRTHDAY PHOTO CLUB</span>
+            <strong>{activeFrame.label}</strong>
           </div>
 
           <div className="booth-camera__screen">
@@ -345,13 +335,17 @@ export default function PhotoBoothScene({ birthday }) {
               className={`booth-frame-stickers booth-frame-stickers--${selectedFrame}`}
               aria-hidden="true"
             >
-              {(frameStickers[selectedFrame] ?? []).map((sticker, index) => (
-                <span
-                  key={index}
+              {getFrameStickerNames(selectedFrame).map((sticker, index) => (
+                <img
+                  key={`${sticker}-${index}`}
                   className={`booth-frame-stickers__item booth-frame-stickers__item--${index + 1}`}
-                >
-                  {sticker}
-                </span>
+                  src={getStickerSource(sticker)}
+                  alt=""
+                  draggable={false}
+                  width={80}
+                  height={80}
+                  decoding="async"
+                />
               ))}
             </div>
 
@@ -387,7 +381,8 @@ export default function PhotoBoothScene({ birthday }) {
           </div>
 
           <div className="booth-camera__footer">
-            ♡ Hari spesial kamu ♡
+            <span>♡ Hari spesial kamu ♡</span>
+            <small>Satu senyum, satu kenangan manis.</small>
           </div>
         </div>
 
@@ -400,7 +395,7 @@ export default function PhotoBoothScene({ birthday }) {
                 <button
                   key={frame.id}
                   type="button"
-                  className={`frame-option ${
+                  className={`frame-option frame-option--${frame.id} ${
                     selectedFrame === frame.id
                       ? "is-selected"
                       : ""
@@ -413,7 +408,7 @@ export default function PhotoBoothScene({ birthday }) {
                     selectedFrame === frame.id
                   }
                 >
-                  <span>{frame.symbol}</span>
+                  <img className="frame-option__icon" src={getStickerSource(getFrameStickerNames(frame.id)[0])} alt="" width={48} height={40} draggable={false} decoding="async" />
                   <small>{frame.label}</small>
                 </button>
               ))}

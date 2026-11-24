@@ -11,99 +11,62 @@
 }
 
 .booth-camera {
+  --frame-paper: #fff5fa;
+  --frame-trim: #e9b3ca;
+  --frame-ink: #a95d81;
   position: relative;
-  overflow: hidden;
-
   width: min(100%, 390px);
-  padding: 16px;
-  border: 9px solid #efb5ce;
-  border-radius: 26px;
+  padding: 18px;
+  border: 7px solid #edbed2;
+  border-radius: 28px;
   background:
-    radial-gradient(circle at top, #fff7fb 0%, #fff0f6 62%);
-  box-shadow: var(--shadow-card);
-}
-
-.booth-camera::before,
-.booth-camera::after {
-  position: absolute;
-  pointer-events: none;
-  opacity: 0.9;
+    radial-gradient(circle, #c6a16a20 1px, transparent 1.5px) 0 0 / 18px 18px,
+    var(--frame-paper);
+  box-shadow: inset 0 0 0 2px #ffffff90, 0 18px 42px #94506f1c, 0 4px 0 #e9c9d8;
 }
 
 .booth-camera::before {
-  top: 10px;
-  left: 16px;
-  font-size: 26px;
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px dashed var(--frame-trim);
+  border-radius: 17px;
+  pointer-events: none;
 }
 
 .booth-camera::after {
-  top: 12px;
-  right: 16px;
-  font-size: 22px;
-}
-
-.booth-camera.frame--princess {
-  border-color: #efb5ce;
-  background:
-    radial-gradient(circle at top, #fff8fc 0%, #fff1f7 60%);
-}
-
-.booth-camera.frame--princess::before {
-  content: "♛";
-  color: #cf79a0;
-}
-
-.booth-camera.frame--princess::after {
-  content: "♡";
-  color: #e29ab8;
+  content: "";
+  position: absolute;
+  z-index: 3;
+  top: -16px;
+  left: calc(50% - 42px);
+  width: 84px;
+  height: 25px;
+  border-inline: 1px dashed #fff8fb;
+  background: repeating-linear-gradient(45deg, #e6b3c9bb 0 7px, #f6d2e0bb 7px 14px);
+  transform: rotate(-5deg);
+  pointer-events: none;
 }
 
 .booth-camera.frame--love-strip {
-  border-color: #da89ae;
-  background:
-    radial-gradient(circle at top, #fff5f9 0%, #f8d7e4 62%);
-}
-
-.booth-camera.frame--love-strip::before {
-  content: "♡";
-  color: #c8638f;
-}
-
-.booth-camera.frame--love-strip::after {
-  content: "♡";
-  color: #e29ab8;
+  --frame-paper: #fce8ef;
+  --frame-trim: #d690b0;
+  --frame-ink: #a4517b;
+  border-color: #dc9fba;
 }
 
 .booth-camera.frame--scrapbook {
-  border-color: #d9b99a;
-  background:
-    radial-gradient(circle at top, #fffdf9 0%, #fff6e9 65%);
-}
-
-.booth-camera.frame--scrapbook::before {
-  content: "✿";
-  color: #b58674;
-}
-
-.booth-camera.frame--scrapbook::after {
-  content: "✦";
-  color: #d1a673;
+  --frame-paper: #fff8ec;
+  --frame-trim: #d2b291;
+  --frame-ink: #8f695d;
+  border-color: #ddc2a7;
 }
 
 .booth-camera.frame--royal {
-  border-color: #d2b16e;
-  background:
-    radial-gradient(circle at top, #fffdf9 0%, #fff4f5 62%);
-}
-
-.booth-camera.frame--royal::before {
-  content: "✦";
-  color: #b58a46;
-}
-
-.booth-camera.frame--royal::after {
-  content: "✦";
-  color: #d6b36d;
+  --frame-paper: #fff9ee;
+  --frame-trim: #d4b876;
+  --frame-ink: #9b7a3c;
+  border-color: #d8be88;
 }
 
 .booth-camera__heading,
@@ -118,14 +81,43 @@
 }
 
 .booth-camera__heading {
-  color: var(--pink-700);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 17px;
+  color: var(--frame-ink);
   font-family: var(--font-heading);
   font-weight: 700;
 }
 
+.booth-camera__eyebrow {
+  font-family: var(--font-body);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+}
+
+.booth-camera__heading strong {
+  font-size: 25px;
+  font-style: italic;
+  font-weight: 500;
+}
+
 .booth-camera__footer {
-  color: var(--pink-600);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 12px 4px 6px;
+  border-top: 1px dashed var(--frame-trim);
+  color: var(--frame-ink);
   font-size: 13px;
+}
+
+.booth-camera__footer small {
+  font-size: 10px;
+  letter-spacing: 0.03em;
 }
 
 .booth-camera.frame--scrapbook .booth-camera__heading,
@@ -285,7 +277,7 @@
 }
 
 .frame-option {
-  min-height: 78px;
+  min-height: 100px;
   padding: 10px 12px;
   border: 1px solid #ead2dc;
   border-radius: 18px;
@@ -296,13 +288,35 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 8px;
 
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
     border-color 0.2s ease,
     background 0.2s ease;
+}
+
+.frame-option__icon {
+  width: 60px;
+  height: 44px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.frame-option--scrapbook { background: #fff8ec; }
+.frame-option--royal { background: #fff9ee; }
+.frame-option--love-strip { background: #fce8ef; }
+
+.frame-option:last-child {
+  grid-column: 1 / -1;
+}
+
+.frame-option.frame-option--birthday-doodle,
+.frame-option.frame-option--birthday-doodle.is-selected {
+  background: #241a25;
+  color: #fff3f8;
+  border-color: #c89cb3;
 }
 
 .frame-option span {
@@ -381,9 +395,9 @@
   align-items: center;
   gap: 20px;
 
-  border: 1px solid var(--border-soft);
+  border: 1px solid #e9c5d5;
   border-radius: var(--radius-lg);
-  background: white;
+  background: linear-gradient(150deg, #fffdf8, #fff3f8);
   box-shadow: var(--shadow-soft);
 }
 
@@ -436,17 +450,14 @@
 
 .booth-frame-stickers__item {
   position: absolute;
-  display: grid;
-  place-items: center;
-
-  width: 46px;
-  height: 46px;
-
-  font-size: 31px;
-  line-height: 1;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
 
   filter: drop-shadow(
-    0 3px 4px rgba(60, 30, 50, 0.25)
+    0 2px 3px rgba(60, 30, 50, 0.12)
   );
 }
 
@@ -565,9 +576,8 @@
 
 @media (max-width: 480px) {
   .booth-frame-stickers__item {
-    width: 37px;
-    height: 37px;
-    font-size: 25px;
+    width: 58px;
+    height: 58px;
   }
 
   .booth-frame-stickers__item--1,
@@ -600,7 +610,7 @@
   }
 
   .frame-option {
-    min-height: 72px;
+    min-height: 96px;
     padding: 10px 8px;
   }
 
@@ -646,10 +656,18 @@
 ======================================== */
 
 .booth-camera.frame--birthday-doodle {
+  --frame-paper: #181319;
+  --frame-ink: #fff3f8;
+  --frame-trim: #b3869f;
   background: #181319;
   border-color: #d9a8bf;
   box-shadow:
     0 15px 35px rgba(24, 19, 25, 0.25);
+}
+
+.booth-frame-stickers--birthday-doodle {
+  border: 5px double #d9a8bf;
+  border-radius: 10px;
 }
 
 .booth-camera.frame--birthday-doodle

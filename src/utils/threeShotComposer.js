@@ -1,10 +1,8 @@
 
+import { drawPhotoPngStickers, drawPngSticker, loadFrameStickers } from "./photoboothStickers";
+
 const WIDTH = 900;
 const HEIGHT = 2700;
-
-// TRUE = tampilkan garis petunjuk tempat PNG.
-// Nanti setelah gambarnya ada, ubah ke false.
-const SHOW_PNG_GUIDES = true;
 
 const FRAME_COLORS = {
   "birthday-doodle": {
@@ -39,7 +37,7 @@ const FRAME_COLORS = {
   }
 };
 
-// Posisi dekorasi PNG untuk nanti.
+// Ornamen footer tidak menutupi foto atau tulisan ucapan.
 export const threeShotDecorationSlots = {
   topLeft: {
     x: 95,
@@ -104,44 +102,7 @@ function drawCover(ctx, image, x, y, width, height) {
   );
 }
 
-function drawGuide(ctx, slot, color) {
-  ctx.save();
-
-  ctx.strokeStyle = color;
-  ctx.globalAlpha = 0.55;
-  ctx.lineWidth = 3;
-  ctx.setLineDash([12, 9]);
-
-  ctx.strokeRect(
-    slot.x,
-    slot.y,
-    slot.width,
-    slot.height
-  );
-
-  ctx.setLineDash([]);
-  ctx.globalAlpha = 0.8;
-  ctx.fillStyle = color;
-  ctx.textAlign = "center";
-
-  ctx.font = "22px Arial";
-  ctx.fillText(
-    "PNG",
-    slot.x + slot.width / 2,
-    slot.y + slot.height / 2 - 5
-  );
-
-  ctx.font = "17px Arial";
-  ctx.fillText(
-    slot.name,
-    slot.x + slot.width / 2,
-    slot.y + slot.height / 2 + 25
-  );
-
-  ctx.restore();
-}
-
-export function composeThreeShot(images, themeId) {
+export async function composeThreeShot(images, themeId) {
   if (images.length !== 3) {
     throw new Error("Layout 3-shot membutuhkan 3 foto.");
   }
@@ -149,6 +110,8 @@ export function composeThreeShot(images, themeId) {
   const theme =
     FRAME_COLORS[themeId] ||
     FRAME_COLORS["birthday-doodle"];
+
+  const stickers = await loadFrameStickers();
 
   const canvas = document.createElement("canvas");
   canvas.width = WIDTH;
@@ -164,14 +127,33 @@ export function composeThreeShot(images, themeId) {
   ctx.fillStyle = theme.background;
   ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
+  // Motif kertas halus tetap terlihat pada tema terang maupun gelap.
+  ctx.save();
+  ctx.globalAlpha = 0.14;
+  ctx.fillStyle = theme.accent;
+  for (let x = 70; x < WIDTH - 60; x += 42) {
+    for (let y = 70; y < HEIGHT - 60; y += 42) {
+      ctx.beginPath();
+      ctx.arc(x, y, 1.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+
   // Bingkai luar
   ctx.strokeStyle = theme.border;
   ctx.lineWidth = 6;
-  ctx.strokeRect(30, 30, WIDTH - 60, HEIGHT - 60);
+  ctx.beginPath();
+  ctx.roundRect(30, 30, WIDTH - 60, HEIGHT - 60, 32);
+  ctx.stroke();
 
   ctx.strokeStyle = theme.accent;
   ctx.lineWidth = 2;
-  ctx.strokeRect(46, 46, WIDTH - 92, HEIGHT - 92);
+  ctx.setLineDash([8, 10]);
+  ctx.beginPath();
+  ctx.roundRect(46, 46, WIDTH - 92, HEIGHT - 92, 24);
+  ctx.stroke();
+  ctx.setLineDash([]);
 
   // Header
   ctx.textAlign = "center";
@@ -194,14 +176,26 @@ export function composeThreeShot(images, themeId) {
     );
 
     // Border putih di belakang foto
+    ctx.save();
+    ctx.shadowColor = "rgba(82, 42, 61, 0.16)";
+    ctx.shadowBlur = 16;
+    ctx.shadowOffsetY = 6;
     ctx.fillStyle = "#FFFDFB";
-    ctx.fillRect(
+    ctx.beginPath();
+    ctx.roundRect(
       photo.x - 8,
       y - 8,
       photo.width + 16,
-      photo.height + 16
+      photo.height + 16,
+      18
     );
+    ctx.fill();
+    ctx.restore();
 
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(photo.x, y, photo.width, photo.height, 12);
+    ctx.clip();
     drawCover(
       ctx,
       image,
@@ -210,7 +204,16 @@ export function composeThreeShot(images, themeId) {
       photo.width,
       photo.height
     );
+    ctx.restore();
   });
+
+  const photoSlots = images.map((image, index) => ({
+    x: photo.x,
+    y: photo.y + index * (photo.height + photo.gap),
+    w: photo.width,
+    h: photo.height
+  }));
+  drawPhotoPngStickers(ctx, stickers, themeId, photoSlots);
 
   // Garis pemisah footer
   ctx.strokeStyle = theme.accent;
@@ -241,12 +244,11 @@ export function composeThreeShot(images, themeId) {
     760
   );
 
-  // Tempat dekorasi PNG (belum ada gambar)
-  if (SHOW_PNG_GUIDES) {
-    Object.values(threeShotDecorationSlots).forEach(
-      slot => drawGuide(ctx, slot, theme.accent)
-    );
-  }
+  // PNG asli menggantikan kotak panduan pada desain sebelumnya.
+  Object.values(threeShotDecorationSlots).forEach(slot => {
+    drawPngSticker(ctx, stickers[slot.name.replace(".png", "")], slot);
+  });
+  drawPngSticker(ctx, stickers.flower, { x: 355, y: 2350, width: 190, height: 145 });
 
   // Tulisan kecil paling bawah
   ctx.fillStyle = theme.accent;

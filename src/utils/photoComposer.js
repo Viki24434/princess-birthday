@@ -3,6 +3,7 @@ import {
 } from "./photoFrameDecorations";
 
 import { composeThreeShot } from "./threeShotComposer";
+import { drawPhotoPngStickers, loadFrameStickers } from "./photoboothStickers";
 
 const themes = {
   princess: {
@@ -502,6 +503,9 @@ export async function composeBirthdayPhoto(
   );
 
   drawFooter(ctx, canvas, theme, images.length);
+
+  const stickers = await loadFrameStickers();
+  drawPhotoPngStickers(ctx, stickers, themeId, photoSlots);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
