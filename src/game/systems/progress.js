@@ -87,10 +87,12 @@ export function collectHearts(game) {
     }
   });
 
-  playGameSound("heart");
-
   // true jika jumlah hati bertambah
-  return game.collected.size !== previousCount;
+  const collectedHeart = game.collected.size !== previousCount;
+  if (collectedHeart) {
+    playGameSound("heart");
+  }
+  return collectedHeart;
 }
 
 // ====================================

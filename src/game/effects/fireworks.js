@@ -37,8 +37,10 @@ export function spawnFirework(particles, x, y) {
       color
     });
 
-    playGameSound("firework");
   }
+
+  // Satu suara untuk satu ledakan, bukan untuk setiap partikel.
+  playGameSound("firework");
 }
 
 // Menggerakkan seluruh partikel

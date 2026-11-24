@@ -21,7 +21,7 @@ import {
   getGameSoundEnabled,
   setGameSoundEnabled,
   unlockGameAudio,
-  stopGameMusic
+  stopGameAudio
 } from "../../game/audio/gameAudio";
 
 export default function HeartAdventure({ onComplete }) {
@@ -53,10 +53,10 @@ export default function HeartAdventure({ onComplete }) {
     }
   }
 
-  // Hentikan musik saat keluar dari scene
+  // Hentikan musik dan efek suara saat keluar dari scene
   useEffect(() => {
     return () => {
-      stopGameMusic();
+      stopGameAudio();
     };
   }, []);
 
