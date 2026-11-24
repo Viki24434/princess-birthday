@@ -1,0 +1,323 @@
+{
+  "created": "2026-11-24",
+  "originalSourceArchive": {
+    "gitCommit": "af81729d404daeb972daa48241878dad4dd00627",
+    "note": "The original source paths below describe generation provenance. Legacy kiri.png and kanan.png were later removed from public assets; their original bytes remain available in this Git commit. Runtime uses samping-normal.png and mirrors it for left-facing characters."
+  },
+  "tool": "image_gen (built-in)",
+  "mode": "minimal facial edit; one PNG per expression",
+  "orientation": "All source PNGs face right; the game flips the same image horizontally to face left.",
+  "dimensions": {
+    "width": 236,
+    "height": 242
+  },
+  "processing": {
+    "neutral": "Crop the original kanan.png without redrawing it.",
+    "expression": "Align each generated single-expression head to the original alpha silhouette. Apply only the listed facial regions to a copy of the original image, with 15% feathering at the ellipse edges. Preserve the original alpha, and all pixels outside facial edit regions. Protect the girl's blue cap from every facial edit. Crop the original transparent border consistently across all expressions.",
+    "sourceCrop": {
+      "x": 10,
+      "y": 7,
+      "width": 236,
+      "height": 242
+    },
+    "oldAtlases": "Removed from the project; original character PNGs remain unchanged."
+  },
+  "assets": [
+    {
+      "file": "public/game/characters/cowok/samping-normal.png",
+      "original": "public/game/characters/cowok/kanan.png",
+      "generation": "none; cropped original"
+    },
+    {
+      "file": "public/game/characters/cowok/samping-kedip.png",
+      "original": "public/game/characters/cowok/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: A brief natural blink: close the single visible eye into a simple curved eyelid. Keep the visible eyebrow and the existing mouth unchanged. Nothing else changes..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            191,
+            165,
+            31,
+            25
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cowok/samping-terkejut.png",
+      "original": "public/game/characters/cowok/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Surprised: slightly widen the single existing eye, raise the existing eyebrow a little, and replace the mouth with a small open O. Keep the original eye size and placement as much as possible, no exaggerated face proportions..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            191,
+            165,
+            31,
+            25
+          ]
+        },
+        {
+          "name": "brow",
+          "ellipse": [
+            188,
+            132,
+            36,
+            18
+          ]
+        },
+        {
+          "name": "mouth",
+          "ellipse": [
+            216,
+            211,
+            20,
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cowok/samping-sedih.png",
+      "original": "public/game/characters/cowok/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Sad but gentle: raise the INNER end of the existing eyebrow and change the mouth into a small downturned curve. Keep the original eye and cheek contours. No tears, no symbols, no facial distortions..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            191,
+            165,
+            31,
+            25
+          ]
+        },
+        {
+          "name": "brow",
+          "ellipse": [
+            188,
+            132,
+            36,
+            18
+          ]
+        },
+        {
+          "name": "mouth",
+          "ellipse": [
+            216,
+            211,
+            20,
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cowok/samping-malu.png",
+      "original": "public/game/characters/cowok/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Shy: add subtle pink blush with two or three tiny cheek strokes and a small closed gentle smile. Keep the original eye, eyebrow, nose, head and all other details unchanged. No hearts or symbols..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "mouth",
+          "ellipse": [
+            216,
+            211,
+            20,
+            19
+          ]
+        },
+        {
+          "name": "cheek",
+          "ellipse": [
+            176,
+            187,
+            24,
+            16
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cowok/samping-senang.png",
+      "original": "public/game/characters/cowok/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Happy: close the visible eye into a happy upward-curved eyelid, and make a modest open smile with a little white upper teeth. Keep the original recognizable profile and normal proportions, not an exaggerated laughing caricature..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            191,
+            165,
+            31,
+            25
+          ]
+        },
+        {
+          "name": "brow",
+          "ellipse": [
+            188,
+            132,
+            36,
+            18
+          ]
+        },
+        {
+          "name": "mouth",
+          "ellipse": [
+            216,
+            211,
+            20,
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cewek/samping-normal.png",
+      "original": "public/game/characters/cewek/kanan.png",
+      "generation": "none; cropped original"
+    },
+    {
+      "file": "public/game/characters/cewek/samping-kedip.png",
+      "original": "public/game/characters/cewek/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: A brief natural blink: close the single visible eye into a simple curved eyelid. Keep the visible eyebrow and the existing mouth unchanged. Nothing else changes..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            175,
+            143,
+            24,
+            20
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cewek/samping-terkejut.png",
+      "original": "public/game/characters/cewek/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Surprised: slightly widen the single existing eye, raise the existing eyebrow a little, and replace the mouth with a small open O. Keep the original eye size and placement as much as possible, no exaggerated face proportions..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            175,
+            143,
+            24,
+            20
+          ]
+        },
+        {
+          "name": "brow",
+          "ellipse": [
+            176,
+            119,
+            26,
+            15
+          ]
+        },
+        {
+          "name": "mouth",
+          "ellipse": [
+            188,
+            184,
+            23,
+            24
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cewek/samping-sedih.png",
+      "original": "public/game/characters/cewek/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Sad but gentle: raise the INNER end of the existing eyebrow and change the mouth into a small downturned curve. Keep the original eye and cheek contours. No tears, no symbols, no facial distortions..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            175,
+            143,
+            24,
+            20
+          ]
+        },
+        {
+          "name": "brow",
+          "ellipse": [
+            176,
+            119,
+            26,
+            15
+          ]
+        },
+        {
+          "name": "mouth",
+          "ellipse": [
+            188,
+            184,
+            23,
+            24
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cewek/samping-malu.png",
+      "original": "public/game/characters/cewek/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Shy: add subtle pink blush with two or three tiny cheek strokes and a small closed gentle smile. Keep the original eye, eyebrow, nose, head and all other details unchanged. No hearts or symbols..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "mouth",
+          "ellipse": [
+            188,
+            184,
+            23,
+            24
+          ]
+        },
+        {
+          "name": "cheek",
+          "ellipse": [
+            167,
+            162,
+            20,
+            13
+          ]
+        }
+      ]
+    },
+    {
+      "file": "public/game/characters/cewek/samping-senang.png",
+      "original": "public/game/characters/cewek/kanan.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit.\nEdit target: the supplied ORIGINAL right-facing head PNG. This is a minimal facial-expression edit, NOT a redesign and NOT a new character.\nMake exactly ONE isolated head in the SAME strict right-facing profile. Keep the head silhouette, hair/hijab/hat shape, hair strands, original flat soft-shaded chibi artwork, outline thickness, skin tone, eye placement, ear, nose shape, chin, neck, colors, and every non-facial detail as close to the supplied image as possible. Do not beautify, modernize, re-style, rotate, zoom out, or re-interpret. Keep the same neutral mouth unless the requested expression needs it to change. Exactly one visible eye. Nose points RIGHT.\nExpression change: Happy: close the visible eye into a happy upward-curved eyelid, and make a modest open smile with a little white upper teeth. Keep the original recognizable profile and normal proportions, not an exaggerated laughing caricature..\nComposition: ONE head only, tightly framed like the original source, with the entire head visible and essentially no empty transparent margins. Scale the head to fill the canvas edge to edge, cropped tightly to the outermost head/hair/headwear/neck pixels, with at most 1–2 pixels of transparent padding. Do not add wider empty space around it. Keep transparent alpha on every pixel outside the exact original head silhouette. No sheet, no grid, no duplicate heads, no body, no shoulders, no extra neck, no floating symbols, no glitter, no glow, no cast shadows, no background gradient, no sticker border, no watermark, no text outside the existing cap lettering.\nMost important: preserve the exact original recognizable character and artwork; change only the indicated facial expression.",
+      "facialRegions": [
+        {
+          "name": "eye",
+          "ellipse": [
+            175,
+            143,
+            24,
+            20
+          ]
+        },
+        {
+          "name": "brow",
+          "ellipse": [
+            176,
+            119,
+            26,
+            15
+          ]
+        },
+        {
+          "name": "mouth",
+          "ellipse": [
+            188,
+            184,
+            23,
+            24
+          ]
+        }
+      ]
+    }
+  ]
+}

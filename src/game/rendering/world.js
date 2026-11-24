@@ -80,12 +80,20 @@ function drawCoupleLayer(game, time, sprites, cameraX, viewport) {
   // Samakan posisi kamera
   coupleCtx.translate(-cameraX, 0);
 
+  const checkpointAge = time - (game.checkpointCelebration?.startedAt ?? -Infinity);
+  const expressionContext = {
+    finishStep: game.finishStep,
+    failed: Boolean(game.failureType),
+    celebrating: checkpointAge >= 0 && checkpointAge < 1000
+  };
+
   // Cowok — karakter pemain
   drawPlayer(
     coupleCtx,
     game.player,
     time,
-    sprites
+    sprites,
+    expressionContext
   );
 
   // Cewek — pasangan yang menunggu
@@ -93,7 +101,8 @@ function drawCoupleLayer(game, time, sprites, cameraX, viewport) {
     coupleCtx,
     time,
     sprites,
-    game.partner
+    game.partner,
+    expressionContext
   );
 
   // Pegangan tangan

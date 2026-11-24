@@ -1,5 +1,6 @@
 
 import { partner } from "../levels/level1";
+import { getCharacterHeadSprite } from "./characterExpressions";
 
 // ====================================
 // PENGATURAN UKURAN KEPALA
@@ -20,18 +21,23 @@ const HEAD_SIZE = {
   }
 };
 
-function drawHead(ctx, image, x, y, config) {
+function drawHead(ctx, sprite, x, y, config) {
+  const { image, flipX = false } = sprite;
   const headX = x + config.offsetX;
   const headY = y + config.offsetY;
 
   if (image?.complete && image.naturalWidth > 0) {
+    ctx.save();
+    ctx.translate(headX + (flipX ? config.width : 0), headY);
+    ctx.scale(flipX ? -1 : 1, 1);
     ctx.drawImage(
       image,
-      headX,
-      headY,
+      0,
+      0,
       config.width,
       config.height
     );
+    ctx.restore();
     return;
   }
 
@@ -46,7 +52,7 @@ function drawHead(ctx, image, x, y, config) {
 // COWOK — KARAKTER YANG DIMAINKAN
 // ====================================
 
-export function drawPlayer(ctx, player, time, sprites) {
+export function drawPlayer(ctx, player, time, sprites, expressionContext = {}) {
   const x = player.x;
   const y = player.y;
 
@@ -204,12 +210,7 @@ export function drawPlayer(ctx, player, time, sprites) {
   // KEPALA COWOK
   // =========================
 
-  const head =
-    player.facing === "depan"
-      ? sprites.cowokSenang
-      : player.facing === "kiri"
-        ? sprites.cowokKiri
-        : sprites.cowokKanan;
+  const head = getCharacterHeadSprite(sprites, "cowok", player, time, expressionContext);
 
   drawHead(ctx, head, x, y, HEAD_SIZE.cowok);
 
@@ -224,7 +225,8 @@ export function drawPartner(
   ctx,
   time,
   sprites,
-  character = partner
+  character = partner,
+  expressionContext = {}
 ) {
   const x = character.x;
   const y = character.y;
@@ -312,12 +314,10 @@ export function drawPartner(
   // KEPALA CEWEK
   // =========================
 
-  const head =
-    character.facing === "kanan"
-      ? sprites.cewekKanan
-      : character.facing === "kiri"
-        ? sprites.cewekKiri
-        : sprites.cewekSenang;
+  const head = getCharacterHeadSprite(sprites, "cewek", character, time, {
+    ...expressionContext,
+    role: "partner"
+  });
 
   drawHead(ctx, head, x, y, HEAD_SIZE.cewek);
 

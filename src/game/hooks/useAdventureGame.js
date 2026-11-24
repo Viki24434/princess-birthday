@@ -97,12 +97,14 @@ export function useAdventureGame() {
     setScore(0);
     setNotice("");
     setFailMessage("");
+    setFailType(null);
     unlockGameAudio();
     startGameMusic();
   }
 
     function resumeGame() {
         resetControls(controlsRef.current);
+        gameRef.current.failureType = null;
 
         setFailMessage("");
 
@@ -189,6 +191,7 @@ export function useAdventureGame() {
     function respawn(type) {
     // Kembali ke checkpoint terakhir
     respawnPlayer(gameRef.current);
+    gameRef.current.failureType = type;
 
     // Ucapan acak sesuai penyebab gagal
     setFailMessage(getRandomDeathMessage(type));

@@ -40,6 +40,7 @@ export function createGame() {
     fireworkClock: 0,
 
     checkpoint: 55,
+    failureType: null,
     collected: new Set(),
     warned: false,
     coupleOpacity: 1,
