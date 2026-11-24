@@ -208,13 +208,15 @@
     display: none;
   }
 
-  .welcome-card {
+  .welcome-card,
+  .cake-card {
     grid-template-columns: 1fr;
     max-width: 440px;
     border-radius: 24px;
   }
 
-  .welcome-card__art {
+  .welcome-card__art,
+  .cake-card__art {
     min-height: 350px;
     padding-top: 40px;
     border-right: 0;
@@ -222,17 +224,20 @@
     border-radius: 24px 24px 0 0;
   }
 
-  .welcome-card__message {
+  .welcome-card__message,
+  .cake-card__message {
     padding: 34px 24px 28px;
     gap: 16px;
   }
 
-  .welcome-card__message h2 {
+  .welcome-card__message h2,
+  .cake-card__message h2 {
     max-width: 100%;
     font-size: 31px;
   }
 
-  .welcome-card__message .btn {
+  .welcome-card__message .btn,
+  .cake-card__message .btn {
     align-self: stretch;
   }
 
