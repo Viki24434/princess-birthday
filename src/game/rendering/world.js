@@ -7,6 +7,7 @@ import { getCameraX } from "./viewport";
 
 import { drawBackground } from "./background";
 import { drawTerrain } from "./terrain";
+import { drawMovingPlatforms, drawSecretArea } from "./bonusObjects";
 
 import {
   drawCollectibles,
@@ -139,6 +140,8 @@ export function drawWorld(ctx, game, time, sprites, viewport = { width: WIDTH, s
 
     // Tanah, jurang, platform, tangga
     drawTerrain(ctx);
+    drawMovingPlatforms(ctx, game.movingPlatforms ?? []);
+    drawSecretArea(ctx, game, time);
 
     // Bendera checkpoint
     drawCheckpoints(ctx, game, time);

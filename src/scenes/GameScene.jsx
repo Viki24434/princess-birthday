@@ -21,9 +21,9 @@ export default function GameScene({ onComplete, onSkip }) {
       <div className="game-scene__message">
         <p>
           Di perjalanan nanti ada jurang, ada mob yang jalan-jalan,
-          dan ada tangga yang harus kamu naiki.
+          tangga, dan pijakan yang bergerak.
           Kumpulin hati juga yaa, terus naik sampai ke kastil.
-          Aku tungguin kamu di akhir. ♡
+          Kalau ingin menjelajah, ada sudut kecil yang menyimpan pesan buatmu. ♡
         </p>
       </div>
     </SceneLayout>

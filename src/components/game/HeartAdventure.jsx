@@ -14,6 +14,7 @@ import {
 import AdventureOverlay from "./AdventureOverlay";
 import AdventureControls from "./AdventureControls";
 import AdventureFailModal from "./AdventureFailModal";
+import AdventureSecretModal from "./AdventureSecretModal";
 
 import { useState, useEffect } from "react";
 
@@ -32,8 +33,11 @@ export default function HeartAdventure({ onComplete }) {
     notice,
     failMessage,
     failType,
+    secretFound,
     startGame,
     resumeGame,
+    openSecret,
+    resumeSecret,
     handlePress,
     handleRelease
   } = useAdventureGame();
@@ -97,6 +101,13 @@ export default function HeartAdventure({ onComplete }) {
           </span>
         </div>
 
+        {secretFound && (
+          <button type="button" className="adventure__secret-badge" onClick={openSecret}
+            disabled={status !== "playing"} aria-label="Baca kembali pesan rahasia">
+            <span aria-hidden="true">♥</span> Rahasia
+          </button>
+        )}
+
         {/* TAMPILAN MULAI DAN MENANG */}
         <AdventureOverlay
           status={status}
@@ -110,6 +121,8 @@ export default function HeartAdventure({ onComplete }) {
           type={failType}
           onRetry={resumeGame}
         />
+
+        {status === "secret" && <AdventureSecretModal onResume={resumeSecret} />}
       </div>
 
       {/* PESAN INFO LAINNYA */}

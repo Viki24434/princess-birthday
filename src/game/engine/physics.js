@@ -7,13 +7,14 @@ import {
   JUMP_FORCE,
   GRAVITY,
   MAX_FALL_SPEED
-} from "../constants";
+} from "../constants.js";
 
 import {
   getLadderForPlayer,
   resolveStairCollision,
   resolvePlatformCollision
-} from "./collision";
+} from "./collision.js";
+import { carryPlayerOnPlatform } from "../systems/movingPlatforms.js";
 
 // Membatasi angka supaya berada di
 // dalam rentang minimum dan maksimum.
@@ -29,8 +30,10 @@ function clamp(value, min, max) {
 export function updatePlayer(
   player,
   controls,
-  delta
+  delta,
+  movingPlatforms = []
 ) {
+  carryPlayerOnPlatform(player, movingPlatforms);
   // ====================================
   // 1. GERAK HORIZONTAL
   // ====================================
@@ -140,6 +143,7 @@ export function updatePlayer(
     // dan hanya menekan ↓.
     if (!atLadderBottom || controls.up) {
       player.onLadder = true;
+      player.supportingPlatformId = null;
       player.onGround = false;
 
       player.vx = 0;
@@ -311,7 +315,8 @@ export function updatePlayer(
     // Collision tanah dan platform
     resolvePlatformCollision(
       player,
-      previousBottom
+      previousBottom,
+      movingPlatforms
     );
   }
 

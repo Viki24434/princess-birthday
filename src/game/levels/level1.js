@@ -85,7 +85,6 @@ export const platforms = [
 
   // Jembatan gantung terputus: tiap bentang punya tinggi dan jarak berbeda.
   { x: 3250, y: 172, w: 170, h: 16, kind: "bridge" },
-  { x: 3480, y: 205, w: 155, h: 16, kind: "bridge" },
   { x: 3695, y: 164, w: 165, h: 16, kind: "bridge" },
   { x: 3930, y: 225, w: 155, h: 16, kind: "bridge" },
 
@@ -94,8 +93,23 @@ export const platforms = [
   { x: 4445, y: 204, w: 115, h: 20, kind: "garden" },
   { x: 4610, y: 140, w: 130, h: 22, kind: "pavilion" },
   { x: 4820, y: 205, w: 140, h: 22, kind: "pavilion" },
-  { x: 5040, y: 258, w: 115, h: 20, kind: "garden" }
+  { x: 5040, y: 258, w: 115, h: 20, kind: "garden" },
+
+  // Sudut bonus di atas jalur utama, bisa dicapai lewat lift bunga.
+  { x: 4245, y: 102, w: 160, h: 18, kind: "secret" }
 ];
+
+export const movingPlatformTemplates = [
+  { id: "garden-ferry", x: 1380, y: 265, targetX: 1510, targetY: 265, w: 100, h: 16, period: 300 },
+  { id: "bridge-ferry", x: 3465, y: 205, targetX: 3565, targetY: 205, w: 130, h: 16, period: 320 },
+  { id: "secret-lift", x: 4130, y: 275, targetX: 4130, targetY: 155, w: 100, h: 16, period: 360 }
+];
+
+export const SECRET_AREA = {
+  heart: { x: 4325, y: 68 },
+  title: "Ada tempat istimewa buat kamu ♡",
+  message: "Dari semua jalan yang bisa aku pilih, aku tetap ingin berjalan bareng kamu. Terima kasih sudah hadir dan membuat hal-hal kecil terasa istimewa."
+};
 
 
 
@@ -277,7 +291,7 @@ export const enemyTemplates = [
   { x: 4010, y: 302, w: 30, h: 28, minX: 3910, maxX: 4100, speed: 1.2, dir: -1 },
   { x: 4450, y: 302, w: 30, h: 28, minX: 4380, maxX: 4520, speed: 1.3, dir: 1 },
   { x: 4990, y: 302, w: 30, h: 28, minX: 4860, maxX: 5130, speed: 1.4, dir: -1 },
-  { x: 3540, y: 177, w: 28, h: 28, minX: 3500, maxX: 3570, speed: 1.1, dir: 1 },
+  { x: 3350, y: 144, w: 28, h: 28, minX: 3320, maxX: 3370, speed: 1.1, dir: 1 },
   { x: 4880, y: 177, w: 28, h: 28, minX: 4850, maxX: 4910, speed: 1.2, dir: -1 }
 ];
 
@@ -346,7 +360,7 @@ export const backgroundMemories = [
   },
   { x: 2900, y: 55, image: "game/memories/kenangan-1.jpg", text: "Pelan-pelan, aku tunggu ♡", rotation: -0.04 },
   { x: 3540, y: 65, image: "game/memories/kenangan-2.jpg", text: "Masih banyak cerita kita ♡", rotation: 0.05 },
-  { x: 4310, y: 55, image: "game/memories/main-bareng.jpg", text: "Terima kasih sudah sampai sini ♡", rotation: -0.05 },
+  { x: 4530, y: 50, image: "game/memories/main-bareng.jpg", text: "Terima kasih sudah sampai sini ♡", rotation: -0.05 },
   { x: 5100, y: 60, image: "game/memories/kenangan-3.jpg", text: "Sebentar lagi ketemu kamu ♡", rotation: 0.04 }
 ];
 

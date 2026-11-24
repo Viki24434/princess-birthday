@@ -10,6 +10,8 @@ import {
 
 import { updatePlayer } from "../engine/physics";
 import { updateEnemies } from "../entities/enemies";
+import { updateMovingPlatforms } from "../systems/movingPlatforms";
+import { collectSecret } from "../systems/secretArea";
 
 import {
   updateCheckpoint,
@@ -82,6 +84,7 @@ export function useAdventureGame() {
   const [notice, setNotice] = useState("");
   const [failMessage, setFailMessage] = useState("");
   const [failType, setFailType] = useState(null);
+  const [secretFound, setSecretFound] = useState(false);
 
   // ====================================
   // MULAI / ULANG GAME
@@ -98,6 +101,7 @@ export function useAdventureGame() {
     setNotice("");
     setFailMessage("");
     setFailType(null);
+    setSecretFound(false);
     unlockGameAudio();
     startGameMusic();
   }
@@ -115,6 +119,23 @@ export function useAdventureGame() {
         unlockGameAudio();
         startGameMusic();
     }
+
+  function openSecret() {
+    if (!gameRef.current.secretFound || statusRef.current !== "playing") return;
+    resetControls(controlsRef.current);
+    statusRef.current = "secret";
+    setStatus("secret");
+    stopGameMusic();
+  }
+
+  function resumeSecret() {
+    if (statusRef.current !== "secret") return;
+    resetControls(controlsRef.current);
+    statusRef.current = "playing";
+    setStatus("playing");
+    unlockGameAudio();
+    startGameMusic();
+  }
 
   // ====================================
   // KONTROL TOMBOL LAYAR
@@ -240,6 +261,7 @@ export function useAdventureGame() {
 
       // Gerakkan mob
       updateEnemies(game.enemies, delta);
+      updateMovingPlatforms(game.movingPlatforms, delta);
 
         const wasOnGround = game.player.onGround;
         const previousY = game.player.y;
@@ -248,7 +270,8 @@ export function useAdventureGame() {
       updatePlayer(
         player,
         controlsRef.current,
-        delta
+        delta,
+        game.movingPlatforms
       );
 
         if (
@@ -281,6 +304,17 @@ export function useAdventureGame() {
         respawn("mob");
         return;
         }
+
+      if (collectSecret(game)) {
+        setSecretFound(true);
+        resetControls(controlsRef.current);
+        statusRef.current = "secret";
+        setStatus("secret");
+        setNotice("");
+        stopGameMusic();
+        playGameSound("checkpoint");
+        return;
+      }
 
       // Menyentuh tiang bendera
       const flagResult = checkFlagContact(game);
@@ -365,8 +399,11 @@ export function useAdventureGame() {
     notice,
     failMessage,
     failType,
+    secretFound,
     startGame,
     resumeGame,
+    openSecret,
+    resumeSecret,
     handlePress,
     handleRelease
     };

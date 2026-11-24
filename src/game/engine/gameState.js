@@ -2,13 +2,16 @@
 import {
   GROUND_Y,
   PLAYER_HEIGHT
-} from "../constants";
+} from "../constants.js";
 
 import {
   enemyTemplates,
+  movingPlatformTemplates,
   FLAG,
   partner
-} from "../levels/level1";
+} from "../levels/level1.js";
+
+import { createMovingPlatforms } from "../systems/movingPlatforms.js";
 
 export function createGame() {
   return {
@@ -22,7 +25,8 @@ export function createGame() {
     onLadder: false,
     facing: "kanan",
     holdingHands: false,
-    isFlagSliding: false
+    isFlagSliding: false,
+    supportingPlatformId: null
     },
 
     partner: {
@@ -41,6 +45,8 @@ export function createGame() {
 
     checkpoint: 55,
     failureType: null,
+    secretFound: false,
+    movingPlatforms: createMovingPlatforms(movingPlatformTemplates),
     collected: new Set(),
     warned: false,
     coupleOpacity: 1,
@@ -65,4 +71,5 @@ export function respawnPlayer(game) {
   player.vy = 0;
   player.onGround = true;
   player.onLadder = false;
+  player.supportingPlatformId = null;
 }

@@ -2,13 +2,13 @@
 import {
   PLAYER_WIDTH,
   PLAYER_HEIGHT
-} from "../constants";
+} from "../constants.js";
 
 import {
   platforms,
   END_STAIRS,
   ladders
-} from "../levels/level1";
+} from "../levels/level1.js";
 
 // Mengecek apakah dua objek saling bersentuhan
 export function overlaps(a, b) {
@@ -96,32 +96,47 @@ export function resolveStairCollision(
 // tanah, platform, dan tangga balok.
 export function resolvePlatformCollision(
   player,
-  previousBottom
+  previousBottom,
+  movingPlatforms = []
 ) {
+  const previousSupport = player.supportingPlatformId;
+  const currentBottom = player.y + PLAYER_HEIGHT;
   player.onGround = false;
+  player.supportingPlatformId = null;
 
   const allPlatforms = [
     ...platforms,
-    ...END_STAIRS
+    ...END_STAIRS,
+    ...movingPlatforms
   ];
 
+  let landing = null;
+
   for (const platform of allPlatforms) {
-    const crossingTop =
-      previousBottom <= platform.y + 6 &&
-      player.y + PLAYER_HEIGHT >= platform.y;
+    // Pemain yang sudah dibawa platform memakai posisi atas terbaru.
+    // Pendaratan baru memakai posisi platform sebelum dan sesudah bergerak.
+    const previousTop = platform.id && platform.id !== previousSupport
+      ? platform.previousY : platform.y;
+    const relativeFall = currentBottom - previousBottom - (platform.y - previousTop);
+    const crossingTop = previousBottom <= previousTop + 6 && currentBottom >= platform.y;
 
     const horizontallyInside =
       player.x + PLAYER_WIDTH > platform.x &&
       player.x < platform.x + platform.w;
 
     if (
-      player.vy >= 0 &&
+      relativeFall >= -0.001 &&
       crossingTop &&
       horizontallyInside
     ) {
-      player.y = platform.y - PLAYER_HEIGHT;
-      player.vy = 0;
-      player.onGround = true;
+      if (!landing || platform.y < landing.y) landing = platform;
     }
+  }
+
+  if (landing) {
+    player.y = landing.y - PLAYER_HEIGHT;
+    player.vy = 0;
+    player.onGround = true;
+    player.supportingPlatformId = landing.id ?? null;
   }
 }

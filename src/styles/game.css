@@ -216,6 +216,41 @@
   text-align: center;
 }
 
+.adventure__secret-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #e6c77f;
+  border-radius: 22px;
+  background: #fff8e9f2;
+  color: #8c6631;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.adventure__secret-badge span { color: #c89a37; }
+.adventure__secret-badge:disabled { cursor: default; }
+
+.adventure__secret-modal {
+  z-index: 4;
+  gap: 8px;
+  padding: 16px;
+  background: radial-gradient(ellipse at top, #fff0ce, #fffaf2 75%);
+}
+
+.adventure__secret-gift { width: 40px; height: 40px; object-fit: contain; }
+.adventure__secret-eyebrow { color: #9d7a37; font-size: 10px; letter-spacing: 0.08em; }
+.adventure__secret-modal h2 { max-width: 430px; font-size: clamp(17px, 2.8vw, 24px); }
+.adventure__secret-modal p { color: #86694f; font-size: clamp(12px, 2vw, 14px); }
+.adventure__secret-modal .btn { min-height: 44px; }
+
 .adventure__restart {
   min-height: 44px;
   padding: 8px 15px;

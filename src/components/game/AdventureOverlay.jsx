@@ -16,10 +16,9 @@ export default function AdventureOverlay({
         <h2>Petualangan Menuju Kastil ♡</h2>
 
         <p>
-          Lewatin jurang, hindari mob,
-          kumpulin {REQUIRED_HEARTS} hati,
-          terus turunin benderanya yaa.
-          Aku tunggu di kastil! ♡
+          Hindari mob, kumpulkan {REQUIRED_HEARTS} hati,
+          lalu turunkan bendera di kastil.
+          Naiki pijakan bergerak, dan kalau melihat kilau emas, coba ikuti… ♡
         </p>
 
         <button

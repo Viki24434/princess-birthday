@@ -114,7 +114,7 @@ function drawPavilionPlatform(ctx, platform) {
 
 function drawPlatforms(ctx) {
   for (const platform of platforms) {
-    if (platform.kind === "garden") {
+    if (platform.kind === "garden" || platform.kind === "secret") {
       drawGardenPlatform(ctx, platform);
       continue;
     }
