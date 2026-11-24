@@ -40,9 +40,11 @@ export function registerKeyboardControls(
 
     if (!control) return;
 
-    if (statusRef.current !== "playing") return;
+    const playing = statusRef.current === "playing";
+    // Panah tetap milik game saat jeda dan animasi akhir, meski pemain tidak bergerak.
+    if (playing || event.code.startsWith("Arrow")) event.preventDefault();
 
-    event.preventDefault();
+    if (!playing) return;
 
     if (control === "jump") {
       if (!event.repeat) {
@@ -59,7 +61,8 @@ export function registerKeyboardControls(
 
     if (!control) return;
 
-    event.preventDefault();
+    // Di luar gameplay, Spasi tetap bisa mengaktifkan tombol mulai/coba lagi.
+    if (statusRef.current === "playing" || event.code.startsWith("Arrow")) event.preventDefault();
 
     if (control !== "jump") {
       controlsRef.current[control] = false;
