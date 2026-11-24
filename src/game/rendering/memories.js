@@ -162,7 +162,7 @@ function drawPolaroid(ctx, memory) {
 }
 
 // Foto ikut berpindah ketika kamera bergerak
-export function drawBackgroundMemories(ctx, cameraX) {
+export function drawBackgroundMemories(ctx, cameraX, viewportWidth = WIDTH) {
   for (const memory of backgroundMemories) {
     const screenX = memory.x - cameraX;
 
@@ -170,7 +170,7 @@ export function drawBackgroundMemories(ctx, cameraX) {
     // di luar layar
     if (
       screenX < -160 ||
-      screenX > WIDTH + 160
+      screenX > viewportWidth + 160
     ) {
       continue;
     }

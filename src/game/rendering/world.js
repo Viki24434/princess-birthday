@@ -1,9 +1,9 @@
 
 import {
   WIDTH,
-  HEIGHT,
-  WORLD_WIDTH
+  HEIGHT
 } from "../constants";
+import { getCameraX } from "./viewport";
 
 import { drawBackground } from "./background";
 import { drawTerrain } from "./terrain";
@@ -39,31 +39,18 @@ import { drawCheckpoints } from "./checkpoints";
 let coupleCanvas = null;
 let coupleCtx = null;
 
-function getCoupleLayer() {
+function getCoupleLayer(viewport) {
   if (!coupleCanvas) {
     coupleCanvas = document.createElement("canvas");
-
-    coupleCanvas.width = WIDTH;
-    coupleCanvas.height = HEIGHT;
-
     coupleCtx = coupleCanvas.getContext("2d");
   }
 
+  const width = Math.round(viewport.width * viewport.scale);
+  const height = Math.round(HEIGHT * viewport.scale);
+  if (coupleCanvas.width !== width) coupleCanvas.width = width;
+  if (coupleCanvas.height !== height) coupleCanvas.height = height;
+
   return { coupleCanvas, coupleCtx };
-}
-
-// =====================================
-// KAMERA
-// =====================================
-
-function getCameraX(playerX) {
-  return Math.max(
-    0,
-    Math.min(
-      playerX - 230,
-      WORLD_WIDTH - WIDTH
-    )
-  );
 }
 
 // =====================================
@@ -71,8 +58,8 @@ function getCameraX(playerX) {
 // SATU GAMBAR UTUH
 // =====================================
 
-function drawCoupleLayer(game, time, sprites, cameraX) {
-  const { coupleCanvas, coupleCtx } = getCoupleLayer();
+function drawCoupleLayer(game, time, sprites, cameraX, viewport) {
+  const { coupleCanvas, coupleCtx } = getCoupleLayer(viewport);
 
   if (!coupleCtx) return null;
 
@@ -83,11 +70,12 @@ function drawCoupleLayer(game, time, sprites, cameraX) {
   coupleCtx.clearRect(
     0,
     0,
-    WIDTH,
-    HEIGHT
+    coupleCanvas.width,
+    coupleCanvas.height
   );
 
   coupleCtx.save();
+  coupleCtx.scale(viewport.scale, viewport.scale);
 
   // Samakan posisi kamera
   coupleCtx.translate(-cameraX, 0);
@@ -124,21 +112,21 @@ function drawCoupleLayer(game, time, sprites, cameraX) {
 // RENDER DUNIA GAME
 // =====================================
 
-export function drawWorld(ctx, game, time, sprites) {
+export function drawWorld(ctx, game, time, sprites, viewport = { width: WIDTH, scale: 1 }) {
   const player = game.player;
   const partner = game.partner;
 
-  const cameraX = getCameraX(player.x);
+  const cameraX = getCameraX(player.x, viewport.width);
 
   // Background
 
-    drawBackground(ctx, cameraX);
+    drawBackground(ctx, cameraX, viewport.width);
 
     ctx.save();
     ctx.translate(-cameraX, 0);
 
     // Foto dan tulisan kenangan di background
-    drawBackgroundMemories(ctx, cameraX);
+    drawBackgroundMemories(ctx, cameraX, viewport.width);
 
     // Tanah, jurang, platform, tangga
     drawTerrain(ctx);
@@ -166,7 +154,8 @@ export function drawWorld(ctx, game, time, sprites) {
     game,
     time,
     sprites,
-    cameraX
+    cameraX,
+    viewport
   );
 
   if (coupleLayer) {
@@ -187,7 +176,9 @@ export function drawWorld(ctx, game, time, sprites) {
     ctx.drawImage(
       coupleLayer,
       cameraX,
-      0
+      0,
+      viewport.width,
+      HEIGHT
     );
 
     ctx.restore();

@@ -9,7 +9,7 @@ function drawCloud(ctx, x, y) {
   ctx.fill();
 }
 
-export function drawBackground(ctx, cameraX) {
+export function drawBackground(ctx, cameraX, viewportWidth = WIDTH) {
   // Langit
   const sky = ctx.createLinearGradient(
     0, 0, 0, HEIGHT
@@ -19,7 +19,7 @@ export function drawBackground(ctx, cameraX) {
   sky.addColorStop(1, "#FFF8ED");
 
   ctx.fillStyle = sky;
-  ctx.fillRect(0, 0, WIDTH, HEIGHT);
+  ctx.fillRect(0, 0, viewportWidth, HEIGHT);
 
   // Awan bergerak lebih lambat daripada pemain
   ctx.fillStyle = "#FFFFFF";

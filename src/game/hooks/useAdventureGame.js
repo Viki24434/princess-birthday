@@ -1,7 +1,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { REQUIRED_HEARTS } from "../constants";
+import { WIDTH, HEIGHT, REQUIRED_HEARTS } from "../constants";
 
 import {
   createGame,
@@ -34,6 +34,7 @@ import {
 
 import { loadHeadSprites } from "../assets/sprites";
 import { drawWorld } from "../rendering/world";
+import { getGameViewport } from "../rendering/viewport";
 
 import {
   unlockGameAudio,
@@ -139,6 +140,30 @@ export function useAdventureGame() {
     const ctx = canvas?.getContext("2d");
 
     if (!ctx) return;
+
+    const controls = controlsRef.current;
+    let viewport = getGameViewport(WIDTH, HEIGHT);
+
+    function resizeCanvas() {
+      const next = getGameViewport(
+        canvas.clientWidth,
+        canvas.clientHeight,
+        window.devicePixelRatio
+      );
+
+      if (!next) return;
+
+      if (canvas.width !== next.pixelWidth) canvas.width = next.pixelWidth;
+      if (canvas.height !== next.pixelHeight) canvas.height = next.pixelHeight;
+      viewport = next;
+    }
+
+    resizeCanvas();
+    const resizeObserver = typeof ResizeObserver !== "undefined"
+      ? new ResizeObserver(resizeCanvas)
+      : null;
+    resizeObserver?.observe(canvas);
+    window.addEventListener("resize", resizeCanvas);
 
     spritesRef.current = loadHeadSprites();
 
@@ -295,11 +320,14 @@ export function useAdventureGame() {
         update(delta);
       }
 
+      ctx.setTransform(viewport.scale, 0, 0, viewport.scale, 0, 0);
+
       drawWorld(
         ctx,
         gameRef.current,
         time,
-        spritesRef.current
+        spritesRef.current,
+        viewport
       );
 
       frameId = requestAnimationFrame(frame);
@@ -314,13 +342,15 @@ export function useAdventureGame() {
     return () => {
       cancelAnimationFrame(frameId);
       unregisterKeyboard();
+      resizeObserver?.disconnect();
+      window.removeEventListener("resize", resizeCanvas);
 
       window.removeEventListener(
         "blur",
         handleBlur
       );
 
-      resetControls(controlsRef.current);
+      resetControls(controls);
       spritesRef.current = {};
     };
   }, []);
