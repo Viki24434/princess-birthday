@@ -1,13 +1,13 @@
 
 export const WIDTH = 720;
 export const HEIGHT = 400;
-export const WORLD_WIDTH = 3500;
+export const WORLD_WIDTH = 6500;
 
 export const PLAYER_WIDTH = 30;
 export const PLAYER_HEIGHT = 42;
 
 export const GROUND_Y = 330;
-export const REQUIRED_HEARTS = 4;
+export const REQUIRED_HEARTS = 6;
 
 // Pengaturan gerakan karakter
 export const PLAYER_SPEED = 5.2;

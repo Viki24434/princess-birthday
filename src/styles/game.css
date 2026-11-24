@@ -234,6 +234,41 @@
   line-height: 1.7;
 }
 
+.game-scene__choice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: min(100%, 860px);
+  padding: 16px 18px;
+  border: 1px dashed #ddb8ca;
+  border-radius: 18px;
+  background: #fffaf3;
+}
+
+.game-scene__choice p {
+  max-width: 460px;
+  color: #896579;
+  font-size: 13px;
+}
+
+.game-scene__choice .btn {
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .game-scene__choice {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .game-scene__choice .btn {
+    width: 100%;
+  }
+}
+
 .adventure__hint-touch {
   display: none;
 }

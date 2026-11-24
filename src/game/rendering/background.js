@@ -24,9 +24,13 @@ export function drawBackground(ctx, cameraX, viewportWidth = WIDTH) {
   // Awan bergerak lebih lambat daripada pemain
   ctx.fillStyle = "#FFFFFF";
 
-  for (let i = 0; i < 10; i++) {
-    const x = i * 180 - cameraX * 0.18 + 30;
-    const y = 65 + (i % 3) * 24;
+  const cloudOffset = cameraX * 0.18;
+  const firstCloud = Math.floor(cloudOffset / 180) - 1;
+  const lastCloud = Math.ceil((cloudOffset + viewportWidth) / 180) + 1;
+
+  for (let i = firstCloud; i <= lastCloud; i++) {
+    const x = i * 180 - cloudOffset + 30;
+    const y = 65 + ((i % 3 + 3) % 3) * 24;
 
     drawCloud(ctx, x, y);
   }
@@ -34,8 +38,12 @@ export function drawBackground(ctx, cameraX, viewportWidth = WIDTH) {
   // Bukit belakang — efek parallax
   ctx.fillStyle = "#F4C9DB";
 
-  for (let i = 0; i < 12; i++) {
-    const x = i * 300 - cameraX * 0.35;
+  const hillOffset = cameraX * 0.35;
+  const firstHill = Math.floor(hillOffset / 300) - 1;
+  const lastHill = Math.ceil((hillOffset + viewportWidth) / 300) + 1;
+
+  for (let i = firstHill; i <= lastHill; i++) {
+    const x = i * 300 - hillOffset;
 
     ctx.beginPath();
     ctx.ellipse(

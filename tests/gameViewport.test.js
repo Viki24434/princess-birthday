@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { getCameraX, getGameViewport } from "../src/game/rendering/viewport.js";
 import { HEIGHT, WIDTH, WORLD_WIDTH, PLAYER_WIDTH, PLAYER_HEIGHT } from "../src/game/constants.js";
+import { CASTLE_X } from "../src/game/levels/level1.js";
 
 function nearlyEqual(actual, expected) {
   assert.ok(Math.abs(actual - expected) < 0.00001, `${actual} should equal ${expected}`);
@@ -41,7 +42,7 @@ test("portrait, landscape, and fractional sizes use equal horizontal and vertica
 
 test("camera keeps the player visible and never exposes space outside the world", () => {
   for (const viewWidth of [480, 720, 1480, WORLD_WIDTH + 100]) {
-    for (const playerX of [0, 55, 500, 1800, 3098, 3330, WORLD_WIDTH - PLAYER_WIDTH]) {
+    for (const playerX of [0, 55, 500, 1800, CASTLE_X - 162, CASTLE_X + 70, WORLD_WIDTH - PLAYER_WIDTH]) {
       const cameraX = getCameraX(playerX, viewWidth);
       const screenX = playerX - cameraX;
 
@@ -62,8 +63,8 @@ test("zoomed camera leaves enough room to see obstacles ahead", () => {
 
 test("both characters at the castle balcony remain visible on a narrow frame", () => {
   const viewWidth = getGameViewport(288, 248, 2).width;
-  const cameraX = getCameraX(3330, viewWidth);
-  for (const x of [3330, 3366]) {
+  const cameraX = getCameraX(CASTLE_X + 70, viewWidth);
+  for (const x of [CASTLE_X + 70, CASTLE_X + 106]) {
     assert.ok(x >= cameraX);
     assert.ok(x + PLAYER_WIDTH <= cameraX + viewWidth);
   }

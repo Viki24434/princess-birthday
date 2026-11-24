@@ -30,9 +30,6 @@ export default function App() {
   const [unlockedScenes, setUnlockedScenes] =
     useState(["welcome"]);
 
-  const [gameCompleted, setGameCompleted] =
-    useState(false);
-
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -58,15 +55,6 @@ export default function App() {
       return;
     }
 
-    // Surat baru bisa dibuka setelah game selesai.
-    if (
-      currentScene === "game" &&
-      sceneId === "letter" &&
-      !gameCompleted
-    ) {
-      return;
-    }
-
     setUnlockedScenes(previous => {
       if (previous.includes(sceneId)) {
         return previous;
@@ -88,20 +76,6 @@ export default function App() {
     if (next) {
       navigateTo(next.id);
     }
-  }
-
-  function finishGame() {
-    setGameCompleted(true);
-
-    setUnlockedScenes(previous => {
-      if (previous.includes("letter")) {
-        return previous;
-      }
-
-      return [...previous, "letter"];
-    });
-
-    setCurrentScene("letter");
   }
 
   if (loading) {
@@ -156,7 +130,7 @@ export default function App() {
     ),
 
     game: (
-      <GameScene onComplete={finishGame} />
+      <GameScene onComplete={goNext} onSkip={goNext} />
     ),
 
     letter: (
@@ -200,10 +174,6 @@ export default function App() {
           currentScene={currentScene}
           unlockedScenes={unlockedScenes}
           onNavigate={navigateTo}
-          canContinue={
-            currentScene !== "game" ||
-            gameCompleted
-          }
         />
 
         <main
