@@ -74,8 +74,21 @@ export function updatePlayer(
     ladder = getLadderForPlayer(probePlayer);
   }
 
-  const wantsLadder =
-    !!ladder && (controls.up || controls.down);
+  const wantsUp = controls.up && !controls.down;
+  const wantsDown = controls.down && !controls.up;
+  const atLadderTop = !!ladder && player.y + PLAYER_HEIGHT <= ladder.y + 0.5;
+
+  // Di puncak, pemain sudah berdiri di platform, bukan masih memanjat.
+  if (atLadderTop && player.onLadder && !wantsDown) {
+    player.y = ladder.y - PLAYER_HEIGHT;
+    player.onLadder = false;
+    player.onGround = true;
+    player.vy = 0;
+  }
+
+  const wantsLadder = !!ladder && (wantsDown || (wantsUp && !atLadderTop));
+  // Jangan menangkap tangga lagi selama pemain sedang melompat naik.
+  const canGrabLadder = player.onGround || player.vy >= 0;
 
   // ====================================
   // 3. PANAH ATAS: LOMPAT / NAIK
@@ -93,10 +106,10 @@ export function updatePlayer(
   ) {
     controls.upJumpHandled = true;
 
-    // Kalau tidak dekat tangga,
-    // gunakan ↑ untuk melompat.
+    // Di atas platform, termasuk ujung atas tangga, ↑ berarti melompat.
     if (
-      !ladder &&
+      !controls.down &&
+      (!ladder || atLadderTop) &&
       !player.onLadder &&
       player.onGround
     ) {
@@ -123,6 +136,7 @@ export function updatePlayer(
 
   if (
     wantsLadder &&
+    canGrabLadder &&
     !player.onLadder &&
     !controls.jump
   ) {
@@ -240,6 +254,14 @@ export function updatePlayer(
           topLimit,
           bottomLimit
         );
+
+        // Selesai memanjat tanpa melompat otomatis saat ↑ masih ditahan.
+        if (!wantsDown && player.y <= topLimit + 0.5) {
+          player.y = topLimit;
+          player.vy = 0;
+          player.onLadder = false;
+          player.onGround = true;
+        }
 
         // ====================================
         // SAMPAI DI BAWAH TANGGA

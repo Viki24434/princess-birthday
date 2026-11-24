@@ -5,7 +5,8 @@ export function createControls() {
     right: false,
     up: false,
     down: false,
-    jump: false
+    jump: false,
+    upJumpHandled: false
   };
 }
 
