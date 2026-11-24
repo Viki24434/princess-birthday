@@ -44,6 +44,7 @@
 .adventure__overlay {
   position: absolute;
   inset: 0;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,54 +72,113 @@
 }
 
 .adventure__controls {
+  --control-size: clamp(44px, 13vw, 56px);
+  --jump-size: clamp(72px, 20vw, 88px);
   width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content max-content;
   justify-content: space-between;
-  gap: 18px;
-  align-items: stretch;
-  padding: 4px 5px;
-  touch-action: none;
+  align-items: end;
+  gap: 16px;
+  padding: 14px 16px 18px;
+  border: 1px solid #edc8d8;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #fffafc, #fceaf2);
+  box-shadow: inset 0 1px 0 #fff, 0 5px 16px #b96a8d0d;
   user-select: none;
   -webkit-user-select: none;
 }
 
-.adventure__move,
-.adventure__action {
+.adventure__control-group {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-.adventure__controls button {
-  min-width: 70px;
-  min-height: 60px;
-  border: 2px solid #edb5ca;
-  border-radius: 18px;
-  background: #fff0f6;
+.adventure__control-label {
   color: #94506f;
-  font-size: 22px;
+  font-size: 10px;
   font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.06em;
+}
+
+.adventure__direction-pad {
+  display: grid;
+  grid-template-columns: repeat(3, var(--control-size));
+  grid-template-rows: repeat(2, var(--control-size));
+  grid-template-areas:
+    ". up ."
+    "left down right";
+  gap: 6px;
+}
+
+.adventure__control-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-size);
+  height: var(--control-size);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 2px solid #edb5ca;
+  border-radius: 14px;
+  background: linear-gradient(#fffaff, #f8dfeb);
+  color: #94506f;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 4px 0 #dfabc2, inset 0 1px 0 #fff;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
   transition: transform 120ms ease, background 120ms ease;
 }
 
-.adventure__controls button:active:not(:disabled) {
-  transform: scale(0.94);
+.adventure__control-button--left { grid-area: left; }
+.adventure__control-button--right { grid-area: right; }
+.adventure__control-button--up { grid-area: up; }
+.adventure__control-button--down { grid-area: down; }
+
+.adventure__control-button:active:not(:disabled) {
+  transform: translateY(3px);
   background: #f8d7e4;
+  box-shadow: 0 1px 0 #dfabc2;
 }
 
-.adventure__controls button:disabled {
-  opacity: 0.5;
+.adventure__control-button:disabled {
+  opacity: 0.45;
+  box-shadow: none;
 }
 
-.adventure__jump {
-  min-width: 110px !important;
-  background: #b96a8d !important;
-  border-color: #b96a8d !important;
-  color: white !important;
-  font-size: 15px !important;
+.adventure__control-group--jump {
+  padding-bottom: 4px;
+}
+
+.adventure__control-button--jump {
+  width: var(--jump-size);
+  height: var(--jump-size);
+  gap: 5px;
+  border-radius: 50%;
+  border-color: #a65e80;
+  background: linear-gradient(145deg, #c57c9e, #a95d81);
+  color: white;
+  font-size: 12px;
+  box-shadow: 0 5px 0 #8b476d, inset 0 1px 0 #ffffff55;
+}
+
+.adventure__control-button--jump:active:not(:disabled) {
+  background: #a65e80;
+  box-shadow: 0 2px 0 #8b476d;
+}
+
+.adventure__jump-icon {
+  font-size: 28px;
 }
 
 .adventure__hint {
@@ -139,6 +199,7 @@
 }
 
 .adventure__restart {
+  min-height: 44px;
   padding: 8px 15px;
   border: 0;
   background: transparent;
@@ -155,16 +216,13 @@
   line-height: 1.7;
 }
 
-@media (max-width: 760px) {
-  .adventure__controls {
-    flex-direction: column;
-    align-items: center;
-  }
+.adventure__hint-touch {
+  display: none;
+}
 
-  .adventure__move,
-  .adventure__action {
-    justify-content: center;
-  }
+@media (pointer: coarse) {
+  .adventure__hint-keyboard { display: none; }
+  .adventure__hint-touch { display: inline; }
 }
 
 @media (max-width: 600px) {
@@ -182,30 +240,51 @@
     font-size: 11px;
   }
 
-  .adventure__controls button {
-    min-width: 62px;
-    min-height: 56px;
-    font-size: 21px;
-  }
-
-  .adventure__jump {
-    min-width: 96px !important;
-    font-size: 14px !important;
+  .adventure__controls {
+    padding-inline: 12px;
+    border-radius: 16px;
   }
 
   .adventure__overlay {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr);
+    align-content: start;
     gap: 6px;
-    padding: 12px;
+    padding: 10px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .adventure__overlay h2 {
+    font-size: 15px;
+    line-height: 1.3;
+    text-align: left;
+  }
+
+  .adventure__overlay .adventure__emoji {
+    font-size: 24px;
+  }
+
+  .adventure__overlay p,
+  .adventure__overlay .btn {
+    grid-column: 1 / -1;
+  }
+
+  .adventure__overlay p {
+    justify-self: center;
+    font-size: 11px;
+    line-height: 1.45;
   }
 
   .adventure__overlay .btn {
-    min-height: 35px;
-    padding: 7px 15px;
-    font-size: 11px;
+    justify-self: center;
+    min-height: 44px;
+    padding: 9px 16px;
+    font-size: 12px;
   }
 
   .adventure__hint {
-    font-size: 10px;
+    font-size: 11px;
   }
 }
 
@@ -338,9 +417,9 @@
   }
 
   .adventure__fail-modal button {
-    min-height: 30px;
-    padding: 5px 12px;
-    font-size: 11px;
+    min-height: 44px;
+    padding: 9px 16px;
+    font-size: 12px;
   }
 }
 
@@ -440,6 +519,7 @@
   justify-content: center;
 
   padding: 7px 13px;
+  min-height: 44px;
   border: 1px solid #e8b8cf;
   border-radius: 999px;
 

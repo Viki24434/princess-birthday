@@ -1,5 +1,5 @@
 
-const movementButtons = [
+const directionButtons = [
   {
     action: "left",
     label: "Jalan ke kiri",
@@ -9,10 +9,7 @@ const movementButtons = [
     action: "right",
     label: "Jalan ke kanan",
     text: "→"
-  }
-];
-
-const actionButtons = [
+  },
   {
     action: "up",
     label: "Lompat atau naik tangga",
@@ -22,13 +19,14 @@ const actionButtons = [
     action: "down",
     label: "Turun tangga",
     text: "↓"
-  },
-  {
-    action: "jump",
-    label: "Lompat",
-    text: "Lompat"
   }
 ];
+
+const jumpButton = {
+  action: "jump",
+  label: "Lompat",
+  text: "Lompat"
+};
 
 function ControlButton({
   item,
@@ -40,11 +38,7 @@ function ControlButton({
     <button
       type="button"
       aria-label={item.label}
-      className={
-        item.action === "jump"
-          ? "adventure__jump"
-          : undefined
-      }
+      className={`adventure__control-button adventure__control-button--${item.action}`}
       disabled={disabled}
       onPointerDown={(event) =>
         onPress(item.action, event)
@@ -59,7 +53,10 @@ function ControlButton({
         onRelease(item.action)
       }
     >
-      {item.text}
+      {item.action === "jump" && (
+        <span className="adventure__jump-icon" aria-hidden="true">↑</span>
+      )}
+      <span>{item.text}</span>
     </button>
   );
 }
@@ -75,37 +72,38 @@ export default function AdventureControls({
   return (
     <>
       <div className="adventure__controls">
-        <div className="adventure__move">
-          {movementButtons.map((item) => (
-            <ControlButton
-              key={item.action}
-              item={item}
-              disabled={disabled}
-              onPress={onPress}
-              onRelease={onRelease}
-            />
-          ))}
+        <div className="adventure__control-group">
+          <span className="adventure__control-label" aria-hidden="true">Jalan & tangga</span>
+          <div className="adventure__direction-pad" role="group" aria-label="Kontrol arah dan tangga">
+            {directionButtons.map((item) => (
+              <ControlButton
+                key={item.action}
+                item={item}
+                disabled={disabled}
+                onPress={onPress}
+                onRelease={onRelease}
+              />
+            ))}
+          </div>
         </div>
 
-        <div className="adventure__action">
-          {actionButtons.map((item) => (
-            <ControlButton
-              key={item.action}
-              item={item}
-              disabled={disabled}
-              onPress={onPress}
-              onRelease={onRelease}
-            />
-          ))}
+        <div className="adventure__control-group adventure__control-group--jump" role="group" aria-label="Kontrol lompat">
+          <span className="adventure__control-label" aria-hidden="true">Lompat</span>
+          <ControlButton
+            item={jumpButton}
+            disabled={disabled}
+            onPress={onPress}
+            onRelease={onRelease}
+          />
         </div>
       </div>
 
       <p className="adventure__hint">
-        Komputer: ← → untuk jalan,
+        <span className="adventure__hint-keyboard">Komputer: ← → untuk jalan,
         Spasi untuk lompat,
         ↑ untuk lompat atau naik tangga,
-        ↓ untuk turun tangga.
-        HP: gunakan tombol di bawah permainan.
+        ↓ untuk turun tangga.</span>
+        <span className="adventure__hint-touch">Tahan ← atau → untuk jalan, lalu ketuk Lompat dengan jari lainnya. Gunakan ↑ ↓ saat di tangga.</span>
       </p>
 
       {status === "playing" && (
