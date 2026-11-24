@@ -4,9 +4,8 @@ import { useEffect, useState } from "react";
 import useBirthdayData from "./hooks/useBirthdayData";
 
 import DecorativeBackground from "./components/DecorativeBackground";
-import SceneNavigation, {
-  scenes
-} from "./components/SceneNavigation";
+import SceneNavigation from "./components/SceneNavigation";
+import { scenes } from "./data/scenes";
 
 import WelcomeScene from "./scenes/WelcomeScene";
 import CakeScene from "./scenes/CakeScene";
@@ -187,12 +186,13 @@ export default function App() {
             <span className="brand__icon">♡</span>
 
             <span className="brand__text">
-              Princess Birthday
+              <strong>Princess Birthday</strong>
+              <small>Sebuah kejutan, sepenuh hati</small>
             </span>
           </button>
 
           <span className="header-label">
-            Khusus Buat Kamu ✦
+            <span aria-hidden="true">✦</span> Khusus Buat Kamu
           </span>
         </header>
 

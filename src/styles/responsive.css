@@ -44,22 +44,6 @@
     height: 260px;
   }
 
-  .scene-progress {
-    gap: 8px;
-  }
-
-  .progress-dot {
-    width: 28px;
-    height: 28px;
-  }
-
-  .bottom-navigation {
-    position: relative;
-    padding: 15px 0;
-    padding-bottom:
-      max(15px, env(safe-area-inset-bottom));
-  }
-
   .bottom-navigation .btn {
     min-height: 44px;
     padding-inline: 17px;
@@ -135,10 +119,6 @@
     font-size: 14px;
   }
 
-  .final-card {
-    padding: 30px 22px;
-  }
-
   .final-actions {
     width: 100%;
   }
@@ -153,13 +133,8 @@
     font-size: 12px;
   }
 
-  .progress-dot {
-    width: 25px;
-    height: 25px;
-  }
-
-  .scene-progress {
-    gap: 6px;
+  .brand__text small {
+    font-size: 9px;
   }
 
   .polaroid-grid {
@@ -177,6 +152,96 @@
   .bottom-navigation .btn {
     padding-inline: 11px;
     font-size: 11px;
+  }
+}
+
+/* Kartu dan navigasi tetap lapang di layar HP. */
+@media (max-width: 767px) {
+  .journey-shell {
+    margin-top: 16px;
+  }
+
+  .journey-heading {
+    font-size: 10px;
+  }
+
+  .journey-heading > span:first-child {
+    max-width: 170px;
+  }
+
+  .scene-progress {
+    gap: 2px;
+    padding: 6px 4px;
+    border-radius: 17px;
+  }
+
+  .progress-dot {
+    width: 100%;
+    height: auto;
+    min-height: 65px;
+    gap: 6px;
+    border-radius: 10px;
+  }
+
+  .progress-dot__number {
+    width: 26px;
+    height: 26px;
+    font-size: 10px;
+  }
+
+  .progress-dot__label {
+    max-width: 52px;
+    min-height: 24px;
+    font-size: 9px;
+    display: grid;
+    align-items: center;
+  }
+
+  .bottom-navigation {
+    position: relative;
+    padding: 14px 12px max(14px, env(safe-area-inset-bottom));
+    gap: 8px;
+    border-radius: 18px;
+  }
+
+  .navigation-caption strong {
+    display: none;
+  }
+
+  .welcome-card {
+    grid-template-columns: 1fr;
+    max-width: 440px;
+    border-radius: 24px;
+  }
+
+  .welcome-card__art {
+    min-height: 350px;
+    padding-top: 40px;
+    border-right: 0;
+    border-bottom: 1px dashed #e4b4ca;
+    border-radius: 24px 24px 0 0;
+  }
+
+  .welcome-card__message {
+    padding: 34px 24px 28px;
+    gap: 16px;
+  }
+
+  .welcome-card__message h2 {
+    max-width: 100%;
+    font-size: 31px;
+  }
+
+  .welcome-card__message .btn {
+    align-self: stretch;
+  }
+
+  .welcome-card__art .gift-reveal__heart {
+    margin-block: 30px;
+  }
+
+  .final-card {
+    padding: 36px 25px;
   }
 }
 
