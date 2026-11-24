@@ -79,6 +79,9 @@ export default function GiftBox({ onOpened }) {
         disabled={isOpening}
         aria-label="Buka kado ulang tahun"
       >
+        <span className="gift-sparkle gift-sparkle--one" aria-hidden="true">✦</span>
+        <span className="gift-sparkle gift-sparkle--two" aria-hidden="true">✧</span>
+        <span className="gift-sparkle gift-sparkle--three" aria-hidden="true">♡</span>
         <div className="gift-glow" />
 
         <div className="gift-wrapper">
@@ -93,6 +96,10 @@ export default function GiftBox({ onOpened }) {
             <div className="gift-ribbon" />
             <div className="gift-heart">♡</div>
           </div>
+
+          <span className="gift-tag" aria-hidden="true">
+            untukmu <span>♡</span>
+          </span>
         </div>
       </button>
     </div>
