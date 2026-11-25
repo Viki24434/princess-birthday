@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 
-import useBirthdayData from "./hooks/useBirthdayData";
+import useBirthdayData from "./hooks/useBirthDayData";
 
 import DecorativeBackground from "./components/DecorativeBackground";
 import SceneNavigation from "./components/SceneNavigation";
