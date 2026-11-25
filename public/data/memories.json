@@ -23,5 +23,13 @@
     "description": "Aku nggak tahu nanti bakal ada berapa banyak cerita lagi, tapi aku berharap masih banyak momen yang bisa kita buat bareng-bareng.",
     "image": "images/memories/memory-03.jpg",
     "rotation": -3
+  },
+  {
+    "id": "memory-04",
+    "title": "Masih Banyak Cerita Kita",
+    "date": "Untuk hari-hari yang menunggu",
+    "description": "Masih banyak tempat yang pengen aku datangi sama kamu, tawa yang pengen aku dengar, dan momen kecil yang pengen aku simpan. Semoga nanti kita bisa lihat foto-foto ini sambil bilang: ternyata kita sudah sejauh itu, yaa. ♡",
+    "image": "",
+    "rotation": 3
   }
 ]
