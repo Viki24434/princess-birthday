@@ -1,6 +1,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import SceneLayout from "../components/SceneLayout";
+import PhotoAlbum from "../components/PhotoAlbum";
 import {
   capturePhoto,
   composeBirthdayPhoto
@@ -265,7 +266,8 @@ export default function PhotoBoothScene({ birthday }) {
         }
 
         resultUrlRef.current = url;
-        setRenderedResult({ photos, frame: selectedFrame, url });
+        setRenderedResult({ photos, frame: selectedFrame, url, blob,
+          id: crypto.randomUUID(), count: photos.length, createdAt: new Date().toISOString() });
       })
       .catch(err => {
         if (!active) return;
@@ -553,7 +555,7 @@ export default function PhotoBoothScene({ birthday }) {
                       href={resultUrl}
                       download="foto-ulang-tahun-sayang.png"
                     >
-                      Simpan fotonya ♡
+                      Unduh PNG ♡
                     </a>
                   )}
                 </div>
@@ -561,6 +563,7 @@ export default function PhotoBoothScene({ birthday }) {
             )}
           </div>
         )}
+        <PhotoAlbum currentPhoto={resultMatches && !isCapturing && renderedResult?.blob ? renderedResult : null} />
       </div>
     </SceneLayout>
   );

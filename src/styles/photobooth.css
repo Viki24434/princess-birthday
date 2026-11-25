@@ -2,6 +2,50 @@
    BIRTHDAY PHOTO BOOTH
 ======================================== */
 
+.photo-album {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: clamp(18px, 4vw, 28px);
+  border: 1px solid #e8c7d4;
+  border-radius: 24px;
+  background: linear-gradient(140deg, #fffaf1, #fff4f8);
+  box-shadow: 0 12px 30px #94506f10;
+}
+.photo-album__heading { display: flex; align-items: center; gap: 14px; }
+.photo-album__heading > span { color: #bd7898; font-size: 42px; }
+.photo-album__heading h3 { color: #94506f; font-size: clamp(20px, 4vw, 26px); }
+.photo-album__heading p, .photo-album__status, .photo-album__empty, .photo-album__feedback { color: #926c80; font-size: 13px; line-height: 1.7; }
+.photo-album__feedback:empty, .photo-album__grid:empty { display: none; }
+.photo-album .btn { min-height: 44px; }
+.photo-album__unlock { display: flex; flex-direction: column; gap: 8px; }
+.photo-album__unlock label { color: #94506f; font-size: 13px; font-weight: 700; }
+.photo-album__unlock > div { display: flex; flex-wrap: wrap; gap: 10px; }
+.photo-album__unlock input { flex: 1; min-width: 140px; min-height: 44px; padding: 10px 14px; border: 1px solid #e1b8ca; border-radius: 12px; background: #fff; font: inherit; }
+.photo-album__unlock input:focus-visible { outline: 2px solid #b96a8d; outline-offset: 2px; }
+.photo-album__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
+.photo-album__actions span { flex: 1; color: #5f8265; font-size: 12px; }
+.photo-album__actions button { min-height: 44px; padding: 8px; border: 0; background: transparent; color: #94506f; text-decoration: underline; cursor: pointer; }
+.photo-album__pending { padding: 14px; border: 1px dashed #d6b377; border-radius: 14px; background: #fff8e7; }
+.photo-album__pending p { color: #96733c; font-size: 12px; line-height: 1.7; margin-bottom: 8px; }
+.photo-album__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.photo-album__card { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 10px; border: 1px solid #ead6de; border-radius: 15px; background: #fffdf9; }
+.photo-album__card > img, .photo-album__placeholder { display: block; width: 100%; height: 180px; object-fit: contain; border-radius: 8px; background: #f8edf1; }
+.photo-album__placeholder { display: grid; place-items: center; color: #d0a1b6; font-size: 56px; }
+.photo-album__card p { font-size: 12px; color: #8c6376; line-height: 1.6; }
+.photo-album__card small { font-size: 10px; color: #987c89; }
+.photo-album__card .btn { margin-top: auto; font-size: 12px; padding-inline: 8px; }
+.photo-album__preview { margin: 0; padding-top: 16px; border-top: 1px dashed #dcb9ca; }
+.photo-album__preview > img { display: block; width: 100%; max-height: 72dvh; object-fit: contain; border-radius: 12px; background: #fff; }
+.photo-album__preview figcaption { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 14px; }
+@media (max-width: 540px) {
+  .photo-album__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .photo-album__card > img, .photo-album__placeholder { height: 155px; }
+  .photo-album__unlock > div { flex-direction: column; }
+  .photo-album__unlock input { width: 100%; }
+}
+
 .booth-container {
   width: min(100%, 720px);
   display: flex;
