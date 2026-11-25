@@ -1,12 +1,12 @@
 
 import { useState } from "react";
+import { resolveAssetUrl } from "../utils/customContent";
 
 export default function PolaroidCard({ memory }) {
   const [flipped, setFlipped] = useState(false);
   const [imageError, setImageError] = useState(false);
 
-  const imageUrl =
-    `${import.meta.env.BASE_URL}${memory.image}`;
+  const imageUrl = resolveAssetUrl(memory.image);
 
   return (
     <button
@@ -22,7 +22,7 @@ export default function PolaroidCard({ memory }) {
       <div className="polaroid__inner">
         <div className="polaroid__front">
           <div className="polaroid__image">
-            {!imageError ? (
+            {imageUrl && !imageError ? (
               <img
                 src={imageUrl}
                 alt={memory.title}

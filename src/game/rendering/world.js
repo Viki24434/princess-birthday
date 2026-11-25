@@ -122,7 +122,7 @@ function drawCoupleLayer(game, time, sprites, cameraX, viewport) {
 // RENDER DUNIA GAME
 // =====================================
 
-export function drawWorld(ctx, game, time, sprites, viewport = { width: WIDTH, scale: 1 }) {
+export function drawWorld(ctx, game, time, sprites, viewport = { width: WIDTH, scale: 1 }, memories = []) {
   const player = game.player;
   const partner = game.partner;
 
@@ -136,7 +136,7 @@ export function drawWorld(ctx, game, time, sprites, viewport = { width: WIDTH, s
     ctx.translate(-cameraX, 0);
 
     // Foto dan tulisan kenangan di background
-    drawBackgroundMemories(ctx, cameraX, viewport.width);
+    drawBackgroundMemories(ctx, cameraX, viewport.width, memories);
 
     // Tanah, jurang, platform, tangga
     drawTerrain(ctx);

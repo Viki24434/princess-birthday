@@ -2,13 +2,13 @@
 import SceneLayout from "../components/SceneLayout";
 import PolaroidCard from "../components/PolaroidCard";
 
-export default function MemoriesScene({ memories }) {
+export default function MemoriesScene({ memories, content }) {
   return (
     <SceneLayout
       className="memories-scene"
-      eyebrow="Sedikit cerita tentang kita"
-      title="Cerita Kita ♡"
-      description="Ada cerita kecil di balik setiap foto kita."
+      eyebrow={content.eyebrow}
+      title={content.title}
+      description={content.description}
     >
       <div className="scrapbook">
         <div className="scrapbook__tape tape-left" />
@@ -18,10 +18,7 @@ export default function MemoriesScene({ memories }) {
           <span>✿</span>
 
           <p>
-            Aku nyimpen beberapa momen kita
-            di sini. Mungkin sederhana,
-            tapi semuanya punya cerita yang
-            pengen aku inget terus.
+            {content.intro}
           </p>
 
           <span>✿</span>
@@ -37,7 +34,7 @@ export default function MemoriesScene({ memories }) {
         </div>
 
         <p className="scrapbook__footer">
-          Coba klik fotonya, sayang ♡
+          {content.hint}
         </p>
       </div>
     </SceneLayout>

@@ -70,7 +70,7 @@ function getRandomDeathMessage(type) {
 }
 
 
-export function useAdventureGame() {
+export function useAdventureGame(memories) {
   const canvasRef = useRef(null);
   const gameRef = useRef(createGame());
   const spritesRef = useRef({});
@@ -366,7 +366,8 @@ export function useAdventureGame() {
         gameRef.current,
         time,
         spritesRef.current,
-        viewport
+        viewport,
+        memories
       );
 
       frameId = requestAnimationFrame(frame);
@@ -392,7 +393,7 @@ export function useAdventureGame() {
       resetControls(controls);
       spritesRef.current = {};
     };
-  }, []);
+  }, [memories]);
 
     return {
     canvasRef,

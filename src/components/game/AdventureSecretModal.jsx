@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import { SECRET_AREA } from "../../game/levels/level1";
+import { resolveAssetUrl } from "../../utils/customContent";
 
-export default function AdventureSecretModal({ onResume }) {
+export default function AdventureSecretModal({ content, onResume }) {
   const continueRef = useRef(null);
 
   useEffect(() => {
@@ -26,12 +26,12 @@ export default function AdventureSecretModal({ onResume }) {
 
   return (
     <div className="adventure__overlay adventure__secret-modal" role="dialog" aria-modal="true" aria-labelledby="adventure-secret-title">
-      <img className="adventure__secret-gift" src={`${import.meta.env.BASE_URL}photobooth/decorations/gift.png`} alt="" />
-      <span className="adventure__secret-eyebrow">Sudut rahasia ditemukan</span>
-      <h2 id="adventure-secret-title">{SECRET_AREA.title}</h2>
-      <p>{SECRET_AREA.message}</p>
+      <img className="adventure__secret-gift" src={resolveAssetUrl(content.image)} alt="" />
+      <span className="adventure__secret-eyebrow">{content.eyebrow}</span>
+      <h2 id="adventure-secret-title">{content.title}</h2>
+      <p>{content.message}</p>
       <button ref={continueRef} type="button" className="btn btn--primary" onClick={onResume}>
-        Lanjutkan petualangan →
+        {content.button}
       </button>
     </div>
   );

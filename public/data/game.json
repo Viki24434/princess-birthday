@@ -1,0 +1,62 @@
+{
+  "scene": {
+    "eyebrow": "Ada tantangan kecil buat kamu",
+    "title": "Petualangan Menuju Kastil ♡",
+    "description": "Ada perjalanan yang lebih panjang menuju kastil. Main dulu boleh, langsung baca suratnya juga boleh, {nickname}.",
+    "choiceMessage": "Kamu boleh menikmati petualangannya atau langsung lanjut ke kejutan berikutnya. ♡",
+    "skipButton": "Lanjut tanpa bermain →",
+    "footerMessage": "Di perjalanan nanti ada jurang, ada mob yang jalan-jalan, tangga, dan pijakan yang bergerak. Kumpulin hati juga yaa, terus naik sampai ke kastil. Kalau ingin menjelajah, ada sudut kecil yang menyimpan pesan buatmu. ♡",
+    "levelLabel": "Level 1 — Menuju Kastil"
+  },
+  "intro": {
+    "title": "Petualangan Menuju Kastil ♡",
+    "message": "Injak mob hijau dari atas, hindari yang berduri, kumpulkan {hearts} hati, lalu turunkan bendera di kastil. Naiki pijakan bergerak, dan kalau melihat kilau emas, coba ikuti… ♡",
+    "button": "Mulai Main ♡"
+  },
+  "win": {
+    "title": "Kita berhasil sampai ke atas, {nickname}! ♡",
+    "message": "Yeay, akhirnya kita sampai juga! Lihat tuh, kembang apinya cantik banget. Makasih yaa udah mau lewatin petualangan kecil ini bareng aku. Tapi tunggu, masih ada sesuatu yang pengen aku kasih ke kamu. ♡",
+    "button": "Lihat kejutan berikutnya ♡"
+  },
+  "secret": {
+    "eyebrow": "Sudut rahasia ditemukan",
+    "title": "Ada tempat istimewa buat kamu ♡",
+    "message": "Dari semua jalan yang bisa aku pilih, aku tetap ingin berjalan bareng kamu. Terima kasih sudah hadir dan membuat hal-hal kecil terasa istimewa.",
+    "image": "photobooth/decorations/gift.png",
+    "button": "Lanjutkan petualangan →"
+  },
+  "memories": [
+    {
+      "image": "game/memories/kenangan-1.jpg",
+      "text": "Masih inget ini? ♡"
+    },
+    {
+      "image": "game/memories/kenangan-2.jpg",
+      "text": "Momen favoritku ♡"
+    },
+    {
+      "image": "game/memories/main-bareng.jpg",
+      "text": "Waktu kita main ♡"
+    },
+    {
+      "image": "game/memories/kenangan-3.jpg",
+      "text": "Sama kamu terus ♡"
+    },
+    {
+      "image": "game/memories/kenangan-1.jpg",
+      "text": "Pelan-pelan, aku tunggu ♡"
+    },
+    {
+      "image": "game/memories/kenangan-2.jpg",
+      "text": "Masih banyak cerita kita ♡"
+    },
+    {
+      "image": "game/memories/main-bareng.jpg",
+      "text": "Terima kasih sudah sampai sini ♡"
+    },
+    {
+      "image": "game/memories/kenangan-3.jpg",
+      "text": "Sebentar lagi ketemu kamu ♡"
+    }
+  ]
+}

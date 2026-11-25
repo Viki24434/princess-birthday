@@ -4,51 +4,52 @@ import GiftBox from "../components/GiftBox";
 
 export default function WelcomeScene({ birthday, onContinue }) {
   const [giftOpened, setGiftOpened] = useState(false);
-  const nickname = birthday?.recipient?.nickname || "sayang";
+  const content = birthday.welcome;
+  const message = giftOpened ? content.opened : content.closed;
 
   return (
     <SceneLayout
       className="welcome-scene"
-      eyebrow="Ada sesuatu buat kamu"
-      title={giftOpened ? `Selamat ulang tahun, ${nickname} ♡` : `Hai, ${nickname}... ♡`}
-      description={giftOpened ? "Kadonya baru permulaan, masih ada cerita lainnya." : "Aku bikin sesuatu buat kamu, nih."}
+      eyebrow={content.eyebrow}
+      title={message.title}
+      description={giftOpened ? message.description : birthday.website.subtitle}
     >
       <div className={`welcome-card ${giftOpened ? "is-opened" : ""}`}>
         <div className="welcome-card__art">
-          <span className="welcome-card__label">SEBUAH KEJUTAN KECIL</span>
+          <span className="welcome-card__label">{content.artLabel}</span>
           {giftOpened ? (
             <div className="gift-reveal__heart" aria-hidden="true">♡</div>
           ) : (
             <GiftBox onOpened={() => setGiftOpened(true)} />
           )}
           <p className="gift-instruction" role="status">
-            {giftOpened ? "Yeay, kadonya sudah terbuka! ♡" : "Ketuk kadonya untuk mulai, yaa ♡"}
+            {message.instruction}
           </p>
         </div>
 
         <div className="welcome-card__message">
           <span className="welcome-card__stamp" aria-hidden="true">♡</span>
-          <span className="welcome-card__eyebrow">DARI AKU, UNTUK KAMU</span>
-          <h2>{giftOpened ? "Hari ini, tentang kamu." : "Khusus buat kamu."}</h2>
+          <span className="welcome-card__eyebrow">{content.cardEyebrow}</span>
+          <h2>{message.heading}</h2>
           <p>
             {giftOpened
-              ? "Hari ini kan hari spesial kamu. Jadi aku pengen bikin sesuatu yang bisa kamu inget nantinya."
-              : birthday?.website?.welcomeMessage || "Sebenernya sederhana aja, tapi aku bikinnya khusus buat kamu. Semoga kamu suka, yaa."}
+              ? message.message
+              : birthday.website.welcomeMessage}
           </p>
           {giftOpened ? (
             <>
-              <p>Aku harap kamu seneng yaa, soalnya masih ada beberapa kejutan kecil lainnya, hehe.</p>
+              <p>{message.extraMessage}</p>
               <button type="button" className="btn btn--primary btn--large" onClick={onContinue}>
-                Lanjut, yuk <span aria-hidden="true">→</span>
+                {message.continueLabel} <span aria-hidden="true">→</span>
               </button>
             </>
           ) : (
             <div className="welcome-card__previews" aria-label="Beberapa kejutan yang menunggu">
-              <span>Kue & doa</span><span>Kenangan kita</span><span>Surat cinta</span>
+              {content.previews.map((preview, index) => <span key={index}>{preview}</span>)}
             </div>
           )}
           <div className="welcome-card__signature">
-            <span>Dengan sepenuh hati,</span>
+            <span>{content.signatureLabel}</span>
             <strong>{birthday?.sender?.name || "Aku"} <span aria-hidden="true">♡</span></strong>
           </div>
         </div>

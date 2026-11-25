@@ -20,6 +20,7 @@ export default function App() {
     birthday,
     memories,
     letter,
+    game,
     loading,
     error
   } = useBirthdayData();
@@ -36,6 +37,10 @@ export default function App() {
       behavior: "instant"
     });
   }, [currentScene]);
+
+  useEffect(() => {
+    if (birthday?.website?.title) document.title = birthday.website.title;
+  }, [birthday]);
 
   function navigateTo(sceneId) {
     const targetIndex = scenes.findIndex(
@@ -88,7 +93,7 @@ export default function App() {
     );
   }
 
-  if (error || !birthday || !letter) {
+  if (error || !birthday || !letter || !game) {
     return (
       <div className="app-status">
         <h1>Ups, ada yang salah ♡</h1>
@@ -122,7 +127,7 @@ export default function App() {
     ),
 
     memories: (
-      <MemoriesScene memories={memories} />
+      <MemoriesScene memories={memories} content={birthday.memories} />
     ),
 
     photobooth: (
@@ -130,7 +135,7 @@ export default function App() {
     ),
 
     game: (
-      <GameScene onComplete={goNext} onSkip={goNext} />
+      <GameScene content={game} onComplete={goNext} onSkip={goNext} />
     ),
 
     letter: (
@@ -160,13 +165,13 @@ export default function App() {
             <span className="brand__icon">♡</span>
 
             <span className="brand__text">
-              <strong>Princess Birthday</strong>
-              <small>Sebuah kejutan, sepenuh hati</small>
+              <strong>{birthday.website.brand}</strong>
+              <small>{birthday.website.tagline}</small>
             </span>
           </button>
 
           <span className="header-label">
-            <span aria-hidden="true">✦</span> Khusus Buat Kamu
+            <span aria-hidden="true">✦</span> {birthday.website.headerLabel}
           </span>
         </header>
 
@@ -174,6 +179,7 @@ export default function App() {
           currentScene={currentScene}
           unlockedScenes={unlockedScenes}
           onNavigate={navigateTo}
+          journeyLabel={birthday.website.journeyLabel}
         />
 
         <main
@@ -189,7 +195,7 @@ export default function App() {
         </main>
 
         <div className="app-footer-note">
-          Dibuat khusus buat kamu ♡
+          {birthday.website.footerNote}
         </div>
       </div>
     </div>

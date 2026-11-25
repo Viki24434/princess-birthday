@@ -1,11 +1,13 @@
 
 import { useEffect, useState } from "react";
+import { formatContent } from "../utils/customContent";
 
 export default function useBirthdayData() {
   const [data, setData] = useState({
     birthday: null,
     memories: [],
-    letter: null
+    letter: null,
+    game: null
   });
 
   const [loading, setLoading] = useState(true);
@@ -51,19 +53,21 @@ export default function useBirthdayData() {
       setError(null);
 
       try {
-        const [birthday, memories, letter] =
+        const [birthday, memories, letter, game] =
           await Promise.all([
             loadJSON("birthday.json"),
             loadJSON("memories.json"),
-            loadJSON("letter.json")
+            loadJSON("letter.json"),
+            loadJSON("game.json")
           ]);
 
         if (!controller.signal.aborted) {
-          setData({
-            birthday,
-            memories,
-            letter
-          });
+          const variables = {
+            name: birthday.recipient?.name || "Sayang",
+            nickname: birthday.recipient?.nickname || "sayang",
+            sender: birthday.sender?.name || "Aku"
+          };
+          setData(formatContent({ birthday, memories, letter, game }, variables));
         }
       } catch (err) {
         if (err.name !== "AbortError") {

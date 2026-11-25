@@ -1,7 +1,6 @@
 
-import { REQUIRED_HEARTS } from "../../game/constants";
-
 export default function AdventureOverlay({
+  content,
   status,
   onStart,
   onComplete
@@ -13,13 +12,10 @@ export default function AdventureOverlay({
           🏰
         </span>
 
-        <h2>Petualangan Menuju Kastil ♡</h2>
+        <h2>{content.intro.title}</h2>
 
         <p>
-          Injak mob hijau dari atas, hindari yang berduri,
-          kumpulkan {REQUIRED_HEARTS} hati,
-          lalu turunkan bendera di kastil.
-          Naiki pijakan bergerak, dan kalau melihat kilau emas, coba ikuti… ♡
+          {content.intro.message}
         </p>
 
         <button
@@ -27,7 +23,7 @@ export default function AdventureOverlay({
           className="btn btn--primary"
           onClick={onStart}
         >
-          Mulai Main ♡
+          {content.intro.button}
         </button>
       </div>
     );
@@ -40,16 +36,10 @@ export default function AdventureOverlay({
           💖
         </span>
 
-        <h2>Kita berhasil sampai ke atas, sayang! ♡</h2>
+        <h2>{content.win.title}</h2>
 
         <p>
-        Yeay, akhirnya kita sampai juga!
-        Lihat tuh, kembang apinya cantik banget.
-        Makasih yaa udah mau lewatin
-        petualangan kecil ini bareng aku.
-
-        Tapi tunggu, masih ada sesuatu
-        yang pengen aku kasih ke kamu. ♡
+          {content.win.message}
         </p>
 
         <button
@@ -57,7 +47,7 @@ export default function AdventureOverlay({
           className="btn btn--primary"
           onClick={onComplete}
         >
-          Lihat kejutan berikutnya ♡
+          {content.win.button}
         </button>
       </div>
     );

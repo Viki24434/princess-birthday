@@ -11,6 +11,13 @@ npm run dev
 
 Build produksi: `npm run build`. Pengujian: `node --test tests/*.test.js`.
 
+## Mengganti tulisan dan foto
+
+Edit konten personal melalui JSON di `public/data`: `birthday.json`, `memories.json`,
+`letter.json`, dan `game.json`. Foto mendukung path di dalam `public` atau URL HTTPS
+gambar langsung. Lihat [panduan mengganti konten](docs/custom-content.md) untuk daftar
+bagian dan placeholder nama yang tersedia.
+
 ## Album kenangan Google Drive
 
 Untuk menyimpan hasil photobooth ke satu folder Google Drive milik pemilik website,

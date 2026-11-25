@@ -106,9 +106,7 @@ export const movingPlatformTemplates = [
 ];
 
 export const SECRET_AREA = {
-  heart: { x: 4325, y: 68 },
-  title: "Ada tempat istimewa buat kamu ♡",
-  message: "Dari semua jalan yang bisa aku pilih, aku tetap ingin berjalan bareng kamu. Terima kasih sudah hadir dan membuat hal-hal kecil terasa istimewa."
+  heart: { x: 4325, y: 68 }
 };
 
 
@@ -343,39 +341,16 @@ export const partner = {
 // Berjarak sedikit dari karakter cowok
 export const FINISH_WALK_X = 6098;
 
-export const backgroundMemories = [
-  {
-    x: 350,
-    y: 55,
-    image: "game/memories/kenangan-1.jpg",
-    text: "Masih inget ini? ♡",
-    rotation: -0.07
-  },
-  {
-    x: 920,
-    y: 70,
-    image: "game/memories/kenangan-2.jpg",
-    text: "Momen favoritku ♡",
-    rotation: 0.05
-  },
-  {
-    x: 1590,
-    y: 60,
-    image: "game/memories/main-bareng.jpg",
-    text: "Waktu kita main ♡",
-    rotation: -0.04
-  },
-  {
-    x: 2250,
-    y: 65,
-    image: "game/memories/kenangan-3.jpg",
-    text: "Sama kamu terus ♡",
-    rotation: 0.06
-  },
-  { x: 2900, y: 55, image: "game/memories/kenangan-1.jpg", text: "Pelan-pelan, aku tunggu ♡", rotation: -0.04 },
-  { x: 3540, y: 65, image: "game/memories/kenangan-2.jpg", text: "Masih banyak cerita kita ♡", rotation: 0.05 },
-  { x: 4530, y: 50, image: "game/memories/main-bareng.jpg", text: "Terima kasih sudah sampai sini ♡", rotation: -0.05 },
-  { x: 5100, y: 60, image: "game/memories/kenangan-3.jpg", text: "Sebentar lagi ketemu kamu ♡", rotation: 0.04 }
+// Posisi foto tetap di level; isi foto dan caption berasal dari public/data/game.json.
+export const backgroundMemorySpots = [
+  { x: 350, y: 55, rotation: -0.07 },
+  { x: 920, y: 70, rotation: 0.05 },
+  { x: 1590, y: 60, rotation: -0.04 },
+  { x: 2250, y: 65, rotation: 0.06 },
+  { x: 2900, y: 55, rotation: -0.04 },
+  { x: 3540, y: 65, rotation: 0.05 },
+  { x: 4530, y: 50, rotation: -0.05 },
+  { x: 5100, y: 60, rotation: 0.04 }
 ];
 
 

@@ -4,7 +4,8 @@ export default function SceneNavigation({
   currentScene,
   unlockedScenes = [],
   onNavigate,
-  canContinue = true
+  canContinue = true,
+  journeyLabel
 }) {
   const currentIndex = scenes.findIndex(
     scene => scene.id === currentScene
@@ -17,7 +18,7 @@ export default function SceneNavigation({
     <>
       <div className="journey-shell">
         <div className="journey-heading">
-          <span>Perjalanan kecil buat kamu <span aria-hidden="true">♡</span></span>
+          <span>{journeyLabel}</span>
           <span>Bab {String(currentIndex + 1).padStart(2, "0")} dari {String(scenes.length).padStart(2, "0")}</span>
         </div>
         <nav

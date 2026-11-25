@@ -3,7 +3,8 @@ import SceneLayout from "../components/SceneLayout";
 
 export default function CakeScene({ birthday }) {
   const [candlesOut, setCandlesOut] = useState(false);
-  const nickname = birthday?.recipient?.nickname || "sayang";
+  const content = birthday.cake;
+  const message = candlesOut ? content.after : content.before;
   const candleCount = Math.min(
     Math.max(birthday?.cake?.candles || 3, 1),
     8
@@ -12,13 +13,13 @@ export default function CakeScene({ birthday }) {
   return (
     <SceneLayout
       className="cake-scene"
-      eyebrow="Hari spesial kamu"
-      title={`Selamat Ulang Tahun, ${nickname}! ♡`}
+      eyebrow={content.eyebrow}
+      title={content.title}
       description={birthday?.cake?.message}
     >
       <div className={`cake-card ${candlesOut ? "is-celebrating" : ""}`}>
         <div className="cake-card__art">
-          <span className="cake-card__label">SEPOTONG MANIS DI HARI ISTIMEWA</span>
+          <span className="cake-card__label">{content.artLabel}</span>
           <div className="cake-stage">
             <span className="cake-sparkle cake-sparkle--one" aria-hidden="true">✦</span>
             <span className="cake-sparkle cake-sparkle--two" aria-hidden="true">✧</span>
@@ -56,24 +57,15 @@ export default function CakeScene({ birthday }) {
             </div>
           </div>
           <p className="cake-card__status" id="cake-status" role="status">
-            {candlesOut ? "Lilinnya padam, semoga doanya sampai ♡" : "Tutup mata sebentar, buat satu permintaan ♡"}
+            {message.status}
           </p>
         </div>
 
         <div className="cake-card__message">
           <span className="cake-card__stamp" aria-hidden="true">♡</span>
-          <span className="cake-card__eyebrow">SATU DOA, BANYAK HARAPAN</span>
-          <h2>{candlesOut ? "Aamiin, semoga terkabul yaa!" : "Bikin satu permintaan, yuk."}</h2>
-          <p>
-            {candlesOut
-              ? "Semoga semua yang kamu harapin bisa tercapai satu per satu. Aku juga bakal ikut seneng kalau kamu bahagia."
-              : "Sebelum lanjut, coba tutup mata sebentar, terus bikin satu permintaan dulu, yaa."}
-          </p>
-          <p>
-            {candlesOut
-              ? "Semoga hari-hari kamu selalu dipenuhi hal baik, senyum yang tulus, dan banyak alasan untuk bahagia. ♡"
-              : `Kalau udah, tiup lilinnya. Semoga permintaannya terkabul, ${nickname}. ♡`}
-          </p>
+          <span className="cake-card__eyebrow">{content.cardEyebrow}</span>
+          <h2>{message.heading}</h2>
+          {message.paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
           <button
             type="button"
             className="btn btn--primary btn--large"
@@ -81,10 +73,10 @@ export default function CakeScene({ birthday }) {
             aria-describedby="cake-status"
             onClick={() => setCandlesOut(value => !value)}
           >
-            {candlesOut ? "Nyalain lilinnya lagi ♡" : "Tiup lilinnya ♡"}
+            {message.button}
           </button>
           <div className="cake-card__signature">
-            <span>Aku ikut mendoakan yang terbaik,</span>
+            <span>{content.signatureLabel}</span>
             <strong>{birthday?.sender?.name || "Aku"} <span aria-hidden="true">♡</span></strong>
           </div>
         </div>

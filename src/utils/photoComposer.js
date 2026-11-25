@@ -11,8 +11,6 @@ const themes = {
     accent: "#C46692",
     border: "#F1A8C7",
     soft: "#FFE3EF",
-    title: "Putri Cantik ♡",
-    subtitle: "Hari ini kamu lucu banget, sayang",
     symbol: "♛"
   },
   "love-strip": {
@@ -20,8 +18,6 @@ const themes = {
     accent: "#B55682",
     border: "#E397B8",
     soft: "#FFF1F6",
-    title: "Foto Kita ♡",
-    subtitle: "Senyum dulu, sayang",
     symbol: "♡"
   },
   scrapbook: {
@@ -29,8 +25,6 @@ const themes = {
     accent: "#A67A67",
     border: "#DDBB9D",
     soft: "#FFFDF8",
-    title: "Kenangan Manis ♡",
-    subtitle: "Disimpan buat dikenang terus",
     symbol: "✿"
   },
   royal: {
@@ -38,8 +32,6 @@ const themes = {
     accent: "#AA8243",
     border: "#D9BC7B",
     soft: "#FFFDF7",
-    title: "Hari Spesial Kamu ♡",
-    subtitle: "Sedikit kenangan dari aku",
     symbol: "✦"
   },
   "birthday-doodle": {
@@ -47,8 +39,6 @@ const themes = {
     accent: "#FFF3F8",
     border: "#D9A8BF",
     soft: "#241A25",
-    title: "Birthday Booth ♡",
-    subtitle: "Made with love",
     symbol: "♡"
   },
 };
@@ -303,20 +293,20 @@ function drawHeader(ctx, canvas, theme) {
   ctx.fillText(theme.subtitle, canvas.width / 2, 176);
 }
 
-function drawFooter(ctx, canvas, theme, photoCount) {
+function drawFooter(ctx, canvas, theme, photoCount, content) {
   const footerY = canvas.height - 110;
 
   ctx.fillStyle = theme.accent;
   ctx.textAlign = "center";
 
   ctx.font = "30px Georgia";
-  ctx.fillText("Dibuat khusus buat kamu ♡", canvas.width / 2, footerY);
+  ctx.fillText(content.footer || "", canvas.width / 2, footerY);
 
   ctx.font = "22px Georgia";
   ctx.fillText(
     photoCount > 1
-      ? "Empat senyum manis dalam satu kenangan"
-      : "Satu senyum manis buat hari spesialmu",
+      ? content.multipleCaption || ""
+      : content.singleCaption || "",
     canvas.width / 2,
     footerY + 38
   );
@@ -375,7 +365,8 @@ export function capturePhoto(video, mirror = false) {
 
 export async function composeBirthdayPhoto(
   photoSources,
-  themeId = "princess"
+  themeId = "princess",
+  content = {}
 ) {
   if (!photoSources.length) {
     throw new Error("Belum ada foto yang diambil.");
@@ -387,10 +378,14 @@ export async function composeBirthdayPhoto(
 
   // Layout khusus untuk 3 foto, rasio 1:3.
   if (images.length === 3) {
-    return composeThreeShot(images, themeId);
+    return composeThreeShot(images, themeId, content.print);
   }
 
-  const theme = themes[themeId] || themes.princess;
+  const theme = {
+    ...(themes[themeId] || themes.princess),
+    title: content.frames?.[themeId]?.title || "",
+    subtitle: content.frames?.[themeId]?.subtitle || ""
+  };
   const isStrip = images.length > 1;
 
   const canvas = document.createElement("canvas");
@@ -502,7 +497,7 @@ export async function composeBirthdayPhoto(
     canvas.height
   );
 
-  drawFooter(ctx, canvas, theme, images.length);
+  drawFooter(ctx, canvas, theme, images.length, content.print || {});
 
   const stickers = await loadFrameStickers();
   drawPhotoPngStickers(ctx, stickers, themeId, photoSlots);

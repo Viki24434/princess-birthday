@@ -102,7 +102,7 @@ function drawCover(ctx, image, x, y, width, height) {
   );
 }
 
-export async function composeThreeShot(images, themeId) {
+export async function composeThreeShot(images, themeId, content = {}) {
   if (images.length !== 3) {
     throw new Error("Layout 3-shot membutuhkan 3 foto.");
   }
@@ -159,7 +159,7 @@ export async function composeThreeShot(images, themeId) {
   ctx.textAlign = "center";
   ctx.fillStyle = theme.text;
   ctx.font = "italic 40px Georgia";
-  ctx.fillText("♡ Birthday Booth ♡", WIDTH / 2, 104);
+  ctx.fillText(content.threeShotTitle || "", WIDTH / 2, 104);
 
   // Tiga foto
   const photo = {
@@ -229,7 +229,7 @@ export async function composeThreeShot(images, themeId) {
   ctx.textAlign = "center";
   ctx.font = "italic bold 55px Georgia";
   ctx.fillText(
-    "Happy Birthday, Sayang ♡",
+    content.threeShotGreeting || "",
     WIDTH / 2,
     2145,
     760
@@ -238,7 +238,7 @@ export async function composeThreeShot(images, themeId) {
   // Subjudul footer
   ctx.font = "29px Georgia";
   ctx.fillText(
-    "Made with love, just for you",
+    content.threeShotSubtitle || "",
     WIDTH / 2,
     2215,
     760
@@ -254,7 +254,7 @@ export async function composeThreeShot(images, themeId) {
   ctx.fillStyle = theme.accent;
   ctx.font = "25px Georgia";
   ctx.fillText(
-    "A little memory of your special day",
+    content.threeShotFooter || "",
     WIDTH / 2,
     2590,
     760

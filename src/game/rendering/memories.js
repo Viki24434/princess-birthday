@@ -1,6 +1,7 @@
 
 import { WIDTH } from "../constants";
-import { backgroundMemories } from "../levels/level1";
+import { backgroundMemorySpots } from "../levels/level1";
+import { resolveAssetUrl } from "../../utils/customContent";
 
 const photoCache = new Map();
 
@@ -33,8 +34,7 @@ function getPhoto(path) {
     console.warn("Foto kenangan tidak ditemukan:", path);
   };
 
-  image.src =
-    `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+  image.src = resolveAssetUrl(path);
 
   return asset;
 }
@@ -162,8 +162,11 @@ function drawPolaroid(ctx, memory) {
 }
 
 // Foto ikut berpindah ketika kamera bergerak
-export function drawBackgroundMemories(ctx, cameraX, viewportWidth = WIDTH) {
-  for (const memory of backgroundMemories) {
+export function drawBackgroundMemories(ctx, cameraX, viewportWidth = WIDTH, memories = []) {
+  for (const [index, spot] of backgroundMemorySpots.entries()) {
+    const content = memories[index];
+    if (!content) continue;
+    const memory = { ...spot, image: content.image, text: content.text || "" };
     const screenX = memory.x - cameraX;
 
     // Jangan menggambar foto yang jauh

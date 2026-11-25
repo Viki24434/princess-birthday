@@ -10,12 +10,12 @@ import { getFrameStickerNames, getStickerSource } from "../utils/photoboothStick
 
 import "../styles/photobooth.css";
 
-const frames = [
-  { id: "princess", label: "Putri Cantik", symbol: "♛" },
-  { id: "love-strip", label: "Foto Kita", symbol: "♡" },
-  { id: "scrapbook", label: "Kenangan Manis", symbol: "✿" },
-  { id: "royal", label: "Hari Spesial", symbol: "✦" },
-  { id: "birthday-doodle", label: "Birthday Doodle", symbol: "♡" }
+const frameOptions = [
+  { id: "princess", symbol: "♛" },
+  { id: "love-strip", symbol: "♡" },
+  { id: "scrapbook", symbol: "✿" },
+  { id: "royal", symbol: "✦" },
+  { id: "birthday-doodle", symbol: "♡" }
 ];
 
 function getCameraError(error) {
@@ -35,6 +35,10 @@ function getCameraError(error) {
 }
 
 export default function PhotoBoothScene({ birthday }) {
+  const content = birthday.photoBooth;
+  const frames = frameOptions.map(frame => ({
+    ...frame, label: content.frames[frame.id]?.label || frame.id
+  }));
   const defaultFrame =
     birthday?.photoBooth?.defaultFrame || "birthday-doodle";
 
@@ -48,7 +52,9 @@ export default function PhotoBoothScene({ birthday }) {
   const [cameraStatus, setCameraStatus] = useState("idle");
   const [error, setError] = useState("");
 
-  const [photoCount, setPhotoCount] = useState(3);
+  const [photoCount, setPhotoCount] = useState(
+    [1, 3, 4].includes(content.captureCount) ? content.captureCount : 3
+  );
   const [timerSeconds, setTimerSeconds] = useState(
     birthday?.photoBooth?.countdown === 5 ? 5 : 3
   );
@@ -255,7 +261,7 @@ export default function PhotoBoothScene({ birthday }) {
 
     let active = true;
 
-    composeBirthdayPhoto(photos, selectedFrame)
+    composeBirthdayPhoto(photos, selectedFrame, content)
       .then(blob => {
         if (!active) return;
 
@@ -279,7 +285,7 @@ export default function PhotoBoothScene({ birthday }) {
     return () => {
       active = false;
     };
-  }, [photos, selectedFrame, isCapturing]);
+  }, [photos, selectedFrame, isCapturing, content]);
 
   // Hentikan kamera dan bersihkan file sementara
   // ketika pengguna meninggalkan halaman.
@@ -305,14 +311,14 @@ export default function PhotoBoothScene({ birthday }) {
   return (
     <SceneLayout
       className="photobooth-scene"
-      eyebrow="Senyum dulu, sayang"
-      title="Foto-Foto Dulu, Yuk!"
-      description="Aku bikinin tempat foto kecil buat kamu. Biar ada yang bisa kamu simpen dari hari ini."
+      eyebrow={content.eyebrow}
+      title={content.title}
+      description={content.description}
     >
       <div className="booth-container">
         <div className={`booth-camera frame--${selectedFrame}`}>
           <div className="booth-camera__heading">
-            <span className="booth-camera__eyebrow">BIRTHDAY PHOTO CLUB</span>
+            <span className="booth-camera__eyebrow">{content.clubLabel}</span>
             <strong>{activeFrame.label}</strong>
           </div>
 
@@ -354,7 +360,7 @@ export default function PhotoBoothScene({ birthday }) {
             {cameraStatus === "idle" && (
               <div className="booth-placeholder">
                 <span>♡</span>
-                <p>Yuk, siapin senyum cantik kamu!</p>
+                <p>{content.placeholder}</p>
               </div>
             )}
 
@@ -377,14 +383,14 @@ export default function PhotoBoothScene({ birthday }) {
             {cameraStatus === "ready" &&
               countdown === null && (
                 <div className="booth-camera__hint">
-                  Senyum dulu, sayang ♡
+                  {content.cameraHint}
                 </div>
               )}
           </div>
 
           <div className="booth-camera__footer">
-            <span>♡ Hari spesial kamu ♡</span>
-            <small>Satu senyum, satu kenangan manis.</small>
+            <span>{content.footerTitle}</span>
+            <small>{content.footerMessage}</small>
           </div>
         </div>
 

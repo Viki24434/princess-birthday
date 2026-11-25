@@ -20,6 +20,7 @@ function animationDuration(duration) {
 }
 
 export default function LetterScene({ letter }) {
+  const content = letter.scene;
   // closed -> opening -> open
   // open -> closing -> sealing -> closed
   const [phase, setPhase] = useState("closed");
@@ -71,9 +72,9 @@ export default function LetterScene({ letter }) {
   return (
     <SceneLayout
       className="letter-scene"
-      eyebrow="Ada sedikit cerita dari aku"
-      title="Buat Kamu, Sayang ♡"
-      description="Ada beberapa hal yang pengen aku sampein ke kamu."
+      eyebrow={content.eyebrow}
+      title={content.title}
+      description={content.description}
     >
       {/* ==============================
           AMPLOP ASLI
@@ -108,7 +109,7 @@ export default function LetterScene({ letter }) {
           </button>
 
           <p>
-            Coba buka amplopnya, sayang ♡
+            {content.envelopeHint}
           </p>
 
           <button
@@ -117,7 +118,7 @@ export default function LetterScene({ letter }) {
             onClick={openLetter}
             disabled={phase !== "closed"}
           >
-            Buka suratnya ♡
+            {content.openButton}
           </button>
         </div>
       )}
@@ -162,7 +163,7 @@ export default function LetterScene({ letter }) {
             onClick={closeLetter}
             disabled={phase !== "open"}
           >
-            Tutup surat ♡
+            {content.closeButton}
           </button>
         </article>
       )}

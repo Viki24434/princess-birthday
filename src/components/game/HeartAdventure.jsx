@@ -25,7 +25,7 @@ import {
   stopGameAudio
 } from "../../game/audio/gameAudio";
 
-export default function HeartAdventure({ onComplete }) {
+export default function HeartAdventure({ content, onComplete }) {
   const {
     canvasRef,
     status,
@@ -40,7 +40,7 @@ export default function HeartAdventure({ onComplete }) {
     resumeSecret,
     handlePress,
     handleRelease
-  } = useAdventureGame();
+  } = useAdventureGame(content.memories);
 
 
   const [soundEnabled, setSoundEnabled] =
@@ -69,7 +69,7 @@ export default function HeartAdventure({ onComplete }) {
     <div className="adventure">
       {/* JUDUL LEVEL */}
       <div className="adventure__topbar">
-        <span>Level 1 — Menuju Kastil</span>
+        <span>{content.scene.levelLabel}</span>
 
         <button
           type="button"
@@ -110,6 +110,7 @@ export default function HeartAdventure({ onComplete }) {
 
         {/* TAMPILAN MULAI DAN MENANG */}
         <AdventureOverlay
+          content={content}
           status={status}
           onStart={startGame}
           onComplete={onComplete}
@@ -122,7 +123,7 @@ export default function HeartAdventure({ onComplete }) {
           onRetry={resumeGame}
         />
 
-        {status === "secret" && <AdventureSecretModal onResume={resumeSecret} />}
+        {status === "secret" && <AdventureSecretModal content={content.secret} onResume={resumeSecret} />}
       </div>
 
       {/* PESAN INFO LAINNYA */}

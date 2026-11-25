@@ -1,15 +1,22 @@
-
 {
   "title": "Ada yang Mau Aku Bilang",
-  "greeting": "Hai, sayang...",
+  "greeting": "Hai, {nickname}...",
   "paragraphs": [
-    "Selamat ulang tahun yaa, sayang. Akhirnya nambah umur lagi nih, hehe.",
+    "Selamat ulang tahun yaa, {nickname}. Akhirnya nambah umur lagi nih, hehe.",
     "Aku sebenernya bingung mau ngasih apa buat ulang tahun kamu. Terus aku kepikiran buat bikin sesuatu sendiri. Ya walaupun mungkin nggak seberapa, tapi aku pengen ada sesuatu yang bisa kamu simpen dan kamu buka lagi kapan pun kamu mau.",
     "Makasih yaa udah hadir di hidup aku. Makasih juga buat semua waktu, perhatian, dan hal-hal kecil yang udah kita lewatin bareng.",
     "Aku tahu hubungan kita nggak selalu sempurna. Kadang ada salah paham, kadang juga ada hal-hal yang bikin kesel. Tapi aku tetap pengen kita sama-sama belajar, saling ngerti, dan terus jadi lebih baik.",
     "Di umur kamu yang sekarang, aku berharap kamu selalu sehat, bahagia, dan semua hal baik yang kamu pengenin bisa tercapai satu per satu.",
     "Pokoknya jangan lupa bahagia, yaa. Aku sayang banget sama kamu."
   ],
-  "closing": "Dari aku, yang selalu sayang sama kamu.",
-  "signature": "Aku ♡"
+  "closing": "Dari {sender}, yang selalu sayang sama kamu.",
+  "signature": "{sender} ♡",
+  "scene": {
+    "eyebrow": "Ada sedikit cerita dari aku",
+    "title": "Buat Kamu, {name} ♡",
+    "description": "Ada beberapa hal yang pengen aku sampein ke kamu.",
+    "envelopeHint": "Coba buka amplopnya, {nickname} ♡",
+    "openButton": "Buka suratnya ♡",
+    "closeButton": "Tutup surat ♡"
+  }
 }

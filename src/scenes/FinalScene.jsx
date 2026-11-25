@@ -1,15 +1,17 @@
 
+import { Fragment } from "react";
 import SceneLayout from "../components/SceneLayout";
 
 export default function FinalScene({
   birthday,
   onNavigate
 }) {
+  const content = birthday.final;
   return (
     <SceneLayout
       className="final-scene"
-      eyebrow="Terakhir, ada satu hal lagi"
-      title="Aku Sayang Kamu ♡"
+      eyebrow={content.eyebrow}
+      title={content.title}
       description={birthday?.website?.closingMessage}
     >
       <div className="final-heart">
@@ -18,36 +20,19 @@ export default function FinalScene({
 
       <div className="final-card">
         <span className="script-text">
-          Aku dan Kamu ♡
+          {content.cardLabel}
         </span>
 
         <h2>
-          Semoga kamu selalu punya
-          banyak alasan buat senyum
-          setiap harinya.
+          {content.heading}
         </h2>
 
-        <p>
-          Makasih yaa udah jadi
-          bagian dari hidup aku.
-          Aku seneng bisa kenal sama kamu
-          dan punya banyak cerita bareng kamu.
-        </p>
-
-        <div className="final-card__divider">
-          ✦ ♡ ✦
-        </div>
-
-        <p>
-          Selamat ulang tahun sekali lagi,
-          sayang. Semoga kita masih bisa
-          ngerayain banyak ulang tahun
-          bareng-bareng, yaa.
-        </p>
-
-        <p>
-          Aku sayang kamu. ❤️
-        </p>
+        {content.paragraphs.map((paragraph, index) => (
+          <Fragment key={index}>
+            {index === 1 && <div className="final-card__divider">✦ ♡ ✦</div>}
+            <p>{paragraph}</p>
+          </Fragment>
+        ))}
       </div>
 
       <div className="final-actions">
@@ -56,7 +41,7 @@ export default function FinalScene({
           className="btn btn--secondary"
           onClick={() => onNavigate("memories")}
         >
-          Lihat Kenangan Kita
+          {content.memoriesButton}
         </button>
 
         <button
@@ -64,7 +49,7 @@ export default function FinalScene({
           className="btn btn--primary"
           onClick={() => onNavigate("welcome")}
         >
-          Ulang dari Awal ♡
+          {content.restartButton}
         </button>
       </div>
     </SceneLayout>

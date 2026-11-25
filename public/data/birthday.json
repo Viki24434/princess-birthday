@@ -1,4 +1,3 @@
-
 {
   "recipient": {
     "name": "Sayang",
@@ -10,9 +9,14 @@
   },
   "website": {
     "title": "Ada Sesuatu Buat Kamu",
-    "subtitle": "Aku bikin ini khusus buat kamu, sayang.",
+    "subtitle": "Aku bikin sesuatu buat kamu, nih.",
     "welcomeMessage": "Sebenernya sederhana aja, tapi aku bikinnya khusus buat kamu. Semoga kamu suka, yaa.",
-    "closingMessage": "Semoga di umur kamu yang sekarang, semakin banyak hal baik yang datang. Aku pengen terus ada di samping kamu, nemenin setiap cerita yang bakal kita lewatin nanti."
+    "closingMessage": "Semoga di umur kamu yang sekarang, semakin banyak hal baik yang datang. Aku pengen terus ada di samping kamu, nemenin setiap cerita yang bakal kita lewatin nanti.",
+    "brand": "Princess Birthday",
+    "tagline": "Sebuah kejutan, sepenuh hati",
+    "headerLabel": "Khusus Buat Kamu",
+    "footerNote": "Dibuat khusus buat kamu ♡",
+    "journeyLabel": "Perjalanan kecil buat kamu ♡"
   },
   "theme": {
     "name": "pink-princess-scrapbook",
@@ -21,12 +25,123 @@
   },
   "cake": {
     "candles": 3,
-    "message": "Sebelum lanjut, coba bikin satu permintaan dulu, yaa."
+    "message": "Sebelum lanjut, coba bikin satu permintaan dulu, yaa.",
+    "eyebrow": "Hari spesial kamu",
+    "title": "Selamat Ulang Tahun, {nickname}! ♡",
+    "artLabel": "SEPOTONG MANIS DI HARI ISTIMEWA",
+    "cardEyebrow": "SATU DOA, BANYAK HARAPAN",
+    "signatureLabel": "Aku ikut mendoakan yang terbaik,",
+    "before": {
+      "status": "Tutup mata sebentar, buat satu permintaan ♡",
+      "heading": "Bikin satu permintaan, yuk.",
+      "paragraphs": [
+        "Sebelum lanjut, coba tutup mata sebentar, terus bikin satu permintaan dulu, yaa.",
+        "Kalau udah, tiup lilinnya. Semoga permintaannya terkabul, {nickname}. ♡"
+      ],
+      "button": "Tiup lilinnya ♡"
+    },
+    "after": {
+      "status": "Lilinnya padam, semoga doanya sampai ♡",
+      "heading": "Aamiin, semoga terkabul yaa!",
+      "paragraphs": [
+        "Semoga semua yang kamu harapin bisa tercapai satu per satu. Aku juga bakal ikut seneng kalau kamu bahagia.",
+        "Semoga hari-hari kamu selalu dipenuhi hal baik, senyum yang tulus, dan banyak alasan untuk bahagia. ♡"
+      ],
+      "button": "Nyalain lilinnya lagi ♡"
+    }
   },
   "photoBooth": {
     "title": "Foto-Foto Dulu, Yuk!",
     "defaultFrame": "princess",
     "countdown": 3,
-    "captureCount": 4
+    "captureCount": 3,
+    "eyebrow": "Senyum dulu, {nickname}",
+    "description": "Aku bikinin tempat foto kecil buat kamu. Biar ada yang bisa kamu simpen dari hari ini.",
+    "clubLabel": "BIRTHDAY PHOTO CLUB",
+    "placeholder": "Yuk, siapin senyum cantik kamu!",
+    "cameraHint": "Senyum dulu, {nickname} ♡",
+    "footerTitle": "♡ Hari spesial kamu ♡",
+    "footerMessage": "Satu senyum, satu kenangan manis.",
+    "frames": {
+      "princess": {
+        "label": "Putri Cantik",
+        "title": "Putri Cantik ♡",
+        "subtitle": "Hari ini kamu lucu banget, {nickname}"
+      },
+      "love-strip": {
+        "label": "Foto Kita",
+        "title": "Foto Kita ♡",
+        "subtitle": "Senyum dulu, {nickname}"
+      },
+      "scrapbook": {
+        "label": "Kenangan Manis",
+        "title": "Kenangan Manis ♡",
+        "subtitle": "Disimpan buat dikenang terus"
+      },
+      "royal": {
+        "label": "Hari Spesial",
+        "title": "Hari Spesial Kamu ♡",
+        "subtitle": "Sedikit kenangan dari aku"
+      },
+      "birthday-doodle": {
+        "label": "Birthday Doodle",
+        "title": "Birthday Booth ♡",
+        "subtitle": "Made with love"
+      }
+    },
+    "print": {
+      "footer": "Dibuat khusus buat kamu ♡",
+      "singleCaption": "Satu senyum manis buat hari spesialmu",
+      "multipleCaption": "Empat senyum manis dalam satu kenangan",
+      "threeShotTitle": "♡ Birthday Booth ♡",
+      "threeShotGreeting": "Happy Birthday, {name} ♡",
+      "threeShotSubtitle": "Made with love, just for you",
+      "threeShotFooter": "A little memory of your special day"
+    }
+  },
+  "welcome": {
+    "eyebrow": "Ada sesuatu buat kamu",
+    "artLabel": "SEBUAH KEJUTAN KECIL",
+    "cardEyebrow": "DARI AKU, UNTUK KAMU",
+    "signatureLabel": "Dengan sepenuh hati,",
+    "previews": [
+      "Kue & doa",
+      "Kenangan kita",
+      "Surat cinta"
+    ],
+    "closed": {
+      "title": "Hai, {nickname}... ♡",
+      "instruction": "Ketuk kadonya untuk mulai, yaa ♡",
+      "heading": "Khusus buat kamu."
+    },
+    "opened": {
+      "title": "Selamat ulang tahun, {nickname} ♡",
+      "description": "Kadonya baru permulaan, masih ada cerita lainnya.",
+      "instruction": "Yeay, kadonya sudah terbuka! ♡",
+      "heading": "Hari ini, tentang kamu.",
+      "message": "Hari ini kan hari spesial kamu. Jadi aku pengen bikin sesuatu yang bisa kamu inget nantinya.",
+      "extraMessage": "Aku harap kamu seneng yaa, soalnya masih ada beberapa kejutan kecil lainnya, hehe.",
+      "continueLabel": "Lanjut, yuk"
+    }
+  },
+  "memories": {
+    "eyebrow": "Sedikit cerita tentang kita",
+    "title": "Cerita Kita ♡",
+    "description": "Ada cerita kecil di balik setiap foto kita.",
+    "intro": "Aku nyimpen beberapa momen kita di sini. Mungkin sederhana, tapi semuanya punya cerita yang pengen aku inget terus.",
+    "hint": "Coba klik fotonya, {nickname} ♡"
+  },
+  "final": {
+    "eyebrow": "Terakhir, ada satu hal lagi",
+    "title": "Aku Sayang Kamu ♡",
+    "cardLabel": "Aku dan Kamu ♡",
+    "heading": "Semoga kamu selalu punya banyak alasan buat senyum setiap harinya.",
+    "paragraphs": [
+      "Makasih yaa udah jadi bagian dari hidup aku. Aku seneng bisa kenal sama kamu dan punya banyak cerita bareng kamu.",
+      "Selamat ulang tahun sekali lagi, {nickname}. Semoga kita masih bisa ngerayain banyak ulang tahun bareng-bareng, yaa.",
+      "Aku sayang kamu. ❤️"
+    ],
+    "memoriesButton": "Lihat Kenangan Kita",
+    "restartButton": "Ulang dari Awal ♡"
   }
 }
