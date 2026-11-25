@@ -21,6 +21,12 @@ dari `google-apps-script/Code.gs`. Isi URL deployment melalui `.env.local` berda
 Kode album hanya disimpan di Google Apps Script dan dimasukkan saat membuka album;
 kode ini tidak dimasukkan ke variabel `VITE_*` atau repository.
 
+## Deploy ke GitHub Pages
+
+Ikuti [panduan deployment](docs/github-pages.md) untuk mengisi URL album di repository
+variables dan mengaktifkan GitHub Pages. Setelah pengaturan awal selesai, push ke
+`main` akan menjalankan tes, build, dan deployment secara otomatis.
+
 ## Teknologi
 
 React, Vite, GSAP, IndexedDB melalui idb, serta Google Apps Script untuk album Drive.
