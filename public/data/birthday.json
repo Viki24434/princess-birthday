@@ -2,10 +2,10 @@
   "recipient": {
     "name": "Sayang",
     "nickname": "sayang",
-    "birthday": "2026-12-20"
+    "birthday": "2026-12-04"
   },
   "sender": {
-    "name": "Aku"
+    "name": "Developer"
   },
   "website": {
     "title": "Ada Sesuatu Buat Kamu",
@@ -35,8 +35,7 @@
       "status": "Tutup mata sebentar, buat satu permintaan ♡",
       "heading": "Bikin satu permintaan, yuk.",
       "paragraphs": [
-        "Sebelum lanjut, coba tutup mata sebentar, terus bikin satu permintaan dulu, yaa.",
-        "Kalau udah, tiup lilinnya. Semoga permintaannya terkabul, {nickname}. ♡"
+        "Sebelum lanjut, coba tutup mata sebentar, terus bikin satu permintaan dulu, yaa."
       ],
       "button": "Tiup lilinnya ♡"
     },
@@ -44,8 +43,9 @@
       "status": "Lilinnya padam, semoga doanya sampai ♡",
       "heading": "Aamiin, semoga terkabul yaa!",
       "paragraphs": [
-        "Semoga semua yang kamu harapin bisa tercapai satu per satu. Aku juga bakal ikut seneng kalau kamu bahagia.",
-        "Semoga hari-hari kamu selalu dipenuhi hal baik, senyum yang tulus, dan banyak alasan untuk bahagia. ♡"
+        "Semoga semua yang kamu harapin bisa tercapai satu per satu.",
+        "Semoga hari-hari kamu selalu dipenuhi hal baik, senyum yang tulus, dan banyak alasan untuk bahagia. ♡",
+        "Semoga yang disemogakan tersemogakan. 😘"
       ],
       "button": "Nyalain lilinnya lagi ♡"
     }

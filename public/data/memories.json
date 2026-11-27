@@ -4,7 +4,7 @@
     "id": "memory-01",
     "title": "Awal Cerita Kita",
     "date": "Awal dari semuanya",
-    "description": "Kalau dipikir-pikir lagi, lucu juga ya gimana semuanya bisa dimulai. Aku seneng banget akhirnya bisa kenal sama kamu.",
+    "description": "Kalau dipikir-pikir lagi, lucu juga ya gimana semuanya bisa dimulai. Mungkin waktu itu kamu ngga suka sama aku, tapi aku ngga nyerah buat deketin kamu.",
     "image": "images/memories/memory-01.jpg",
     "rotation": -5
   },
@@ -12,7 +12,7 @@
     "id": "memory-02",
     "title": "Salah Satu Hari Favoritku",
     "date": "Kenangan kecil kita",
-    "description": "Mungkin buat orang lain ini cuma momen biasa, tapi buat aku, hal-hal kecil yang kita lewatin bareng selalu punya tempat tersendiri.",
+    "description": "Mungkin ini ketika kita pertama kali liburan bareng, terlihat sederhana tapi aku seneng banget bisa sama kamu di hari itu.",
     "image": "images/memories/memory-02.jpg",
     "rotation": 4
   },
@@ -20,7 +20,7 @@
     "id": "memory-03",
     "title": "Aku dan Kamu",
     "date": "Cerita kita",
-    "description": "Aku nggak tahu nanti bakal ada berapa banyak cerita lagi, tapi aku berharap masih banyak momen yang bisa kita buat bareng-bareng.",
+    "description": "Aku ngga tau kedepanya bakalan gimana dan juga bagaimana, tapi aku pengen bisa terus bikin cerita sama kamu.",
     "image": "images/memories/memory-03.jpg",
     "rotation": -3
   },

@@ -82,7 +82,7 @@ export default function PhotoAlbum({ currentPhoto }) {
           const input = event.currentTarget.elements.namedItem("albumCode");
           if (await album.unlock(input.value)) input.value = "";
         }}>
-          <label htmlFor="album-code">Kode album dari pemilik website</label>
+          <label htmlFor="album-code">Kata sandi album</label>
           <div><input id="album-code" name="albumCode" type="password" minLength={12} maxLength={128} required autoComplete="off" disabled={busy} />
             <button type="submit" className="btn btn--secondary" disabled={busy}>{state.busy === "unlock" ? "Membuka…" : "Buka album"}</button></div>
         </form>
